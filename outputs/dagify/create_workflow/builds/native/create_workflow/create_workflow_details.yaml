@@ -1,0 +1,130 @@
+dag_type: typed
+description: Generated workflow from UI.
+name: create_workflow
+nodes:
+  create_workflow_dag:
+    agent: false
+    description: Construct a directed acyclic graph (DAG) representing the workflow
+    name: create_workflow_dag
+    nodes_depended_on:
+    - define_step_dependencies
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of node names in the DAG
+      key: dag_nodes
+      type: List[str]
+    - description: List of edges in the DAG, represented as 'node1->node2'
+      key: dag_edges
+      type: List[str]
+    - description: Whether the DAG is acyclic
+      key: is_acyclic
+      type: bool
+    - description: Whether the DAG is connected
+      key: is_connected
+      type: bool
+    prompt: Using the steps and their dependencies, create a DAG that represents the
+      workflow. Ensure that the DAG is acyclic and connected.
+  decompose_tasks_into_steps:
+    agent: false
+    description: Break down each task into detailed, executable steps
+    name: decompose_tasks_into_steps
+    nodes_depended_on:
+    - identify_workflow_tasks
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of detailed, executable steps for each task
+      key: task_steps
+      type: List[str]
+    prompt: Take each task identified and decompose it into specific, actionable steps.
+      List each step in a clear and concise format.
+  define_step_dependencies:
+    agent: false
+    description: Determine the dependencies between steps
+    name: define_step_dependencies
+    nodes_depended_on:
+    - decompose_tasks_into_steps
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of step dependencies in the format 'step1->step2', indicating
+        that step1 must be completed before step2
+      key: step_dependencies
+      type: List[str]
+    - description: A string representation of the dependency graph, where each line
+        represents a step and its dependencies
+      key: dependency_graph
+      type: str
+    - description: List of steps that do not depend on any other steps
+      key: independent_steps
+      type: List[str]
+    prompt: Analyze the steps identified and define their dependencies. Specify which
+      steps must be completed before others can start.
+  define_workflow_objective:
+    agent: false
+    description: Clarify the objective of the workflow
+    name: define_workflow_objective
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: The primary objective of the workflow
+      key: workflow_objective
+      type: str
+    - description: A brief description of the main task or process
+      key: main_task_description
+      type: str
+    prompt: State the primary objective of the workflow. What is the main task or
+      process that this workflow will accomplish?
+  generate_workflow_execution_plan:
+    agent: false
+    description: Produce a detailed execution plan for the workflow
+    name: generate_workflow_execution_plan
+    nodes_depended_on:
+    - validate_workflow
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of steps to be executed in order
+      key: execution_plan
+      type: List[str]
+    - description: List of input names for each step
+      key: step_inputs
+      type: List[str]
+    - description: List of output names for each step
+      key: step_outputs
+      type: List[str]
+    - description: Execution order of steps (implicit in execution_plan but included
+        for clarity)
+      key: execution_order
+      type: List[int]
+    prompt: Based on the validated workflow DAG, generate a detailed execution plan
+      that specifies the steps to be executed, their inputs, and their outputs.
+  identify_workflow_tasks:
+    agent: false
+    description: List the high-level tasks required to achieve the workflow objective
+    name: identify_workflow_tasks
+    nodes_depended_on:
+    - define_workflow_objective
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of high-level tasks required to achieve the workflow objective
+      key: tasks
+      type: List[str]
+    prompt: Based on the workflow objective, identify the main tasks that need to
+      be performed. List each task as a brief bullet point.
+  validate_workflow:
+    agent: false
+    description: Verify that the workflow is correct and complete
+    name: validate_workflow
+    nodes_depended_on:
+    - create_workflow_dag
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the workflow is valid
+      key: is_valid
+      type: bool
+    - description: List of validation errors
+      key: validation_errors
+      type: List[str]
+    - description: List of validation warnings
+      key: validation_warnings
+      type: List[str]
+    prompt: Review the workflow DAG and validate that it accurately represents the
+      desired process. Check for completeness, correctness, and acyclicity.

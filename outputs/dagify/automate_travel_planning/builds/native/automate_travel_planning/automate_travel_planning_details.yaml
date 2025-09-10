@@ -1,0 +1,1477 @@
+dag_type: shim
+description: Generated workflow from UI.
+name: automate_travel_planning
+nodes:
+  apply_for_visas:
+    agent: false
+    code_node_type: shim
+    description: Apply for necessary visas for the trip
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CheckImmigrationRequirementsOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for check_immigration_requirements node outputs.\"\"\"\n    destination_countries:\
+      \ List[str] = Field(..., description=\"List of destination countries\")\n  \
+      \  visa_requirements: List[str] = Field(..., description=\"List of visa requirements\
+      \ for each destination country\")\n    travel_restrictions: List[str] = Field(...,\
+      \ description=\"List of travel restrictions for each destination country\")\n\
+      \    health_certificates_required: List[bool] = Field(..., description=\"List\
+      \ of whether health certificates are required for each destination country\"\
+      )\n\n\nclass CreateItineraryOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ create_itinerary node outputs.\"\"\"\n    itinerary_id: str = Field(..., description=\"\
+      Unique identifier for the itinerary\")\n    flight_details: str = Field(...,\
+      \ description=\"List of flight information, including departure and arrival\
+      \ times, airlines, and flight numbers\")\n    hotel_reservations: str = Field(...,\
+      \ description=\"List of hotel reservation information, including hotel names,\
+      \ locations, and reservation numbers\")\n    car_rental_details: str = Field(...,\
+      \ description=\"List of car rental information, including car types, rental\
+      \ agencies, and pickup/drop-off details\")\n    activity_schedules: str = Field(...,\
+      \ description=\"List of activity schedules, including dates, times, and activity\
+      \ descriptions\")\n    immigration_requirements: str = Field(..., description=\"\
+      List of immigration requirements for each destination, including visa requirements\
+      \ and travel restrictions\")\n    travel_dates: str = Field(..., description=\"\
+      List of travel dates, including start and end dates for the trip\")\n\n\nclass\
+      \ ApplyForVisasOutput(BaseModel):\n    \"\"\"Pydantic model for apply_for_visas\
+      \ node outputs.\"\"\"\n    visa_application_status: bool = Field(..., description=\"\
+      Whether the visa application has been successfully submitted\")\n    visa_types_applied_for:\
+      \ str = Field(..., description=\"List of visa types applied for (e.g., tourist,\
+      \ business, transit)\")\n    required_documentation: str = Field(..., description=\"\
+      List of required documentation for the visa application (e.g., passport, proof\
+      \ of travel, financial statements)\")\n    visa_application_reference_numbers:\
+      \ str = Field(..., description=\"List of reference numbers for the submitted\
+      \ visa applications\")\n    expected_processing_time: int = Field(..., description=\"\
+      Expected processing time for the visa application in days\")\n\n\ndef apply_for_visas(check_immigration_requirements_input:\
+      \ CheckImmigrationRequirementsOutput, create_itinerary_input: CreateItineraryOutput,\
+      \ **kwargs) -> ApplyForVisasOutput:\n    \"\"\"Apply for necessary visas for\
+      \ the trip\n\n    Args:\n        check_immigration_requirements_input: Input\
+      \ from the 'check_immigration_requirements' node.\n        create_itinerary_input:\
+      \ Input from the 'create_itinerary' node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        ApplyForVisasOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # Extract destination countries and\
+      \ visa requirements\n    countries: List[str] = check_immigration_requirements_input.destination_countries\n\
+      \    visa_requirements: List[str] = check_immigration_requirements_input.visa_requirements\n\
+      \    \n    # Extract travel dates and itinerary details\n    travel_dates: str\
+      \ = create_itinerary_input.travel_dates\n    itinerary_id: str = create_itinerary_input.itinerary_id\n\
+      \    \n    # Determine visa types needed based on purpose and duration\n   \
+      \ visa_types: str = determine_visa_types(visa_requirements=visa_requirements,\
+      \ \n                                            travel_dates=travel_dates,\n\
+      \                                            countries=countries)\n    \n  \
+      \  # Compile required documentation for visa applications\n    documentation:\
+      \ str = compile_required_documentation(countries=countries,\n              \
+      \                                          visa_requirements=visa_requirements,\n\
+      \                                                        visa_types=visa_types)\n\
+      \    \n    # Submit visa applications through appropriate channels\n    submission_results:\
+      \ dict = submit_visa_applications(countries=countries,\n                   \
+      \                                      visa_types=visa_types,\n            \
+      \                                             documentation=documentation,\n\
+      \                                                         itinerary_id=itinerary_id)\n\
+      \    \n    # Get application reference numbers\n    reference_numbers: str =\
+      \ extract_reference_numbers(submission_results=submission_results)\n    \n \
+      \   # Track application status and processing time\n    processing_time: int\
+      \ = estimate_processing_time(countries=countries,\n                        \
+      \                             visa_types=visa_types,\n                     \
+      \                                submission_results=submission_results)\n  \
+      \  \n    # Check if all applications were submitted successfully\n    application_status:\
+      \ bool = check_application_status(submission_results=submission_results)\n\n\
+      \    return ApplyForVisasOutput(\n        visa_application_status=application_status,\n\
+      \        visa_types_applied_for=visa_types,\n        required_documentation=documentation,\n\
+      \        visa_application_reference_numbers=reference_numbers,\n        expected_processing_time=processing_time,\n\
+      \    )"
+    name: apply_for_visas
+    nodes_depended_on:
+    - check_immigration_requirements
+    - create_itinerary
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the visa application has been successfully submitted
+      key: visa_application_status
+      type: bool
+    - description: List of visa types applied for (e.g., tourist, business, transit)
+      key: visa_types_applied_for
+      type: str
+    - description: List of required documentation for the visa application (e.g.,
+        passport, proof of travel, financial statements)
+      key: required_documentation
+      type: str
+    - description: List of reference numbers for the submitted visa applications
+      key: visa_application_reference_numbers
+      type: str
+    - description: Expected processing time for the visa application in days
+      key: expected_processing_time
+      type: int
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Parse the 'destination_countries' and 'visa_requirements' fields from
+          the output of 'check_immigration_requirements' node.
+        reason: To determine which visas are required for the trip, we need to know
+          the destination countries and their visa requirements.
+        text: Extract destination countries and their respective visa requirements
+          from the output of 'check_immigration_requirements' node.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Extract 'travel_dates' and 'itinerary_id' from the output of 'create_itinerary'
+          node and correlate them with the destination countries.
+        reason: To apply for the correct type of visa, we need to understand the travel
+          dates and itinerary details.
+        text: Identify the travel dates and itinerary details from the output of 'create_itinerary'
+          node.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the 'visa_requirements' and 'travel_dates' to determine the appropriate
+          visa type for each destination.
+        reason: Different types of visas (tourist, business, transit) have different
+          requirements and application processes.
+        text: Determine the type of visa required for each destination based on the
+          travel purpose and duration of stay.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Refer to the 'visa_requirements' and 'required_documentation' guidelines
+          for each destination country to compile the necessary documents.
+        reason: Each visa type and destination country has specific documentation
+          requirements.
+        text: Compile the required documentation for the visa application based on
+          the visa type and destination country's requirements.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the compiled documentation to submit the visa application through
+          the designated channels and record the application reference numbers.
+        reason: To track the status of the visa application, we need the reference
+          numbers.
+        text: Submit the visa application through the appropriate channels (online
+          portal, embassy, consulate) and obtain the application reference numbers.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Monitor the visa application status through the provided reference
+          numbers and note the expected processing time as per the visa issuing authority's
+          guidelines.
+        reason: To inform the traveler about the status and expected timeline for
+          visa approval.
+        text: Track the status of the visa application and note the expected processing
+          time.
+      - complexity: LOW
+        impact: HIGH
+        method: Aggregate the information gathered during the visa application process
+          into the required output fields.
+        reason: To provide a comprehensive summary of the visa application process
+          for the travel arrangements.
+        text: Compile the final output including the visa application status, types
+          of visas applied for, required documentation, application reference numbers,
+          and expected processing time.
+    prompt: Apply for the necessary visas for the trip, including any required documentation
+      or fees.
+    shims: []
+  book_cars:
+    agent: false
+    code_node_type: shim
+    description: Book car rentals for the trip
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CreateItineraryOutput(BaseModel):\n    \"\"\"Pydantic model for create_itinerary\
+      \ node outputs.\"\"\"\n    itinerary_id: str = Field(..., description=\"Unique\
+      \ identifier for the itinerary\")\n    flight_details: str = Field(..., description=\"\
+      List of flight information, including departure and arrival times, airlines,\
+      \ and flight numbers\")\n    hotel_reservations: str = Field(..., description=\"\
+      List of hotel reservation information, including hotel names, locations, and\
+      \ reservation numbers\")\n    car_rental_details: str = Field(..., description=\"\
+      List of car rental information, including car types, rental agencies, and pickup/drop-off\
+      \ details\")\n    activity_schedules: str = Field(..., description=\"List of\
+      \ activity schedules, including dates, times, and activity descriptions\")\n\
+      \    immigration_requirements: str = Field(..., description=\"List of immigration\
+      \ requirements for each destination, including visa requirements and travel\
+      \ restrictions\")\n    travel_dates: str = Field(..., description=\"List of\
+      \ travel dates, including start and end dates for the trip\")\n\n\nclass BookCarsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for book_cars node outputs.\"\"\"\n    car_rental_booking_reference:\
+      \ str = Field(..., description=\"Booking reference number for the car rental\"\
+      )\n    car_rental_details: List[str] = Field(..., description=\"List of car\
+      \ rental details, including car type, rental agency, and pickup/drop-off information\"\
+      )\n    insurance_options: List[str] = Field(..., description=\"List of insurance\
+      \ options selected for the car rental\")\n    equipment_upgrades: List[str]\
+      \ = Field(..., description=\"List of equipment upgrades selected for the car\
+      \ rental, such as GPS or child seats\")\n    total_cost: float = Field(...,\
+      \ description=\"Total cost of the car rental, including any additional fees\
+      \ or upgrades\")\n    booking_status: bool = Field(..., description=\"Whether\
+      \ the car rental booking was successful\")\n\n\ndef book_cars(create_itinerary_input:\
+      \ CreateItineraryOutput, **kwargs) -> BookCarsOutput:\n    \"\"\"Book car rentals\
+      \ for the trip\n\n    Args:\n        create_itinerary_input: Input from the\
+      \ 'create_itinerary' node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        BookCarsOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # Extract car rental details from create_itinerary output\n\
+      \    car_rental_details: List[str] = extract_car_rental_details(input_data=create_itinerary_input.car_rental_details)\n\
+      \    \n    # Validate car rental details against user requirements\n    validated_details:\
+      \ List[str] = validate_car_rental_details(car_details=car_rental_details, user_requirements=kwargs.get(\"\
+      user_requirements\", {}))\n    \n    # Determine insurance options based on\
+      \ user preferences and requirements\n    insurance_options: List[str] = determine_insurance_options(car_details=validated_details,\
+      \ user_preferences=kwargs.get(\"insurance_preferences\", {}))\n    \n    # Determine\
+      \ equipment upgrades based on user preferences\n    equipment_upgrades: List[str]\
+      \ = determine_equipment_upgrades(car_details=validated_details, user_preferences=kwargs.get(\"\
+      equipment_preferences\", {}))\n    \n    # Book car rental through API\n   \
+      \ booking_result: dict = book_car_rental(\n        car_details=validated_details,\n\
+      \        insurance_options=insurance_options,\n        equipment_upgrades=equipment_upgrades,\n\
+      \        payment_info=kwargs.get(\"payment_info\", {})\n    )\n    \n    # Calculate\
+      \ total cost including all fees and upgrades\n    total_cost: float = calculate_total_cost(\n\
+      \        base_rental_cost=booking_result.get(\"base_cost\", 0.0),\n        insurance_cost=booking_result.get(\"\
+      insurance_cost\", 0.0),\n        upgrades_cost=booking_result.get(\"upgrades_cost\"\
+      , 0.0),\n        additional_fees=booking_result.get(\"additional_fees\", 0.0)\n\
+      \    )\n    \n    # Return output with booking details\n    return BookCarsOutput(\n\
+      \        car_rental_booking_reference=booking_result.get(\"booking_reference\"\
+      , \"\"),\n        car_rental_details=validated_details,\n        insurance_options=insurance_options,\n\
+      \        equipment_upgrades=equipment_upgrades,\n        total_cost=total_cost,\n\
+      \        booking_status=booking_result.get(\"booking_status\", False),\n   \
+      \ )"
+    name: book_cars
+    nodes_depended_on:
+    - create_itinerary
+    nodes_dependent_on: []
+    output_structure:
+    - description: Booking reference number for the car rental
+      key: car_rental_booking_reference
+      type: str
+    - description: List of car rental details, including car type, rental agency,
+        and pickup/drop-off information
+      key: car_rental_details
+      type: List[str]
+    - description: List of insurance options selected for the car rental
+      key: insurance_options
+      type: List[str]
+    - description: List of equipment upgrades selected for the car rental, such as
+        GPS or child seats
+      key: equipment_upgrades
+      type: List[str]
+    - description: Total cost of the car rental, including any additional fees or
+        upgrades
+      key: total_cost
+      type: float
+    - description: Whether the car rental booking was successful
+      key: booking_status
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use a data parsing algorithm to extract the relevant car rental information
+          from the create_itinerary node's output
+        reason: The create_itinerary node provides the necessary car rental information,
+          including car type, rental agency, and pickup/drop-off details
+        text: Retrieve the car rental details from the output of the create_itinerary
+          node
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Implement a validation function that checks the car rental details
+          against the user's requirements, using a rules-based approach
+        reason: Validation is necessary to ensure that the car rental details meet
+          the user's needs and to prevent any potential issues with the booking
+        text: Validate the car rental details to ensure they meet the user's requirements
+      - complexity: HIGH
+        impact: HIGH
+        method: Integrate with a car rental booking API to book the car rental, using
+          a secure payment processing system to handle payments
+        reason: Once the car rental details have been validated, they can be used
+          to book the car rental
+        text: Use the validated car rental details to book the car rental
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a rules-based approach to determine which insurance and equipment
+          upgrades are required or desired, and add them to the booking using the
+          car rental booking API
+        reason: Insurance and equipment upgrades may be required or desired by the
+          user, and must be added to the booking accordingly
+        text: Add any necessary insurance or equipment upgrades to the car rental
+          booking
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a pricing algorithm to calculate the total cost of the car rental,
+          taking into account any additional fees or upgrades
+        reason: The total cost of the car rental must be calculated to ensure that
+          the user is aware of the costs and to prevent any potential issues with
+          payment
+        text: Calculate the total cost of the car rental, including any additional
+          fees or upgrades
+      - complexity: LOW
+        impact: HIGH
+        method: Use a data formatting algorithm to format the output of the book_cars
+          node, including all relevant information about the car rental booking
+        reason: The output of the book_cars node must include all relevant information
+          about the car rental booking
+        text: Return the car rental booking reference number, car rental details,
+          insurance options, equipment upgrades, total cost, and booking status
+    prompt: Book the selected car rentals for the trip, including any necessary insurance
+      or equipment upgrades.
+    shims: []
+  book_flights:
+    agent: false
+    code_node_type: shim
+    description: Book flights for the trip
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CreateItineraryOutput(BaseModel):\n    \"\"\"Pydantic model for create_itinerary\
+      \ node outputs.\"\"\"\n    itinerary_id: str = Field(..., description=\"Unique\
+      \ identifier for the itinerary\")\n    flight_details: str = Field(..., description=\"\
+      List of flight information, including departure and arrival times, airlines,\
+      \ and flight numbers\")\n    hotel_reservations: str = Field(..., description=\"\
+      List of hotel reservation information, including hotel names, locations, and\
+      \ reservation numbers\")\n    car_rental_details: str = Field(..., description=\"\
+      List of car rental information, including car types, rental agencies, and pickup/drop-off\
+      \ details\")\n    activity_schedules: str = Field(..., description=\"List of\
+      \ activity schedules, including dates, times, and activity descriptions\")\n\
+      \    immigration_requirements: str = Field(..., description=\"List of immigration\
+      \ requirements for each destination, including visa requirements and travel\
+      \ restrictions\")\n    travel_dates: str = Field(..., description=\"List of\
+      \ travel dates, including start and end dates for the trip\")\n\n\nclass BookFlightsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for book_flights node outputs.\"\"\"\n    flight_booking_status:\
+      \ bool = Field(..., description=\"Whether the flight booking was successful\"\
+      )\n    flight_itinerary: str = Field(..., description=\"Detailed itinerary of\
+      \ the booked flights\")\n    flight_numbers: List[str] = Field(..., description=\"\
+      List of flight numbers for the booked flights\")\n    departure_times: List[str]\
+      \ = Field(..., description=\"List of departure times for the booked flights\"\
+      )\n    arrival_times: List[str] = Field(..., description=\"List of arrival times\
+      \ for the booked flights\")\n    airlines: List[str] = Field(..., description=\"\
+      List of airlines for the booked flights\")\n    travel_insurance: bool = Field(...,\
+      \ description=\"Whether travel insurance was purchased\")\n    seat_upgrades:\
+      \ bool = Field(..., description=\"Whether seat upgrades were purchased\")\n\n\
+      \ndef book_flights(create_itinerary_input: CreateItineraryOutput, **kwargs)\
+      \ -> BookFlightsOutput:\n    \"\"\"Book flights for the trip\n\n    Args:\n\
+      \        create_itinerary_input: Input from the 'create_itinerary' node.\n \
+      \       **kwargs: Additional keyword arguments.\n\n    Returns:\n        BookFlightsOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # Parse flight details\
+      \ from create_itinerary output\n    parsed_flight_details: dict = parse_flight_details(flight_details=create_itinerary_input.flight_details)\n\
+      \    \n    # Extract necessary flight information\n    flight_info: List[dict]\
+      \ = extract_flight_information(parsed_data=parsed_flight_details)\n    \n  \
+      \  # Book flights through API\n    booking_result: dict = book_flights_through_api(flight_info=flight_info)\n\
+      \    \n    # Check if booking was successful\n    is_booking_successful: bool\
+      \ = verify_booking_status(booking_result=booking_result)\n    \n    if is_booking_successful:\n\
+      \        # Check and purchase travel insurance if needed\n        travel_insurance_purchased:\
+      \ bool = process_travel_insurance(booking_result=booking_result)\n        \n\
+      \        # Check and purchase seat upgrades if desired\n        seat_upgrades_purchased:\
+      \ bool = process_seat_upgrades(booking_result=booking_result)\n        \n  \
+      \      # Generate flight itinerary\n        flight_itinerary_text: str = generate_flight_itinerary(\n\
+      \            booking_result=booking_result,\n            insurance_status=travel_insurance_purchased,\n\
+      \            upgrades_status=seat_upgrades_purchased\n        )\n        \n\
+      \        # Extract flight details from booking result\n        flight_numbers:\
+      \ List[str] = extract_flight_numbers(booking_result=booking_result)\n      \
+      \  departure_times: List[str] = extract_departure_times(booking_result=booking_result)\n\
+      \        arrival_times: List[str] = extract_arrival_times(booking_result=booking_result)\n\
+      \        airlines: List[str] = extract_airlines(booking_result=booking_result)\n\
+      \    else:\n        # Set empty values if booking failed\n        flight_itinerary_text\
+      \ = \"Flight booking failed\"\n        flight_numbers, departure_times, arrival_times,\
+      \ airlines = [], [], [], []\n        travel_insurance_purchased, seat_upgrades_purchased\
+      \ = False, False\n\n    return BookFlightsOutput(\n        flight_booking_status=is_booking_successful,\n\
+      \        flight_itinerary=flight_itinerary_text,\n        flight_numbers=flight_numbers,\n\
+      \        departure_times=departure_times,\n        arrival_times=arrival_times,\n\
+      \        airlines=airlines,\n        travel_insurance=travel_insurance_purchased,\n\
+      \        seat_upgrades=seat_upgrades_purchased,\n    )"
+    name: book_flights
+    nodes_depended_on:
+    - create_itinerary
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the flight booking was successful
+      key: flight_booking_status
+      type: bool
+    - description: Detailed itinerary of the booked flights
+      key: flight_itinerary
+      type: str
+    - description: List of flight numbers for the booked flights
+      key: flight_numbers
+      type: List[str]
+    - description: List of departure times for the booked flights
+      key: departure_times
+      type: List[str]
+    - description: List of arrival times for the booked flights
+      key: arrival_times
+      type: List[str]
+    - description: List of airlines for the booked flights
+      key: airlines
+      type: List[str]
+    - description: Whether travel insurance was purchased
+      key: travel_insurance
+      type: bool
+    - description: Whether seat upgrades were purchased
+      key: seat_upgrades
+      type: bool
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a JSON parser to extract the flight details from the create_itinerary
+          node's output.
+        reason: The create_itinerary node provides the necessary flight information
+          to book flights.
+        text: Retrieve the flight details from the create_itinerary node's output,
+          specifically the flight_details field.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a programming language's built-in data structures, such as lists
+          and dictionaries, to store and manipulate the flight information.
+        reason: This information is required to book flights and generate the flight
+          itinerary.
+        text: Loop through the flight details and extract the necessary information,
+          such as flight numbers, departure and arrival times, and airlines.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a library or framework that provides a interface to the flight
+          booking API, such as a SOAP or REST API client.
+        reason: This step is necessary to secure the flights and generate a flight
+          itinerary.
+        text: Use the extracted flight information to book flights through a flight
+          booking API or website.
+      - complexity: LOW
+        impact: LOW
+        method: Use a simple conditional statement to check if travel insurance is
+          required and purchase it through a travel insurance API or website.
+        reason: Travel insurance is optional but recommended to protect against unforeseen
+          circumstances.
+        text: Check if travel insurance is required and purchase it if necessary.
+      - complexity: LOW
+        impact: LOW
+        method: Use a simple conditional statement to check if seat upgrades are available
+          and purchase them through a flight booking API or website.
+        reason: Seat upgrades can enhance the travel experience but are optional.
+        text: Check if seat upgrades are available and purchase them if desired.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a template engine or a programming language's built-in string
+          manipulation functions to generate the flight itinerary.
+        reason: The flight itinerary is required as output to confirm the booked flights
+          and travel arrangements.
+        text: Generate the flight itinerary based on the booked flights and travel
+          insurance and seat upgrade information.
+    prompt: Book the selected flights for the trip, including any necessary travel
+      insurance or seat upgrades.
+    shims: []
+  book_hotels:
+    agent: false
+    code_node_type: shim
+    description: Book hotels for the trip
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CreateItineraryOutput(BaseModel):\n    \"\"\"Pydantic model for create_itinerary\
+      \ node outputs.\"\"\"\n    itinerary_id: str = Field(..., description=\"Unique\
+      \ identifier for the itinerary\")\n    flight_details: str = Field(..., description=\"\
+      List of flight information, including departure and arrival times, airlines,\
+      \ and flight numbers\")\n    hotel_reservations: str = Field(..., description=\"\
+      List of hotel reservation information, including hotel names, locations, and\
+      \ reservation numbers\")\n    car_rental_details: str = Field(..., description=\"\
+      List of car rental information, including car types, rental agencies, and pickup/drop-off\
+      \ details\")\n    activity_schedules: str = Field(..., description=\"List of\
+      \ activity schedules, including dates, times, and activity descriptions\")\n\
+      \    immigration_requirements: str = Field(..., description=\"List of immigration\
+      \ requirements for each destination, including visa requirements and travel\
+      \ restrictions\")\n    travel_dates: str = Field(..., description=\"List of\
+      \ travel dates, including start and end dates for the trip\")\n\n\nclass BookHotelsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for book_hotels node outputs.\"\"\"\n    hotel_names:\
+      \ List[str] = Field(..., description=\"List of booked hotel names\")\n    room_types:\
+      \ List[str] = Field(..., description=\"List of room types booked\")\n    check_in_dates:\
+      \ List[str] = Field(..., description=\"List of check-in dates for each hotel\"\
+      )\n    check_out_dates: List[str] = Field(..., description=\"List of check-out\
+      \ dates for each hotel\")\n    total_cost: float = Field(..., description=\"\
+      Total cost of all hotel bookings\")\n    booking_status: bool = Field(..., description=\"\
+      Whether the hotel booking was successful\")\n\n\ndef book_hotels(create_itinerary_input:\
+      \ CreateItineraryOutput, **kwargs) -> BookHotelsOutput:\n    \"\"\"Book hotels\
+      \ for the trip\n\n    Args:\n        create_itinerary_input: Input from the\
+      \ 'create_itinerary' node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        BookHotelsOutput: Object containing outputs for this\
+      \ node.\n    \"\"\"\n    # Retrieve the list of selected hotels from the create_itinerary\
+      \ node\n    selected_hotels: List[dict] = extract_selected_hotels(hotel_reservations=create_itinerary_input.hotel_reservations)\n\
+      \    \n    # Initialize output lists\n    hotel_names: List[str] = []\n    room_types:\
+      \ List[str] = []\n    check_in_dates: List[str] = []\n    check_out_dates: List[str]\
+      \ = []\n    total_cost: float = 0.0\n    all_bookings_successful: bool = True\n\
+      \    \n    # Loop through each selected hotel and book it\n    for hotel in\
+      \ selected_hotels:\n        # Retrieve hotel details, including room types and\
+      \ availability\n        hotel_details: dict = retrieve_hotel_details(hotel_id=hotel[\"\
+      id\"])\n        \n        # Check if the desired room type is available\n  \
+      \      available: bool = check_room_availability(\n            hotel_id=hotel[\"\
+      id\"],\n            room_type=hotel[\"room_type\"],\n            check_in=hotel[\"\
+      check_in\"],\n            check_out=hotel[\"check_out\"]\n        )\n      \
+      \  \n        if available:\n            # Book the room if available\n     \
+      \       booking_result: dict = book_hotel_room(\n                hotel_id=hotel[\"\
+      id\"],\n                room_type=hotel[\"room_type\"],\n                check_in=hotel[\"\
+      check_in\"],\n                check_out=hotel[\"check_out\"]\n            )\n\
+      \            \n            if booking_result[\"success\"]:\n               \
+      \ # Add booking details to output lists\n                hotel_names.append(hotel_details[\"\
+      name\"])\n                room_types.append(hotel[\"room_type\"])\n        \
+      \        check_in_dates.append(hotel[\"check_in\"])\n                check_out_dates.append(hotel[\"\
+      check_out\"])\n                \n                # Add cost to total\n     \
+      \           total_cost += booking_result[\"cost\"]\n            else:\n    \
+      \            all_bookings_successful = False\n        else:\n            all_bookings_successful\
+      \ = False\n    \n    # Calculate the total cost of all hotel bookings\n    final_total_cost:\
+      \ float = calculate_total_cost(costs=[booking[\"cost\"] for booking in selected_hotels\
+      \ if booking.get(\"success\", False)])\n    \n    # Return the output\n    return\
+      \ BookHotelsOutput(\n        hotel_names=hotel_names,\n        room_types=room_types,\n\
+      \        check_in_dates=check_in_dates,\n        check_out_dates=check_out_dates,\n\
+      \        total_cost=total_cost,\n        booking_status=all_bookings_successful,\n\
+      \    )"
+    name: book_hotels
+    nodes_depended_on:
+    - create_itinerary
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of booked hotel names
+      key: hotel_names
+      type: List[str]
+    - description: List of room types booked
+      key: room_types
+      type: List[str]
+    - description: List of check-in dates for each hotel
+      key: check_in_dates
+      type: List[str]
+    - description: List of check-out dates for each hotel
+      key: check_out_dates
+      type: List[str]
+    - description: Total cost of all hotel bookings
+      key: total_cost
+      type: float
+    - description: Whether the hotel booking was successful
+      key: booking_status
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use API calls to retrieve the list of selected hotels from the create_itinerary
+          node
+        reason: The create_itinerary node provides the list of selected hotels based
+          on the trip's objectives and destination options
+        text: Retrieve the list of selected hotels from the create_itinerary node
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use hotel APIs to retrieve hotel details, including room types and
+          availability
+        reason: Hotel details are necessary to book the hotel and provide the user
+          with the most up-to-date information
+        text: Loop through each selected hotel and retrieve its details, including
+          room types and availability
+      - complexity: HIGH
+        impact: HIGH
+        method: Use hotel APIs to check room availability and book the room if available
+        reason: Booking the hotel room is the primary objective of this node
+        text: For each hotel, check if the desired room type is available and book
+          the room if available
+      - complexity: LOW
+        impact: MEDIUM
+        method: Sum the costs of each hotel booking
+        reason: The total cost is necessary to provide the user with the overall cost
+          of the trip
+        text: Calculate the total cost of all hotel bookings
+      - complexity: LOW
+        impact: HIGH
+        method: Use the retrieved and calculated data to create the output structure
+        reason: The output structure is necessary to provide the user with the most
+          up-to-date information about their hotel bookings
+        text: Return the list of booked hotel names, room types, check-in and check-out
+          dates, total cost, and booking status
+    prompt: Book the selected hotels for the trip, including any necessary room upgrades
+      or special requests.
+    shims: []
+  check_immigration_requirements:
+    agent: false
+    code_node_type: shim
+    description: Check immigration requirements for each destination
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ResearchDestinationOptionsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for research_destination_options node outputs.\"\"\"\n    potential_destinations:\
+      \ List[str] = Field(..., description=\"List of potential destinations that align\
+      \ with the trip's objectives\")\n    destination_details: List[str] = Field(...,\
+      \ description=\"List of details about each potential destination, including\
+      \ factors like weather, safety, and attractions\")\n\n\nclass CheckImmigrationRequirementsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for check_immigration_requirements node outputs.\"\
+      \"\"\n    destination_countries: List[str] = Field(..., description=\"List of\
+      \ destination countries\")\n    visa_requirements: List[str] = Field(..., description=\"\
+      List of visa requirements for each destination country\")\n    travel_restrictions:\
+      \ List[str] = Field(..., description=\"List of travel restrictions for each\
+      \ destination country\")\n    health_certificates_required: List[bool] = Field(...,\
+      \ description=\"List of whether health certificates are required for each destination\
+      \ country\")\n\n\ndef check_immigration_requirements(research_destination_options_input:\
+      \ ResearchDestinationOptionsOutput, **kwargs) -> CheckImmigrationRequirementsOutput:\n\
+      \    \"\"\"Check immigration requirements for each destination\n\n    Args:\n\
+      \        research_destination_options_input: Input from the 'research_destination_options'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       CheckImmigrationRequirementsOutput: Object containing outputs for this\
+      \ node.\n    \"\"\"\n    # Get the list of potential destinations from the input\n\
+      \    destinations: List[str] = research_destination_options_input.potential_destinations\n\
+      \    \n    # Initialize lists to store the immigration requirements\n    destination_countries:\
+      \ List[str] = []\n    visa_requirements: List[str] = []\n    travel_restrictions:\
+      \ List[str] = []\n    health_certificates_required: List[bool] = []\n    \n\
+      \    # For each destination, research the immigration requirements\n    for\
+      \ destination in destinations:\n        # Add the destination to the list of\
+      \ destination countries\n        destination_countries.append(destination)\n\
+      \        \n        # Research visa requirements using a reliable source\n  \
+      \      visa_requirement: str = research_visa_requirements(destination=destination)\n\
+      \        visa_requirements.append(visa_requirement)\n        \n        # Research\
+      \ travel restrictions using a reliable source\n        travel_restriction: str\
+      \ = research_travel_restrictions(destination=destination)\n        travel_restrictions.append(travel_restriction)\n\
+      \        \n        # Research health certificate requirements using a reliable\
+      \ source\n        health_certificate_required: bool = research_health_certificate_requirements(destination=destination)\n\
+      \        health_certificates_required.append(health_certificate_required)\n\
+      \    \n    # Compile the researched immigration requirements into a structured\
+      \ format for output\n    compiled_output: CheckImmigrationRequirementsOutput\
+      \ = CheckImmigrationRequirementsOutput(\n        destination_countries=destination_countries,\n\
+      \        visa_requirements=visa_requirements,\n        travel_restrictions=travel_restrictions,\n\
+      \        health_certificates_required=health_certificates_required,\n    )\n\
+      \    \n    return compiled_output"
+    name: check_immigration_requirements
+    nodes_depended_on:
+    - research_destination_options
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of destination countries
+      key: destination_countries
+      type: List[str]
+    - description: List of visa requirements for each destination country
+      key: visa_requirements
+      type: List[str]
+    - description: List of travel restrictions for each destination country
+      key: travel_restrictions
+      type: List[str]
+    - description: List of whether health certificates are required for each destination
+        country
+      key: health_certificates_required
+      type: List[bool]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use the output of the research_destination_options node to get the
+          list of potential destinations
+        reason: The potential destinations are required to check immigration requirements
+        text: Retrieve the list of potential destinations from the research_destination_options
+          node
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a web scraping approach or an API to retrieve the visa requirements
+          for each destination
+        reason: Visa requirements are a critical aspect of immigration requirements
+        text: For each potential destination, research the visa requirements using
+          a reliable source such as the official government website or a travel advisory
+          website
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a web scraping approach or an API to retrieve the travel restrictions
+          for each destination
+        reason: Travel restrictions are a critical aspect of immigration requirements
+        text: For each potential destination, research the travel restrictions using
+          a reliable source such as the official government website or a travel advisory
+          website
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a web scraping approach or an API to retrieve the health certificate
+          requirements for each destination
+        reason: Health certificate requirements are a critical aspect of immigration
+          requirements
+        text: For each potential destination, research the health certificate requirements
+          using a reliable source such as the official government website or a travel
+          advisory website
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a data structuring approach to compile the researched immigration
+          requirements into a list of destination countries, visa requirements, travel
+          restrictions, and health certificate requirements
+        reason: The output needs to be in a structured format for further processing
+        text: Compile the researched immigration requirements into a structured format
+          for output
+    prompt: Research and list the immigration requirements for each potential destination,
+      including visa requirements, travel restrictions, and health certificates.
+    shims: []
+  create_itinerary:
+    agent: false
+    code_node_type: shim
+    description: Create a detailed itinerary for the trip
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass SearchFlightsOutput(BaseModel):\n    \"\"\"Pydantic model for search_flights\
+      \ node outputs.\"\"\"\n    flight_options: List[str] = Field(..., description=\"\
+      List of available flight options, including flight numbers, departure and arrival\
+      \ times, airlines, and prices\")\n    airline_names: List[str] = Field(...,\
+      \ description=\"List of airline names\")\n    departure_times: List[str] = Field(...,\
+      \ description=\"List of departure times\")\n    arrival_times: List[str] = Field(...,\
+      \ description=\"List of arrival times\")\n    prices: List[float] = Field(...,\
+      \ description=\"List of prices for each flight option\")\n\n\nclass SearchHotelsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for search_hotels node outputs.\"\"\"\n    hotel_names:\
+      \ List[str] = Field(..., description=\"List of hotel names found at the destinations\"\
+      )\n    hotel_locations: List[str] = Field(..., description=\"List of hotel locations\
+      \ corresponding to the hotels found\")\n    hotel_prices: List[float] = Field(...,\
+      \ description=\"List of hotel prices corresponding to the hotels found\")\n\
+      \    hotel_amenities: List[str] = Field(..., description=\"List of amenities\
+      \ offered by each hotel found\")\n\n\nclass SearchCarsOutput(BaseModel):\n \
+      \   \"\"\"Pydantic model for search_cars node outputs.\"\"\"\n    destination_names:\
+      \ List[str] = Field(..., description=\"List of destination names where car rentals\
+      \ were searched\")\n    car_rental_options: List[str] = Field(..., description=\"\
+      List of available car rental options, including car types and rental agencies\"\
+      )\n    car_rental_prices: List[float] = Field(..., description=\"List of prices\
+      \ for the available car rental options\")\n    rental_agencies: List[str] =\
+      \ Field(..., description=\"List of rental agencies offering car rentals at each\
+      \ destination\")\n\n\nclass CheckImmigrationRequirementsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for check_immigration_requirements node outputs.\"\
+      \"\"\n    destination_countries: List[str] = Field(..., description=\"List of\
+      \ destination countries\")\n    visa_requirements: List[str] = Field(..., description=\"\
+      List of visa requirements for each destination country\")\n    travel_restrictions:\
+      \ List[str] = Field(..., description=\"List of travel restrictions for each\
+      \ destination country\")\n    health_certificates_required: List[bool] = Field(...,\
+      \ description=\"List of whether health certificates are required for each destination\
+      \ country\")\n\n\nclass CreateItineraryOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for create_itinerary node outputs.\"\"\"\n    itinerary_id: str = Field(...,\
+      \ description=\"Unique identifier for the itinerary\")\n    flight_details:\
+      \ str = Field(..., description=\"List of flight information, including departure\
+      \ and arrival times, airlines, and flight numbers\")\n    hotel_reservations:\
+      \ str = Field(..., description=\"List of hotel reservation information, including\
+      \ hotel names, locations, and reservation numbers\")\n    car_rental_details:\
+      \ str = Field(..., description=\"List of car rental information, including car\
+      \ types, rental agencies, and pickup/drop-off details\")\n    activity_schedules:\
+      \ str = Field(..., description=\"List of activity schedules, including dates,\
+      \ times, and activity descriptions\")\n    immigration_requirements: str = Field(...,\
+      \ description=\"List of immigration requirements for each destination, including\
+      \ visa requirements and travel restrictions\")\n    travel_dates: str = Field(...,\
+      \ description=\"List of travel dates, including start and end dates for the\
+      \ trip\")\n\n\ndef create_itinerary(search_flights_input: SearchFlightsOutput,\
+      \ search_hotels_input: SearchHotelsOutput, search_cars_input: SearchCarsOutput,\
+      \ check_immigration_requirements_input: CheckImmigrationRequirementsOutput,\
+      \ **kwargs) -> CreateItineraryOutput:\n    \"\"\"Create a detailed itinerary\
+      \ for the trip\n\n    Args:\n        search_flights_input: Input from the 'search_flights'\
+      \ node.\n        search_hotels_input: Input from the 'search_hotels' node.\n\
+      \        search_cars_input: Input from the 'search_cars' node.\n        check_immigration_requirements_input:\
+      \ Input from the 'check_immigration_requirements' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        CreateItineraryOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # Parse flight information\
+      \ from search_flights node\n    flight_details_str: str = parse_flight_information(\n\
+      \        flight_options=search_flights_input.flight_options,\n        airline_names=search_flights_input.airline_names,\n\
+      \        departure_times=search_flights_input.departure_times,\n        arrival_times=search_flights_input.arrival_times,\n\
+      \        prices=search_flights_input.prices\n    )\n    \n    # Parse hotel\
+      \ reservation information from search_hotels node\n    hotel_reservations_str:\
+      \ str = parse_hotel_information(\n        hotel_names=search_hotels_input.hotel_names,\n\
+      \        hotel_locations=search_hotels_input.hotel_locations,\n        hotel_prices=search_hotels_input.hotel_prices,\n\
+      \        hotel_amenities=search_hotels_input.hotel_amenities\n    )\n    \n\
+      \    # Parse car rental information from search_cars node\n    car_rental_details_str:\
+      \ str = parse_car_rental_information(\n        destination_names=search_cars_input.destination_names,\n\
+      \        car_rental_options=search_cars_input.car_rental_options,\n        car_rental_prices=search_cars_input.car_rental_prices,\n\
+      \        rental_agencies=search_cars_input.rental_agencies\n    )\n    \n  \
+      \  # Parse immigration requirements from check_immigration_requirements node\n\
+      \    immigration_requirements_str: str = parse_immigration_requirements(\n \
+      \       destination_countries=check_immigration_requirements_input.destination_countries,\n\
+      \        visa_requirements=check_immigration_requirements_input.visa_requirements,\n\
+      \        travel_restrictions=check_immigration_requirements_input.travel_restrictions,\n\
+      \        health_certificates_required=check_immigration_requirements_input.health_certificates_required\n\
+      \    )\n    \n    # Generate unique identifier for the itinerary\n    itinerary_id:\
+      \ str = generate_unique_identifier()\n    \n    # Generate activity schedules\
+      \ based on parsed information\n    activity_schedules_str: str = generate_activity_schedules(\n\
+      \        flight_details=flight_details_str,\n        hotel_reservations=hotel_reservations_str,\n\
+      \        car_rental_details=car_rental_details_str\n    )\n    \n    # Generate\
+      \ travel dates information\n    travel_dates_str: str = generate_travel_dates(\n\
+      \        departure_times=search_flights_input.departure_times,\n        arrival_times=search_flights_input.arrival_times\n\
+      \    )\n    \n    # Format the entire itinerary into a human-readable format\n\
+      \    final_itinerary: dict = format_itinerary_to_human_readable(\n        itinerary_id=itinerary_id,\n\
+      \        flight_details=flight_details_str,\n        hotel_reservations=hotel_reservations_str,\n\
+      \        car_rental_details=car_rental_details_str,\n        activity_schedules=activity_schedules_str,\n\
+      \        immigration_requirements=immigration_requirements_str,\n        travel_dates=travel_dates_str\n\
+      \    )\n    \n    # Return the complete itinerary\n    return CreateItineraryOutput(\n\
+      \        itinerary_id=itinerary_id,\n        flight_details=flight_details_str,\n\
+      \        hotel_reservations=hotel_reservations_str,\n        car_rental_details=car_rental_details_str,\n\
+      \        activity_schedules=activity_schedules_str,\n        immigration_requirements=immigration_requirements_str,\n\
+      \        travel_dates=travel_dates_str\n    )\n"
+    name: create_itinerary
+    nodes_depended_on:
+    - search_flights
+    - search_hotels
+    - search_cars
+    - check_immigration_requirements
+    nodes_dependent_on: []
+    output_structure:
+    - description: Unique identifier for the itinerary
+      key: itinerary_id
+      type: str
+    - description: List of flight information, including departure and arrival times,
+        airlines, and flight numbers
+      key: flight_details
+      type: str
+    - description: List of hotel reservation information, including hotel names, locations,
+        and reservation numbers
+      key: hotel_reservations
+      type: str
+    - description: List of car rental information, including car types, rental agencies,
+        and pickup/drop-off details
+      key: car_rental_details
+      type: str
+    - description: List of activity schedules, including dates, times, and activity
+        descriptions
+      key: activity_schedules
+      type: str
+    - description: List of immigration requirements for each destination, including
+        visa requirements and travel restrictions
+      key: immigration_requirements
+      type: str
+    - description: List of travel dates, including start and end dates for the trip
+      key: travel_dates
+      type: str
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use JSON parsing to extract flight information from the search_flights
+          node output
+        reason: This step is necessary to gather flight details for the itinerary
+        text: Retrieve flight information from the search_flights node and parse it
+          into a usable format
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use JSON parsing to extract hotel reservation information from the
+          search_hotels node output
+        reason: This step is necessary to gather hotel reservation details for the
+          itinerary
+        text: Retrieve hotel reservation information from the search_hotels node and
+          parse it into a usable format
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use JSON parsing to extract car rental information from the search_cars
+          node output
+        reason: This step is necessary to gather car rental details for the itinerary
+        text: Retrieve car rental information from the search_cars node and parse
+          it into a usable format
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use JSON parsing to extract immigration requirements from the check_immigration_requirements
+          node output
+        reason: This step is necessary to gather immigration requirements for the
+          itinerary
+        text: Retrieve immigration requirements from the check_immigration_requirements
+          node and parse it into a usable format
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a templating engine to combine the parsed information into a single
+          JSON object
+        reason: This step is necessary to create a comprehensive itinerary for the
+          trip
+        text: Combine the parsed flight, hotel, car rental, and immigration requirements
+          information into a single itinerary
+      - complexity: LOW
+        impact: LOW
+        method: Use a UUID generator to create a unique identifier
+        reason: This step is necessary to uniquely identify the itinerary
+        text: Generate a unique identifier for the itinerary
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a formatting library to format the itinerary into a human-readable
+          format
+        reason: This step is necessary to make the itinerary easy to understand for
+          the user
+        text: Format the itinerary into a human-readable format
+    prompt: Create a detailed itinerary for the trip, including flight information,
+      hotel reservations, car rental details, and activity schedules.
+    shims: []
+  define_travel_objectives:
+    agent: false
+    code_node_type: shim
+    description: Define the purpose and scope of the trip
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DefineTravelObjectivesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for define_travel_objectives node outputs.\"\"\"\n\
+      \    primary_purpose: str = Field(..., description=\"The primary purpose of\
+      \ the trip\")\n    number_of_travelers: int = Field(..., description=\"The number\
+      \ of people traveling\")\n    trip_objectives: str = Field(..., description=\"\
+      A brief description of the trip's objectives\")\n\n\ndef define_travel_objectives(general_input:\
+      \ str, **kwargs) -> DefineTravelObjectivesOutput:\n    \"\"\"Define the purpose\
+      \ and scope of the trip\n\n    Args:\n        general_input: General input string\
+      \ for the root node.\n        **kwargs: Additional keyword arguments.\n\n  \
+      \  Returns:\n        DefineTravelObjectivesOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # Extract the primary purpose from the input\n\
+      \    primary_purpose: str = extract_primary_purpose(input_text=general_input)\n\
+      \    \n    # Extract the number of travelers from the input\n    number_of_travelers:\
+      \ int = extract_number_of_travelers(input_text=general_input)\n    \n    # Extract\
+      \ trip objectives from the input\n    trip_objectives: str = extract_trip_objectives(input_text=general_input)\n\
+      \    \n    # Validate the extracted information\n    validate_travel_information(\n\
+      \        primary_purpose=primary_purpose,\n        number_of_travelers=number_of_travelers,\n\
+      \        trip_objectives=trip_objectives\n    )\n    \n    # Return the completed\
+      \ output\n    return DefineTravelObjectivesOutput(\n        primary_purpose=primary_purpose,\n\
+      \        number_of_travelers=number_of_travelers,\n        trip_objectives=trip_objectives,\n\
+      \    )"
+    name: define_travel_objectives
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: The primary purpose of the trip
+      key: primary_purpose
+      type: str
+    - description: The number of people traveling
+      key: number_of_travelers
+      type: int
+    - description: A brief description of the trip's objectives
+      key: trip_objectives
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use natural language processing (NLP) techniques to parse the input
+          prompt and extract the primary purpose.
+        reason: The primary purpose is essential for determining the type of travel
+          arrangements and recommendations to be made.
+        text: Identify the primary purpose of the trip by analyzing the input prompt
+          for keywords indicating the main reason for travel, such as 'business',
+          'vacation', 'honeymoon', etc.
+      - complexity: LOW
+        impact: HIGH
+        method: Employ regular expressions or NLP to identify and extract the number
+          of travelers from the input prompt.
+        reason: The number of travelers affects booking arrangements, costs, and recommendations.
+        text: Determine the number of travelers by parsing the input prompt for numerical
+          values or references to the number of people traveling.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use NLP to analyze the input prompt, identify key phrases or sentences
+          describing the trip's objectives, and summarize them into a concise description.
+        reason: Understanding the trip's objectives helps in tailoring recommendations
+          and arrangements that meet the travelers' needs.
+        text: Extract a brief description of the trip's objectives from the input
+          prompt, focusing on details that outline what the travelers aim to achieve
+          or experience during the trip.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Implement checks for consistency (e.g., number of travelers is a positive
+          integer), reasonableness (e.g., trip objectives align with the primary purpose),
+          and completeness (all required information is present).
+        reason: Validation is crucial for ensuring the quality and relevance of the
+          travel plan.
+        text: Validate the extracted information (primary purpose, number of travelers,
+          trip objectives) to ensure it is consistent, reasonable, and complete.
+    prompt: State the primary purpose of the trip and the number of travelers. Provide
+      a brief description of the trip's objectives.
+    shims: []
+  finalize_travel_arrangements:
+    agent: false
+    code_node_type: shim
+    description: Finalize all travel arrangements for the trip
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass BookFlightsOutput(BaseModel):\n    \"\"\"Pydantic model for book_flights\
+      \ node outputs.\"\"\"\n    flight_booking_status: bool = Field(..., description=\"\
+      Whether the flight booking was successful\")\n    flight_itinerary: str = Field(...,\
+      \ description=\"Detailed itinerary of the booked flights\")\n    flight_numbers:\
+      \ List[str] = Field(..., description=\"List of flight numbers for the booked\
+      \ flights\")\n    departure_times: List[str] = Field(..., description=\"List\
+      \ of departure times for the booked flights\")\n    arrival_times: List[str]\
+      \ = Field(..., description=\"List of arrival times for the booked flights\"\
+      )\n    airlines: List[str] = Field(..., description=\"List of airlines for the\
+      \ booked flights\")\n    travel_insurance: bool = Field(..., description=\"\
+      Whether travel insurance was purchased\")\n    seat_upgrades: bool = Field(...,\
+      \ description=\"Whether seat upgrades were purchased\")\n\n\nclass BookHotelsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for book_hotels node outputs.\"\"\"\n    hotel_names:\
+      \ List[str] = Field(..., description=\"List of booked hotel names\")\n    room_types:\
+      \ List[str] = Field(..., description=\"List of room types booked\")\n    check_in_dates:\
+      \ List[str] = Field(..., description=\"List of check-in dates for each hotel\"\
+      )\n    check_out_dates: List[str] = Field(..., description=\"List of check-out\
+      \ dates for each hotel\")\n    total_cost: float = Field(..., description=\"\
+      Total cost of all hotel bookings\")\n    booking_status: bool = Field(..., description=\"\
+      Whether the hotel booking was successful\")\n\n\nclass BookCarsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for book_cars node outputs.\"\"\"\n    car_rental_booking_reference:\
+      \ str = Field(..., description=\"Booking reference number for the car rental\"\
+      )\n    car_rental_details: List[str] = Field(..., description=\"List of car\
+      \ rental details, including car type, rental agency, and pickup/drop-off information\"\
+      )\n    insurance_options: List[str] = Field(..., description=\"List of insurance\
+      \ options selected for the car rental\")\n    equipment_upgrades: List[str]\
+      \ = Field(..., description=\"List of equipment upgrades selected for the car\
+      \ rental, such as GPS or child seats\")\n    total_cost: float = Field(...,\
+      \ description=\"Total cost of the car rental, including any additional fees\
+      \ or upgrades\")\n    booking_status: bool = Field(..., description=\"Whether\
+      \ the car rental booking was successful\")\n\n\nclass ApplyForVisasOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for apply_for_visas node outputs.\"\"\"\n    visa_application_status:\
+      \ bool = Field(..., description=\"Whether the visa application has been successfully\
+      \ submitted\")\n    visa_types_applied_for: str = Field(..., description=\"\
+      List of visa types applied for (e.g., tourist, business, transit)\")\n    required_documentation:\
+      \ str = Field(..., description=\"List of required documentation for the visa\
+      \ application (e.g., passport, proof of travel, financial statements)\")\n \
+      \   visa_application_reference_numbers: str = Field(..., description=\"List\
+      \ of reference numbers for the submitted visa applications\")\n    expected_processing_time:\
+      \ int = Field(..., description=\"Expected processing time for the visa application\
+      \ in days\")\n\n\nclass FinalizeTravelArrangementsOutput(BaseModel):\n    \"\
+      \"\"Pydantic model for finalize_travel_arrangements node outputs.\"\"\"\n  \
+      \  travel_arrangement_status: bool = Field(..., description=\"Whether all travel\
+      \ arrangements have been successfully finalized\")\n    flight_confirmation_numbers:\
+      \ List[str] = Field(..., description=\"List of confirmation numbers for booked\
+      \ flights\")\n    hotel_confirmation_numbers: List[str] = Field(..., description=\"\
+      List of confirmation numbers for booked hotels\")\n    car_rental_confirmation_numbers:\
+      \ List[str] = Field(..., description=\"List of confirmation numbers for booked\
+      \ car rentals\")\n    visa_application_status: List[str] = Field(..., description=\"\
+      List of status updates for visa applications\")\n    total_travel_cost: float\
+      \ = Field(..., description=\"Total cost of all travel arrangements\")\n\n\n\
+      def finalize_travel_arrangements(book_flights_input: BookFlightsOutput, book_hotels_input:\
+      \ BookHotelsOutput, book_cars_input: BookCarsOutput, apply_for_visas_input:\
+      \ ApplyForVisasOutput, **kwargs) -> FinalizeTravelArrangementsOutput:\n    \"\
+      \"\"Finalize all travel arrangements for the trip\n\n    Args:\n        book_flights_input:\
+      \ Input from the 'book_flights' node.\n        book_hotels_input: Input from\
+      \ the 'book_hotels' node.\n        book_cars_input: Input from the 'book_cars'\
+      \ node.\n        apply_for_visas_input: Input from the 'apply_for_visas' node.\n\
+      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        FinalizeTravelArrangementsOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # Retrieve flight\
+      \ details from book_flights output\n    flight_details: dict = extract_flight_details(\n\
+      \        flight_data=book_flights_input,\n        required_fields=[\"flight_booking_status\"\
+      , \"flight_numbers\"]\n    )\n    \n    # Retrieve hotel details from book_hotels\
+      \ output\n    hotel_details: dict = extract_hotel_details(\n        hotel_data=book_hotels_input,\n\
+      \        required_fields=[\"booking_status\", \"hotel_names\"]\n    )\n    \n\
+      \    # Retrieve car rental details from book_cars output\n    car_rental_details:\
+      \ dict = extract_car_rental_details(\n        car_data=book_cars_input,\n  \
+      \      required_fields=[\"booking_status\", \"car_rental_details\"]\n    )\n\
+      \    \n    # Retrieve visa application details from apply_for_visas output\n\
+      \    visa_details: dict = extract_visa_details(\n        visa_data=apply_for_visas_input,\n\
+      \        required_fields=[\"visa_application_status\", \"visa_types_applied_for\"\
+      ]\n    )\n    \n    # Aggregate confirmation numbers from bookings\n    flight_confirmation_numbers:\
+      \ List[str] = get_confirmation_numbers(\n        booking_type=\"flight\", \n\
+      \        booking_data=flight_details\n    )\n    \n    hotel_confirmation_numbers:\
+      \ List[str] = get_confirmation_numbers(\n        booking_type=\"hotel\", \n\
+      \        booking_data=hotel_details\n    )\n    \n    car_rental_confirmation_numbers:\
+      \ List[str] = get_confirmation_numbers(\n        booking_type=\"car_rental\"\
+      , \n        booking_data=car_rental_details\n    )\n    \n    # Calculate total\
+      \ travel cost\n    total_cost: float = calculate_total_travel_cost(\n      \
+      \  hotel_cost=book_hotels_input.total_cost,\n        car_rental_cost=book_cars_input.total_cost,\n\
+      \        additional_costs={}\n    )\n    \n    # Determine overall travel arrangement\
+      \ status\n    travel_status: bool = determine_travel_arrangement_status(\n \
+      \       flight_status=book_flights_input.flight_booking_status,\n        hotel_status=book_hotels_input.booking_status,\n\
+      \        car_rental_status=book_cars_input.booking_status,\n        visa_status=apply_for_visas_input.visa_application_status\n\
+      \    )\n    \n    # Compile visa application status information\n    visa_status_info:\
+      \ List[str] = compile_visa_status_info(\n        visa_data=apply_for_visas_input\n\
+      \    )\n    \n    # Return the finalized travel arrangements\n    return FinalizeTravelArrangementsOutput(\n\
+      \        travel_arrangement_status=travel_status,\n        flight_confirmation_numbers=flight_confirmation_numbers,\n\
+      \        hotel_confirmation_numbers=hotel_confirmation_numbers,\n        car_rental_confirmation_numbers=car_rental_confirmation_numbers,\n\
+      \        visa_application_status=visa_status_info,\n        total_travel_cost=total_cost\n\
+      \    )\n"
+    name: finalize_travel_arrangements
+    nodes_depended_on:
+    - book_flights
+    - book_hotels
+    - book_cars
+    - apply_for_visas
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether all travel arrangements have been successfully finalized
+      key: travel_arrangement_status
+      type: bool
+    - description: List of confirmation numbers for booked flights
+      key: flight_confirmation_numbers
+      type: List[str]
+    - description: List of confirmation numbers for booked hotels
+      key: hotel_confirmation_numbers
+      type: List[str]
+    - description: List of confirmation numbers for booked car rentals
+      key: car_rental_confirmation_numbers
+      type: List[str]
+    - description: List of status updates for visa applications
+      key: visa_application_status
+      type: List[str]
+    - description: Total cost of all travel arrangements
+      key: total_travel_cost
+      type: float
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use the output from 'book_flights' to get the required flight information.
+        reason: To finalize travel arrangements, we need the details of the booked
+          flights.
+        text: Retrieve the output from the 'book_flights' node, including 'flight_booking_status',
+          'flight_numbers', and other relevant details.
+      - complexity: LOW
+        impact: HIGH
+        method: Use the output from 'book_hotels' to get the required hotel information.
+        reason: To finalize travel arrangements, we need the details of the booked
+          hotels.
+        text: Retrieve the output from the 'book_hotels' node, including 'booking_status',
+          'hotel_names', and other relevant details.
+      - complexity: LOW
+        impact: HIGH
+        method: Use the output from 'book_cars' to get the required car rental information.
+        reason: To finalize travel arrangements, we need the details of the booked
+          car rentals.
+        text: Retrieve the output from the 'book_cars' node, including 'booking_status',
+          'car_rental_details', and other relevant details.
+      - complexity: LOW
+        impact: HIGH
+        method: Use the output from 'apply_for_visas' to get the required visa application
+          information.
+        reason: To finalize travel arrangements, we need the status of the visa applications.
+        text: Retrieve the output from the 'apply_for_visas' node, including 'visa_application_status',
+          'visa_types_applied_for', and other relevant details.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Extract and compile the confirmation numbers from the outputs of 'book_flights',
+          'book_hotels', and 'book_cars'.
+        reason: To provide a comprehensive summary of travel arrangements.
+        text: Aggregate the confirmation numbers for flights, hotels, and car rentals
+          from their respective booking nodes.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Sum the 'total_cost' from 'book_hotels' and 'book_cars', and add any
+          other relevant costs from other nodes.
+        reason: To provide a total cost for the travel arrangements.
+        text: Calculate the total travel cost by summing the costs of flights, hotels,
+          car rentals, and any other relevant expenses.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Evaluate the 'booking_status' from 'book_flights', 'book_hotels',
+          'book_cars', and 'visa_application_status' from 'apply_for_visas' to determine
+          the overall status.
+        reason: To indicate whether all travel arrangements have been successfully
+          finalized.
+        text: Determine the overall travel arrangement status based on the booking
+          statuses of flights, hotels, car rentals, and visa applications.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the information gathered from previous steps to populate the output
+          structure.
+        reason: To provide a comprehensive and structured output that summarizes the
+          travel arrangements.
+        text: Compile the final output structure with 'travel_arrangement_status',
+          'flight_confirmation_numbers', 'hotel_confirmation_numbers', 'car_rental_confirmation_numbers',
+          'visa_application_status', and 'total_travel_cost'.
+    prompt: Finalize all travel arrangements for the trip, including any last-minute
+      changes or confirmations.
+    shims: []
+  research_destination_options:
+    agent: false
+    code_node_type: stub
+    description: Research and identify potential destinations
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DefineTravelObjectivesOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for define_travel_objectives node outputs.\"\"\"\n    primary_purpose: str\
+      \ = Field(..., description=\"The primary purpose of the trip\")\n    number_of_travelers:\
+      \ int = Field(..., description=\"The number of people traveling\")\n    trip_objectives:\
+      \ str = Field(..., description=\"A brief description of the trip's objectives\"\
+      )\n\n\nclass ResearchDestinationOptionsOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for research_destination_options node outputs.\"\"\"\n    potential_destinations:\
+      \ List[str] = Field(..., description=\"List of potential destinations that align\
+      \ with the trip's objectives\")\n    destination_details: List[str] = Field(...,\
+      \ description=\"List of details about each potential destination, including\
+      \ factors like weather, safety, and attractions\")\n\n\ndef research_destination_options(define_travel_objectives_input:\
+      \ DefineTravelObjectivesOutput, **kwargs) -> ResearchDestinationOptionsOutput:\n\
+      \    \"\"\"Research and identify potential destinations\n\n    Args:\n     \
+      \   define_travel_objectives_input: Input from the 'define_travel_objectives'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       ResearchDestinationOptionsOutput: Object containing outputs for this\
+      \ node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub\
+      \ output with placeholder values\n    return ResearchDestinationOptionsOutput(\n\
+      \        potential_destinations=[],\n        destination_details=[],\n    )"
+    name: research_destination_options
+    nodes_depended_on:
+    - define_travel_objectives
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of potential destinations that align with the trip's objectives
+      key: potential_destinations
+      type: List[str]
+    - description: List of details about each potential destination, including factors
+        like weather, safety, and attractions
+      key: destination_details
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Access the output fields 'primary_purpose', 'number_of_travelers',
+          and 'trip_objectives' from the 'define_travel_objectives' node
+        reason: To understand the trip's requirements and constraints
+        text: Retrieve the primary purpose, number of travelers, and trip objectives
+          from the output of the 'define_travel_objectives' node
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Apply natural language processing (NLP) techniques to analyze the
+          trip objectives and identify key themes or keywords
+        reason: To focus the research on relevant destination types
+        text: Use the trip objectives to determine the type of destinations to research
+          (e.g., beach, city, outdoor activities)
+      - complexity: HIGH
+        impact: HIGH
+        method: Utilize travel industry databases, APIs, or web scraping techniques
+          to gather information on potential destinations, filtering by relevant criteria
+        reason: To identify suitable destinations that meet the trip's objectives
+        text: Research potential destinations based on the determined type, considering
+          factors like weather, safety, and attractions
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Apply a scoring or ranking system to the researched destinations,
+          considering factors like weather, safety, and attractions
+        reason: To provide a manageable number of options for further evaluation
+        text: Shortlist 3-5 potential destinations based on the research findings
+      - complexity: HIGH
+        impact: HIGH
+        method: Gather and summarize relevant information from various sources, such
+          as travel guides, government websites, and review platforms
+        reason: To provide comprehensive details for each potential destination
+        text: Compile detailed information about each shortlisted destination, including
+          weather, safety, and attractions
+      - complexity: LOW
+        impact: LOW
+        method: Map the researched destinations and their details to the 'potential_destinations'
+          and 'destination_details' output fields
+        reason: To ensure the output is consistent with the node's output structure
+        text: Format the potential destinations and their details into the required
+          output structure
+    prompt: Research and list 3-5 potential destinations that align with the trip's
+      objectives. Consider factors like weather, safety, and attractions.
+    shims: []
+  search_cars:
+    agent: false
+    code_node_type: shim
+    description: Search for car rental options at each destination
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ResearchDestinationOptionsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for research_destination_options node outputs.\"\"\"\n    potential_destinations:\
+      \ List[str] = Field(..., description=\"List of potential destinations that align\
+      \ with the trip's objectives\")\n    destination_details: List[str] = Field(...,\
+      \ description=\"List of details about each potential destination, including\
+      \ factors like weather, safety, and attractions\")\n\n\nclass SearchCarsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for search_cars node outputs.\"\"\"\n    destination_names:\
+      \ List[str] = Field(..., description=\"List of destination names where car rentals\
+      \ were searched\")\n    car_rental_options: List[str] = Field(..., description=\"\
+      List of available car rental options, including car types and rental agencies\"\
+      )\n    car_rental_prices: List[float] = Field(..., description=\"List of prices\
+      \ for the available car rental options\")\n    rental_agencies: List[str] =\
+      \ Field(..., description=\"List of rental agencies offering car rentals at each\
+      \ destination\")\n\n\ndef search_cars(research_destination_options_input: ResearchDestinationOptionsOutput,\
+      \ **kwargs) -> SearchCarsOutput:\n    \"\"\"Search for car rental options at\
+      \ each destination\n\n    Args:\n        research_destination_options_input:\
+      \ Input from the 'research_destination_options' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        SearchCarsOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # Extract destinations from the research_destination_options_input\n\
+      \    destinations: List[str] = research_destination_options_input.potential_destinations\n\
+      \    \n    # Initialize lists to store results\n    all_destination_names: List[str]\
+      \ = []\n    all_car_rental_options: List[str] = []\n    all_car_rental_prices:\
+      \ List[float] = []\n    all_rental_agencies: List[str] = []\n    \n    # Search\
+      \ for car rentals at each destination\n    for destination in destinations:\n\
+      \        # Call car rental API to get available options\n        rental_results:\
+      \ List[dict] = search_car_rentals_api(destination=destination, **kwargs)\n \
+      \       \n        # Process results if any car rentals are found\n        if\
+      \ rental_results:\n            # Extract car rental details\n            car_options:\
+      \ List[str] = extract_car_types(results=rental_results)\n            prices:\
+      \ List[float] = extract_rental_prices(results=rental_results)\n            agencies:\
+      \ List[str] = extract_rental_agencies(results=rental_results)\n            \n\
+      \            # Compile results\n            for car_option, price, agency in\
+      \ zip(car_options, prices, agencies):\n                all_destination_names.append(destination)\n\
+      \                all_car_rental_options.append(car_option)\n               \
+      \ all_car_rental_prices.append(price)\n                all_rental_agencies.append(agency)\n\
+      \    \n    # Return compiled car rental information\n    return SearchCarsOutput(\n\
+      \        destination_names=all_destination_names,\n        car_rental_options=all_car_rental_options,\n\
+      \        car_rental_prices=all_car_rental_prices,\n        rental_agencies=all_rental_agencies,\n\
+      \    )"
+    name: search_cars
+    nodes_depended_on:
+    - research_destination_options
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of destination names where car rentals were searched
+      key: destination_names
+      type: List[str]
+    - description: List of available car rental options, including car types and rental
+        agencies
+      key: car_rental_options
+      type: List[str]
+    - description: List of prices for the available car rental options
+      key: car_rental_prices
+      type: List[float]
+    - description: List of rental agencies offering car rentals at each destination
+      key: rental_agencies
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use the 'potential_destinations' output from 'research_destination_options'
+          node
+        reason: The 'research_destination_options' node provides the list of potential
+          destinations that we need to search for car rentals
+        text: Extract the list of potential destinations from the output of the 'research_destination_options'
+          node
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a car rental API (e.g., Expedia, Kayak) to search for car rentals
+          at each destination
+        reason: We need to find available car rental options for each destination
+        text: For each potential destination, search for car rental options using
+          a car rental API or service
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Parse the car rental search results to extract car types, rental agencies,
+          and prices
+        reason: We need to gather detailed information about the available car rental
+          options
+        text: Extract car rental options details including car types, rental agencies,
+          and prices
+      - complexity: MEDIUM
+        impact: HIGH
+        method: 'Map the extracted car rental details to the output fields: ''destination_names'',
+          ''car_rental_options'', ''car_rental_prices'', and ''rental_agencies'''
+        reason: We need to format the car rental information according to the specified
+          output structure
+        text: Compile the extracted car rental options into the required output format
+      - complexity: LOW
+        impact: HIGH
+        method: Output the compiled car rental information in the required format
+        reason: This is the final step in executing the 'search_cars' node
+        text: Return the compiled car rental information as the output of the 'search_cars'
+          node
+    prompt: Search for car rental options at each potential destination and list the
+      available options, including car types, prices, and rental agencies.
+    shims: []
+  search_flights:
+    agent: false
+    code_node_type: stub
+    description: Search for flights to each destination
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ResearchDestinationOptionsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for research_destination_options node outputs.\"\"\"\n    potential_destinations:\
+      \ List[str] = Field(..., description=\"List of potential destinations that align\
+      \ with the trip's objectives\")\n    destination_details: List[str] = Field(...,\
+      \ description=\"List of details about each potential destination, including\
+      \ factors like weather, safety, and attractions\")\n\n\nclass SearchFlightsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for search_flights node outputs.\"\"\"\n    flight_options:\
+      \ List[str] = Field(..., description=\"List of available flight options, including\
+      \ flight numbers, departure and arrival times, airlines, and prices\")\n   \
+      \ airline_names: List[str] = Field(..., description=\"List of airline names\"\
+      )\n    departure_times: List[str] = Field(..., description=\"List of departure\
+      \ times\")\n    arrival_times: List[str] = Field(..., description=\"List of\
+      \ arrival times\")\n    prices: List[float] = Field(..., description=\"List\
+      \ of prices for each flight option\")\n\n\ndef search_flights(research_destination_options_input:\
+      \ ResearchDestinationOptionsOutput, **kwargs) -> SearchFlightsOutput:\n    \"\
+      \"\"Search for flights to each destination\n\n    Args:\n        research_destination_options_input:\
+      \ Input from the 'research_destination_options' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        SearchFlightsOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return SearchFlightsOutput(\n\
+      \        flight_options=[],\n        airline_names=[],\n        departure_times=[],\n\
+      \        arrival_times=[],\n        prices=[],\n    )"
+    name: search_flights
+    nodes_depended_on:
+    - research_destination_options
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of available flight options, including flight numbers, departure
+        and arrival times, airlines, and prices
+      key: flight_options
+      type: List[str]
+    - description: List of airline names
+      key: airline_names
+      type: List[str]
+    - description: List of departure times
+      key: departure_times
+      type: List[str]
+    - description: List of arrival times
+      key: arrival_times
+      type: List[str]
+    - description: List of prices for each flight option
+      key: prices
+      type: List[float]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Access the 'potential_destinations' field from the output of 'research_destination_options'.
+        reason: The list of potential destinations is required to search for flights.
+        text: Retrieve the list of potential destinations from the output of the 'research_destination_options'
+          node.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Utilize APIs like Skyscanner or Kayak to search for flights, specifying
+          departure and arrival cities, and dates.
+        reason: External APIs provide comprehensive and up-to-date flight information.
+        text: For each potential destination, use an external flight search API (e.g.,
+          Skyscanner, Kayak) to retrieve available flight options.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use data parsing techniques to extract relevant information from the
+          API response and format it according to the output structure.
+        reason: The output needs to be in a standardized format for downstream processing.
+        text: Parse the flight information retrieved from the API into the required
+          output format, including flight numbers, departure and arrival times, airlines,
+          and prices.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Iterate through the parsed flight information and populate the respective
+          lists.
+        reason: The output structure requires separate lists for different aspects
+          of flight information.
+        text: Aggregate the parsed flight information into lists for flight options,
+          airline names, departure times, arrival times, and prices.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Implement try-except blocks to catch API errors or parsing exceptions,
+          and provide a meaningful error message or default values.
+        reason: Robust error handling is crucial for maintaining the workflow's integrity.
+        text: Handle any errors or exceptions that occur during the API call or data
+          parsing, ensuring that the node provides a graceful failure or fallback.
+    prompt: Search for flights to each potential destination and list the available
+      options, including departure and arrival times, airlines, and prices.
+    shims: []
+  search_hotels:
+    agent: false
+    code_node_type: stub
+    description: Search for hotels at each destination
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ResearchDestinationOptionsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for research_destination_options node outputs.\"\"\"\n    potential_destinations:\
+      \ List[str] = Field(..., description=\"List of potential destinations that align\
+      \ with the trip's objectives\")\n    destination_details: List[str] = Field(...,\
+      \ description=\"List of details about each potential destination, including\
+      \ factors like weather, safety, and attractions\")\n\n\nclass SearchHotelsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for search_hotels node outputs.\"\"\"\n    hotel_names:\
+      \ List[str] = Field(..., description=\"List of hotel names found at the destinations\"\
+      )\n    hotel_locations: List[str] = Field(..., description=\"List of hotel locations\
+      \ corresponding to the hotels found\")\n    hotel_prices: List[float] = Field(...,\
+      \ description=\"List of hotel prices corresponding to the hotels found\")\n\
+      \    hotel_amenities: List[str] = Field(..., description=\"List of amenities\
+      \ offered by each hotel found\")\n\n\ndef search_hotels(research_destination_options_input:\
+      \ ResearchDestinationOptionsOutput, **kwargs) -> SearchHotelsOutput:\n    \"\
+      \"\"Search for hotels at each destination\n\n    Args:\n        research_destination_options_input:\
+      \ Input from the 'research_destination_options' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        SearchHotelsOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return SearchHotelsOutput(\n\
+      \        hotel_names=[],\n        hotel_locations=[],\n        hotel_prices=[],\n\
+      \        hotel_amenities=[],\n    )"
+    name: search_hotels
+    nodes_depended_on:
+    - research_destination_options
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of hotel names found at the destinations
+      key: hotel_names
+      type: List[str]
+    - description: List of hotel locations corresponding to the hotels found
+      key: hotel_locations
+      type: List[str]
+    - description: List of hotel prices corresponding to the hotels found
+      key: hotel_prices
+      type: List[float]
+    - description: List of amenities offered by each hotel found
+      key: hotel_amenities
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Call the 'research_destination_options' node and retrieve the 'potential_destinations'
+          output.
+        reason: The potential destinations are required to search for hotels.
+        text: Use the output from the 'research_destination_options' node to get the
+          list of potential destinations.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the 'requests' library to send a GET request to the hotel search
+          API with the destination as a parameter.
+        reason: The hotel search API will provide the necessary information about
+          hotels at each destination.
+        text: For each potential destination, send a request to a hotel search API
+          (e.g. Expedia, Booking.com) to retrieve a list of available hotels.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a JSON parsing library (e.g. 'json') to extract the hotel information
+          from the API response.
+        reason: The response from the API will be in a structured format (e.g. JSON)
+          that needs to be parsed to extract the relevant information.
+        text: Parse the response from the hotel search API to extract the hotel names,
+          locations, prices, and amenities.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a dictionary or a pandas DataFrame to store the hotel information.
+        reason: The hotel information needs to be stored in a structured format to
+          be easily accessible and manipulable.
+        text: Store the extracted hotel information in a data structure (e.g. a dictionary
+          or a pandas DataFrame) for further processing.
+      - complexity: LOW
+        impact: HIGH
+        method: Return the stored hotel information as a list of dictionaries or a
+          pandas DataFrame.
+        reason: The output of the 'search_hotels' node is required by the downstream
+          nodes (e.g. 'create_itinerary').
+        text: Return the list of hotel names, locations, prices, and amenities as
+          the output of the 'search_hotels' node.
+    prompt: Search for hotels at each potential destination and list the available
+      options, including hotel names, locations, prices, and amenities.
+    shims: []

@@ -1,0 +1,87 @@
+dag_type: plain_text
+description: A workflow to simulate and visualize a Gaussian process including covariance
+  matrix generation, Cholesky decomposition, and sample path creation
+name: gaussian_process_simulation
+nodes:
+  compute_covariance_matrix:
+    agent: false
+    description: Builds covariance matrix using kernel function
+    name: compute_covariance_matrix
+    nodes_depended_on:
+    - generate_input_space
+    - configure_kernel_parameters
+    nodes_dependent_on: []
+    prompt: Calculate the covariance matrix K where K[i,j] = k(x_i, x_j) using the
+      configured kernel. Show matrix dimensions and corner elements.
+  compute_gp_sample:
+    agent: false
+    description: Combines components to generate sample path
+    name: compute_gp_sample
+    nodes_depended_on:
+    - generate_mean_vector
+    - perform_cholesky_decomposition
+    - generate_random_normal_vector
+    nodes_dependent_on: []
+    prompt: Calculate sample path using f(x) = μ + Lz where L is Cholesky factor.
+      Show final numerical values for entire path.
+  configure_kernel_parameters:
+    agent: false
+    description: Sets hyperparameters for selected kernel
+    name: configure_kernel_parameters
+    nodes_depended_on:
+    - select_kernel_type
+    nodes_dependent_on: []
+    prompt: Define realistic parameters (length_scale, alpha, etc.) for the chosen
+      kernel. Explain how these parameters affect the covariance structure.
+  generate_input_space:
+    agent: false
+    description: Creates linearly spaced input points for GP evaluation
+    name: generate_input_space
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Generate an array of 100 linearly spaced input points between 0 and 10.
+      Output only the numerical values with 2 decimal places.
+  generate_mean_vector:
+    agent: false
+    description: Constructs mean function values
+    name: generate_mean_vector
+    nodes_depended_on:
+    - generate_input_space
+    nodes_dependent_on: []
+    prompt: Create mean vector (zero or simple functional form). Justify choice mathematically
+      and show first 5 elements.
+  generate_random_normal_vector:
+    agent: false
+    description: Creates vector of standard normal variables
+    name: generate_random_normal_vector
+    nodes_depended_on:
+    - generate_input_space
+    nodes_dependent_on: []
+    prompt: Generate 100 independent N(0,1) random variables. Display first 5 values
+      plus mean and standard deviation.
+  perform_cholesky_decomposition:
+    agent: false
+    description: Factorizes covariance matrix for sampling
+    name: perform_cholesky_decomposition
+    nodes_depended_on:
+    - compute_covariance_matrix
+    nodes_dependent_on: []
+    prompt: Compute Cholesky decomposition L of covariance matrix K where LL^T = K.
+      Output lower triangular matrix dimensions and sample entries.
+  select_kernel_type:
+    agent: false
+    description: Specifies covariance function for Gaussian process
+    name: select_kernel_type
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Choose between RBF, Matern, or RationalQuadratic kernel. State your selection
+      with one-sentence justification.
+  visualize_gp_sample:
+    agent: false
+    description: Creates plot of Gaussian process realization
+    name: visualize_gp_sample
+    nodes_depended_on:
+    - compute_gp_sample
+    nodes_dependent_on: []
+    prompt: Generate line plot of input points vs sample values with proper labels
+      and title. Include brief interpretation of smoothness/variation.

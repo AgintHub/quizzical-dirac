@@ -1,0 +1,143 @@
+dag_type: typed
+description: Generated workflow from UI.
+name: quantum_mechanics_workflow
+nodes:
+  create_quantum_mechanics_glossary:
+    agent: false
+    description: Create a glossary of key terms in quantum mechanics.
+    name: create_quantum_mechanics_glossary
+    nodes_depended_on:
+    - define_quantum_mechanics
+    - identify_key_concepts
+    - describe_wave_particles
+    - explain_uncertainty_principle
+    - outline_superposition
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of key terms in quantum mechanics
+      key: glossary_terms
+      type: List[str]
+    - description: List of definitions corresponding to the key terms
+      key: term_definitions
+      type: List[str]
+    - description: A formatted glossary string with terms and definitions
+      key: glossary
+      type: str
+    prompt: Compile a list of key terms and definitions in quantum mechanics, including
+      wave function, Schrodinger equation, and entanglement.
+  define_quantum_mechanics:
+    agent: false
+    description: Define the core concept of quantum mechanics.
+    name: define_quantum_mechanics
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: A concise definition of quantum mechanics
+      key: definition
+      type: str
+    - description: List of core principles of quantum mechanics
+      key: core_principles
+      type: List[str]
+    - description: List of objectives of quantum mechanics
+      key: objectives
+      type: List[str]
+    prompt: Provide a concise definition of quantum mechanics, including its core
+      principles and objectives.
+  describe_wave_particles:
+    agent: false
+    description: Describe the wave-particle duality concept.
+    name: describe_wave_particles
+    nodes_depended_on:
+    - identify_key_concepts
+    nodes_dependent_on: []
+    output_structure:
+    - description: Description of the wave-particle duality concept
+      key: concept_description
+      type: str
+    - description: List of examples illustrating wave-particle duality
+      key: examples
+      type: List[str]
+    - description: List of illustrations or references to illustrations of wave-particle
+        duality
+      key: illustrations
+      type: List[str]
+    prompt: Explain the wave-particle duality concept in quantum mechanics, including
+      examples and illustrations.
+  explain_uncertainty_principle:
+    agent: false
+    description: Explain the uncertainty principle concept.
+    name: explain_uncertainty_principle
+    nodes_depended_on:
+    - identify_key_concepts
+    nodes_dependent_on: []
+    output_structure:
+    - description: A detailed description of the uncertainty principle concept.
+      key: uncertainty_principle_description
+      type: str
+    - description: The mathematical formulation of the uncertainty principle.
+      key: mathematical_formulation
+      type: str
+    - description: A list of implications of the uncertainty principle in quantum
+        mechanics.
+      key: implications
+      type: List[str]
+    - description: Whether the uncertainty principle is a fundamental concept in quantum
+        mechanics.
+      key: is_fundamental
+      type: bool
+    prompt: Describe the uncertainty principle in quantum mechanics, including its
+      mathematical formulation and implications.
+  identify_key_concepts:
+    agent: false
+    description: Identify the key concepts in quantum mechanics.
+    name: identify_key_concepts
+    nodes_depended_on:
+    - define_quantum_mechanics
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of key concepts in quantum mechanics
+      key: key_concepts
+      type: List[str]
+    - description: List of brief descriptions for each key concept
+      key: concept_descriptions
+      type: List[str]
+    prompt: List the fundamental concepts in quantum mechanics, such as wave-particle
+      duality, uncertainty principle, and superposition.
+  outline_superposition:
+    agent: false
+    description: Outline the superposition concept.
+    name: outline_superposition
+    nodes_depended_on:
+    - identify_key_concepts
+    nodes_dependent_on: []
+    output_structure:
+    - description: A clear definition of superposition in quantum mechanics
+      key: superposition_definition
+      type: str
+    - description: The significance of superposition in quantum mechanics
+      key: significance
+      type: str
+    - description: A list of applications of superposition in quantum mechanics
+      key: applications
+      type: List[str]
+    - description: A list of examples illustrating superposition in quantum mechanics
+      key: examples
+      type: List[str]
+    prompt: Explain the concept of superposition in quantum mechanics, including its
+      significance and applications.
+  summarize_quantum_mechanics_workflow:
+    agent: false
+    description: Summarize the quantum mechanics workflow.
+    name: summarize_quantum_mechanics_workflow
+    nodes_depended_on:
+    - create_quantum_mechanics_glossary
+    nodes_dependent_on: []
+    output_structure:
+    - description: A concise summary of the quantum mechanics workflow.
+      key: summary
+      type: str
+    - description: List of key takeaways from the quantum mechanics workflow.
+      key: key_takeaways
+      type: List[str]
+    prompt: Provide a concise summary of the quantum mechanics workflow, highlighting
+      key concepts and takeaways.

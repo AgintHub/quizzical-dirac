@@ -1,0 +1,182 @@
+dag_type: plain_text
+description: Creates a comprehensive, step-by-step trading workflow covering objectives,
+  data, signals, risk, execution, backtesting, monitoring, and final documentation.
+name: algorithmic_trading_workflow_design
+nodes:
+  choose_asset_universe:
+    agent: false
+    description: Select the set of tradable assets the workflow will cover.
+    name: choose_asset_universe
+    nodes_depended_on:
+    - clarify_trading_objectives
+    nodes_dependent_on: []
+    prompt: Based on the trading objectives, list up to 8 specific asset classes or
+      instruments to trade (e.g., US equities, EUR/USD spot FX).
+  clarify_trading_objectives:
+    agent: false
+    description: List the primary goals for the trading workflow in concise bullets.
+    name: clarify_trading_objectives
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: State the core objectives for building the trading workflow (e.g., target
+      return, risk tolerance, holding period). Provide 5–7 short bullet points.
+  compile_workflow_diagram:
+    agent: false
+    description: Integrate all components into a single high-level diagram description.
+    name: compile_workflow_diagram
+    nodes_depended_on:
+    - outline_feature_engineering_methods
+    - design_backtest_experiments
+    - map_trade_lifecycle
+    - draft_monitoring_alerts
+    - define_performance_reporting_layout
+    nodes_dependent_on: []
+    prompt: Describe the trading workflow diagram node by node in textual form, indicating
+      flow direction with arrows (e.g., Data → Cleaning → Features → Signals).
+  define_data_sources:
+    agent: false
+    description: Enumerate raw data feeds needed for trading and research.
+    name: define_data_sources
+    nodes_depended_on:
+    - choose_asset_universe
+    - select_trading_style
+    nodes_dependent_on: []
+    prompt: List each required data source (e.g., real-time prices, fundamentals,
+      news, alternative data) with its update frequency.
+  define_performance_reporting_layout:
+    agent: false
+    description: Plan the structure of periodic performance reports.
+    name: define_performance_reporting_layout
+    nodes_depended_on:
+    - specify_backtest_metrics
+    - draft_monitoring_alerts
+    nodes_dependent_on: []
+    prompt: Outline report sections (Executive Summary, KPI Dashboard, Risk Metrics,
+      Trade Logs, Alerts Summary). Bullet list only.
+  define_signal_features:
+    agent: false
+    description: List raw features that will feed signal generation.
+    name: define_signal_features
+    nodes_depended_on:
+    - select_trading_style
+    - define_data_sources
+    nodes_dependent_on: []
+    prompt: Identify up to 10 basic features (e.g., moving average crossover, RSI,
+      price dispersion) relevant to the trading style.
+  design_backtest_experiments:
+    agent: false
+    description: Outline discrete backtest scenarios to run.
+    name: design_backtest_experiments
+    nodes_depended_on:
+    - define_signal_features
+    - specify_backtest_metrics
+    - draft_position_sizing_rules
+    nodes_dependent_on: []
+    prompt: Describe three distinct backtest configurations varying lookback window,
+      holding period, or risk constraint. Name each scenario in one phrase.
+  design_order_execution_logic:
+    agent: false
+    description: Define the algorithm for sending orders to market.
+    name: design_order_execution_logic
+    nodes_depended_on:
+    - identify_latency_requirements
+    - choose_asset_universe
+    nodes_dependent_on: []
+    prompt: Choose one execution method (e.g., VWAP algo, smart-router, IOC limit)
+      and list its key parameters (slippage buffer, participation rate).
+  design_risk_constraints:
+    agent: false
+    description: Establish hard trading limits.
+    name: design_risk_constraints
+    nodes_depended_on:
+    - clarify_trading_objectives
+    nodes_dependent_on: []
+    prompt: 'List numeric constraints: max position size (%NAV), sector concentration,
+      daily VaR, stop-loss percentage. Provide values only, no explanation.'
+  draft_monitoring_alerts:
+    agent: false
+    description: Specify automated alerts for live trading.
+    name: draft_monitoring_alerts
+    nodes_depended_on:
+    - design_risk_constraints
+    - map_trade_lifecycle
+    nodes_dependent_on: []
+    prompt: Produce a checklist of alert triggers (e.g., breach of VaR limit, stale
+      data feed, order rejection) with brief notification text.
+  draft_position_sizing_rules:
+    agent: false
+    description: Formulate position size calculation logic.
+    name: draft_position_sizing_rules
+    nodes_depended_on:
+    - design_risk_constraints
+    nodes_dependent_on: []
+    prompt: Write a short formula or rule set converting signal strength into position
+      size while respecting each risk constraint.
+  identify_latency_requirements:
+    agent: false
+    description: Specify order-to-market latency tolerance.
+    name: identify_latency_requirements
+    nodes_depended_on:
+    - select_trading_style
+    nodes_dependent_on: []
+    prompt: Indicate the maximum acceptable end-to-end latency (in ms) for order submission
+      and execution, consistent with the selected trading style.
+  map_trade_lifecycle:
+    agent: false
+    description: Create a stepwise chain from signal to settlement.
+    name: map_trade_lifecycle
+    nodes_depended_on:
+    - design_order_execution_logic
+    - draft_position_sizing_rules
+    - design_risk_constraints
+    nodes_dependent_on: []
+    prompt: 'List each atomic action: generate signal → size position → risk check
+      → create order → route → execute → confirm → settle. One line per action.'
+  outline_data_cleaning_steps:
+    agent: false
+    description: Sketch atomic data cleansing actions.
+    name: outline_data_cleaning_steps
+    nodes_depended_on:
+    - define_data_sources
+    nodes_dependent_on: []
+    prompt: Provide a bullet list of individual cleaning tasks for the raw data (e.g.,
+      remove outliers, forward-fill missing ticks). Keep each task to one action verb.
+  outline_feature_engineering_methods:
+    agent: false
+    description: Detail transformations applied to raw features.
+    name: outline_feature_engineering_methods
+    nodes_depended_on:
+    - define_signal_features
+    - outline_data_cleaning_steps
+    nodes_dependent_on: []
+    prompt: 'For each raw feature, specify one transformation or normalization step
+      (e.g., z-score, exponentially weighted mean). Output as two-column table: Feature
+      | Transformation.'
+  produce_final_trading_workflow_document:
+    agent: false
+    description: Generate the complete trading workflow write-up.
+    name: produce_final_trading_workflow_document
+    nodes_depended_on:
+    - compile_workflow_diagram
+    nodes_dependent_on: []
+    prompt: Assemble a concise 400-word document summarizing objectives, data, signals,
+      risk, execution, backtesting, monitoring, and include the workflow diagram description.
+  select_trading_style:
+    agent: false
+    description: Define the overall trading style guiding strategy design.
+    name: select_trading_style
+    nodes_depended_on:
+    - clarify_trading_objectives
+    nodes_dependent_on: []
+    prompt: Choose one primary trading style (e.g., momentum, mean-reversion, statistical
+      arbitrage, market-making) and give a one-sentence rationale aligned with the
+      objectives.
+  specify_backtest_metrics:
+    agent: false
+    description: Select evaluation metrics for simulation results.
+    name: specify_backtest_metrics
+    nodes_depended_on:
+    - clarify_trading_objectives
+    nodes_dependent_on: []
+    prompt: List 5 core performance metrics (e.g., CAGR, Sharpe ratio, max drawdown,
+      hit rate, turnover) to judge backtests.

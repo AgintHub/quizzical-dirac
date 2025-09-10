@@ -1,0 +1,169 @@
+dag_type: typed
+description: Generated workflow from UI.
+name: build_a_workflow
+nodes:
+  break_down_objective:
+    agent: false
+    description: Use elemental decomposition to break down the workflow into manageable
+      parts.
+    name: break_down_objective
+    nodes_depended_on:
+    - determine_objective
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of smaller, self-contained tasks or steps
+      key: decomposed_tasks
+      type: List[str]
+    - description: List of brief descriptions for each decomposed task
+      key: task_descriptions
+      type: List[str]
+    - description: Whether the decomposition was successful
+      key: is_decomposition_successful
+      type: bool
+    prompt: De-compose the objective into smaller, self-contained tasks or steps.
+  connect_workflow_nodes:
+    agent: false
+    description: Ensure that all nodes are connected and part of the single DAG.
+    name: connect_workflow_nodes
+    nodes_depended_on:
+    - establish_workflow_acyclicity
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of node connections in the format 'node_name -> dependent_node_name'
+      key: node_connections
+      type: List[str]
+    - description: Whether all nodes are connected in the DAG
+      key: is_connected
+      type: bool
+    - description: List of all nodes in the DAG
+      key: dag_nodes
+      type: List[str]
+    prompt: Connect each node to at least one upstream dependency or downstream dependent.
+  create_workflow_nodes:
+    agent: false
+    description: Design each node to perform a specific, single outcome.
+    name: create_workflow_nodes
+    nodes_depended_on:
+    - break_down_objective
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of unique IDs for each node in the workflow
+      key: node_ids
+      type: List[str]
+    - description: List of descriptions for each node in the workflow
+      key: node_descriptions
+      type: List[str]
+    - description: List of expected outcomes for each node in the workflow
+      key: node_outcomes
+      type: List[str]
+    prompt: Create nodes representing each individual task or step in the workflow.
+  define_node_dependencies:
+    agent: false
+    description: Define the relationships between each node, including dependencies
+      and data flows.
+    name: define_node_dependencies
+    nodes_depended_on:
+    - create_workflow_nodes
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of node dependencies
+      key: node_dependencies
+      type: List[str]
+    - description: List of data flows between nodes
+      key: data_flows
+      type: List[str]
+    prompt: Determine the dependencies between each node in the workflow.
+  define_workflow_scope:
+    agent: false
+    description: Describe the scope of the workflow, including what it should accomplish.
+    name: define_workflow_scope
+    nodes_depended_on:
+    - determine_objective
+    nodes_dependent_on: []
+    output_structure:
+    - description: A descriptive text outlining the scope of the workflow
+      key: workflow_scope_description
+      type: str
+    - description: A list of specific tasks or functions that the workflow should
+        include
+      key: included_tasks
+      type: List[str]
+    - description: Whether the defined scope is valid and consistent with the objective
+      key: is_scope_valid
+      type: bool
+    prompt: What specific tasks or functions does the workflow need to include?
+  determine_objective:
+    agent: false
+    description: Clearly state the main goal of the workflow.
+    name: determine_objective
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: Description of the main goal of the workflow.
+      key: main_goal
+      type: str
+    - description: Count of values related to the main goal.
+      key: count_values
+      type: List[int]
+    prompt: What is the main objective for the workflow to achieve?
+  establish_workflow_acyclicity:
+    agent: false
+    description: Ensure that the workflow follows a single direction and has no loops.
+    name: establish_workflow_acyclicity
+    nodes_depended_on:
+    - set_up_workflow_data_flow
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the workflow DAG is acyclic
+      key: is_acyclic
+      type: bool
+    - description: List of loops detected in the workflow DAG, if any
+      key: detected_loops
+      type: List[str]
+    - description: List of nodes representing the critical path in the workflow DAG
+      key: critical_path
+      type: List[str]
+    prompt: Enforce acyclicity in the workflow DAG, to prevent circular dependencies.
+  maximize_workflow_concurrency:
+    agent: false
+    description: Focus on parallel and concurrent execution wherever possible.
+    name: maximize_workflow_concurrency
+    nodes_depended_on:
+    - connect_workflow_nodes
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether concurrency has been maximized
+      key: concurrency_maximized
+      type: bool
+    - description: List of nodes that can execute concurrently
+      key: concurrent_nodes
+      type: List[str]
+    - description: List of nodes that have no dependencies
+      key: dependency_free_nodes
+      type: List[str]
+    - description: Maximum level of concurrency achieved
+      key: max_concurrency_level
+      type: int
+    prompt: Maximize concurrency by allowing multiple nodes to execute concurrently,
+      without dependencies.
+  set_up_workflow_data_flow:
+    agent: false
+    description: Create a workflow DAG with a single direction of data flow.
+    name: set_up_workflow_data_flow
+    nodes_depended_on:
+    - define_node_dependencies
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of node names in the workflow
+      key: workflow_nodes
+      type: List[str]
+    - description: List of successor nodes for each node in the workflow
+      key: node_successors
+      type: List[str]
+    - description: List of directed edges representing data flow between nodes
+      key: data_flow_edges
+      type: List[str]
+    - description: Whether the workflow data flow is acyclic
+      key: is_acyclic
+      type: bool
+    prompt: Establish data flow between nodes, using Markovian state transitions.

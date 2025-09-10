@@ -1,0 +1,102 @@
+dag_type: plain_text
+description: A workflow for creating a unique, self-contained workflow from the ground
+  up.
+name: create_a_workflow
+nodes:
+  break_down_workflow_objective:
+    agent: false
+    description: Decompose the workflow objective into individual, self-contained
+      tasks that can be executed independently and achieve specific outcomes.
+    name: break_down_workflow_objective
+    nodes_depended_on:
+    - define_workflow_objective
+    nodes_dependent_on: []
+    prompt: Take the workflow objective and break it down into its most basic, fundamental
+      components. Identify key tasks, subtasks, or outcomes.
+  create_nodes_and_edges:
+    agent: false
+    description: Design the workflow's graphical representation, using nodes for tasks
+      and edges to illustrate task dependencies.
+    name: create_nodes_and_edges
+    nodes_depended_on:
+    - determine_task_dependencies
+    nodes_dependent_on: []
+    prompt: Based on the workflow sequence, task dependencies, and input/output definitions,
+      create a directed acyclic graph (DAG) representation of the workflow. Establish
+      nodes for each task and edges connecting tasks based on dependencies.
+  define_workflow_inputs_and_outputs:
+    agent: false
+    description: Clearly define what data or inputs each task requires and what the
+      expected output should be, ensuring a seamless flow of information throughout
+      the workflow.
+    name: define_workflow_inputs_and_outputs
+    nodes_depended_on:
+    - sequence_workflow_tasks
+    nodes_dependent_on: []
+    prompt: ' Identify the necessary inputs, data, or parameters required for each
+      task in the workflow sequence. Define the expected outcomes, results, or outputs
+      for each task.'
+  define_workflow_objective:
+    agent: false
+    description: Establish the fundamental purpose of the workflow, determining its
+      expected outcome and the scope of tasks involved.
+    name: define_workflow_objective
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Clearly and concisely define the objective of this workflow. What does
+      the output of this workflow need to accomplish?
+  determine_task_dependencies:
+    agent: false
+    description: Establish which tasks are dependent on the results of others and
+      require conditional logic to determine the correct course of action.
+    name: determine_task_dependencies
+    nodes_depended_on:
+    - sequence_workflow_tasks
+    - define_workflow_inputs_and_outputs
+    nodes_dependent_on: []
+    prompt: Determine which tasks, if any, depend on the output or results of previous
+      tasks within the workflow. Identify any necessary conditional logic or branching.
+  document_workflow_for_review:
+    agent: false
+    description: Produce a written record of the workflow, focusing on its purpose,
+      objectives, sequence, and dependencies, making it accessible for review and
+      collaboration.
+    name: document_workflow_for_review
+    nodes_depended_on:
+    - refine_and_validate_workflow
+    nodes_dependent_on: []
+    prompt: Document the workflow in a clear and consumable format, utilizing the
+      refined workflow DAG as a reference. Ensure that the workflow description is
+      concise, accurate, and easy to understand.
+  publish_and_share_workflow:
+    agent: false
+    description: Publish the workflow documentation in a manner that facilitates its
+      reuse, adaptation, and refinement across the organization, fostering a shared
+      understanding and further improving the workflow.
+    name: publish_and_share_workflow
+    nodes_depended_on:
+    - document_workflow_for_review
+    nodes_dependent_on: []
+    prompt: Host the workflow documentation in a suitable repository or service, allowing
+      for easy access, collaboration, and reuse by applicable stakeholders.
+  refine_and_validate_workflow:
+    agent: false
+    description: Verify that the workflow accurately represents the desired outcome
+      and ensures that task dependencies are accurate and consistent.
+    name: refine_and_validate_workflow
+    nodes_depended_on:
+    - create_nodes_and_edges
+    nodes_dependent_on: []
+    prompt: Review the workflow DAG for accuracy, consistency, and logical flow. Confirm
+      that task dependencies are correctly represented, and the workflow correctly
+      achieves its objective.
+  sequence_workflow_tasks:
+    agent: false
+    description: Identify the order in which tasks should be executed to ensure continuity
+      and logical flow throughout the workflow.
+    name: sequence_workflow_tasks
+    nodes_depended_on:
+    - break_down_workflow_objective
+    nodes_dependent_on: []
+    prompt: Determine the logical sequence of tasks necessary to achieve the workflow
+      objective. Establish a clear, step-by-step path through the tasks.

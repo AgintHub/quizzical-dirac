@@ -1,0 +1,57 @@
+dag_type: plain_text
+description: A workflow for analyzing SQL databases and integrating the results into
+  another process
+name: analyze_and_integrate_sql
+nodes:
+  analyze_sql_schema:
+    agent: false
+    description: Analyze the extracted SQL schema for issues and improvements
+    name: analyze_sql_schema
+    nodes_depended_on:
+    - extract_sql_schema
+    nodes_dependent_on: []
+    prompt: Analyze the extracted SQL schema for issues and improvements, including
+      missing indexes and unnecessary joins
+  collect_integration_data:
+    agent: false
+    description: Collect data from the integrated process for analysis
+    name: collect_integration_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Collect data from the integrated process for analysis, including metrics
+      and statistics
+  collect_sql_metadata:
+    agent: false
+    description: Collect metadata about the SQL database
+    name: collect_sql_metadata
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Collect metadata about the SQL database, including database name, schema,
+      and tables
+  extract_sql_schema:
+    agent: false
+    description: Extract the schema of the SQL database
+    name: extract_sql_schema
+    nodes_depended_on:
+    - collect_sql_metadata
+    nodes_dependent_on: []
+    prompt: Extract the schema of the SQL database based on the collected metadata
+  generate_reporting:
+    agent: false
+    description: Generate a report based on the integrated data
+    name: generate_reporting
+    nodes_depended_on:
+    - integrate_sql_data
+    nodes_dependent_on: []
+    prompt: Generate a report based on the integrated data, including charts and graphs
+      for visual analysis
+  integrate_sql_data:
+    agent: false
+    description: Integrate the analyzed SQL data with the collected process data
+    name: integrate_sql_data
+    nodes_depended_on:
+    - analyze_sql_schema
+    - collect_integration_data
+    nodes_dependent_on: []
+    prompt: Integrate the analyzed SQL data with the collected process data to provide
+      a unified view

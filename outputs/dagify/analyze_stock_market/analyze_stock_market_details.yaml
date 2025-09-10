@@ -1,0 +1,709 @@
+dag_type: stub
+description: Generated workflow from UI.
+name: analyze_stock_market
+nodes:
+  analyze_sector_performance:
+    agent: false
+    code_node_type: stub
+    description: Analyze the performance of different sectors in the stock market.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CalculateStockMetricsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for calculate_stock_metrics node outputs.\"\"\"\n    stock_metrics: List[str]\
+      \ = Field(..., description=\"List of stock symbols with calculated metrics\"\
+      )\n    daily_returns: List[float] = Field(..., description=\"List of daily returns\
+      \ for each stock\")\n    volatility: List[float] = Field(..., description=\"\
+      List of volatility (standard deviation of returns) for each stock\")\n    moving_averages_50_day:\
+      \ List[float] = Field(..., description=\"List of 50-day moving averages for\
+      \ each stock\")\n    moving_averages_200_day: List[float] = Field(..., description=\"\
+      List of 200-day moving averages for each stock\")\n\n\nclass AnalyzeSectorPerformanceOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for analyze_sector_performance node outputs.\"\"\"\
+      \n    sector_performance: List[str] = Field(..., description=\"List of sector\
+      \ names (e.g., technology, healthcare, finance)\")\n    sector_average_returns:\
+      \ List[float] = Field(..., description=\"List of average returns for each sector\"\
+      )\n    sector_volatility: List[float] = Field(..., description=\"List of volatility\
+      \ (standard deviation of returns) for each sector\")\n    sector_counts: List[int]\
+      \ = Field(..., description=\"List of stock counts for each sector\")\n    is_valid:\
+      \ bool = Field(..., description=\"Whether the sector performance data is valid\"\
+      )\n\n\ndef analyze_sector_performance(calculate_stock_metrics_input: CalculateStockMetricsOutput,\
+      \ **kwargs) -> AnalyzeSectorPerformanceOutput:\n    \"\"\"Analyze the performance\
+      \ of different sectors in the stock market.\n\n    Args:\n        calculate_stock_metrics_input:\
+      \ Input from the 'calculate_stock_metrics' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        AnalyzeSectorPerformanceOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ AnalyzeSectorPerformanceOutput(\n        sector_performance=[],\n        sector_average_returns=[],\n\
+      \        sector_volatility=[],\n        sector_counts=[],\n        is_valid=False,\n\
+      \    )"
+    name: analyze_sector_performance
+    nodes_depended_on:
+    - calculate_stock_metrics
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of sector names (e.g., technology, healthcare, finance)
+      key: sector_performance
+      type: List[str]
+    - description: List of average returns for each sector
+      key: sector_average_returns
+      type: List[float]
+    - description: List of volatility (standard deviation of returns) for each sector
+      key: sector_volatility
+      type: List[float]
+    - description: List of stock counts for each sector
+      key: sector_counts
+      type: List[int]
+    - description: Whether the sector performance data is valid
+      key: is_valid
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a dictionary to group stocks by sector
+        reason: This approach allows for efficient grouping and calculation of sector-level
+          metrics.
+        text: Group stocks by sector using a dictionary where the keys are sector
+          names and the values are lists of stock symbols.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the mean function to calculate average returns for each sector
+        reason: This approach provides a representative measure of sector performance.
+        text: Calculate average returns for each sector using the daily returns of
+          the stocks in that sector.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the standard deviation function to calculate volatility for each
+          sector
+        reason: This approach provides a measure of sector risk.
+        text: Calculate volatility (standard deviation of returns) for each sector
+          using the daily returns of the stocks in that sector.
+      - complexity: LOW
+        impact: LOW
+        method: Use the len function to count the number of stocks in each sector
+        reason: This approach provides a measure of sector size.
+        text: Count the number of stocks in each sector.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use data validation techniques to check for missing or invalid values
+        reason: This approach ensures the accuracy and reliability of the analysis.
+        text: Validate the sector performance data by checking for missing or invalid
+          values.
+    prompt: Group stocks by sector (e.g., technology, healthcare, finance) and calculate
+      sector-level metrics, such as average returns and volatility.
+    shims: []
+  calculate_stock_metrics:
+    agent: false
+    code_node_type: stub
+    description: Calculate key metrics for each stock, such as daily returns and volatility.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CleanAndProcessStockDataOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for clean_and_process_stock_data node outputs.\"\"\"\n    cleaned_data: List[float]\
+      \ = Field(..., description=\"List of cleaned stock prices\")\n    processed_data:\
+      \ List[float] = Field(..., description=\"List of processed stock prices with\
+      \ normalized values\")\n    date_formats: str = Field(..., description=\"List\
+      \ of date formats used for conversion\")\n    missing_value_handling_status:\
+      \ bool = Field(..., description=\"Whether missing values were handled successfully\"\
+      )\n\n\nclass CalculateStockMetricsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for calculate_stock_metrics node outputs.\"\"\"\n    stock_metrics: List[str]\
+      \ = Field(..., description=\"List of stock symbols with calculated metrics\"\
+      )\n    daily_returns: List[float] = Field(..., description=\"List of daily returns\
+      \ for each stock\")\n    volatility: List[float] = Field(..., description=\"\
+      List of volatility (standard deviation of returns) for each stock\")\n    moving_averages_50_day:\
+      \ List[float] = Field(..., description=\"List of 50-day moving averages for\
+      \ each stock\")\n    moving_averages_200_day: List[float] = Field(..., description=\"\
+      List of 200-day moving averages for each stock\")\n\n\ndef calculate_stock_metrics(clean_and_process_stock_data_input:\
+      \ CleanAndProcessStockDataOutput, **kwargs) -> CalculateStockMetricsOutput:\n\
+      \    \"\"\"Calculate key metrics for each stock, such as daily returns and volatility.\n\
+      \n    Args:\n        clean_and_process_stock_data_input: Input from the 'clean_and_process_stock_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       CalculateStockMetricsOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return CalculateStockMetricsOutput(\n       \
+      \ stock_metrics=[],\n        daily_returns=[],\n        volatility=[],\n   \
+      \     moving_averages_50_day=[],\n        moving_averages_200_day=[],\n    )"
+    name: calculate_stock_metrics
+    nodes_depended_on:
+    - clean_and_process_stock_data
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of stock symbols with calculated metrics
+      key: stock_metrics
+      type: List[str]
+    - description: List of daily returns for each stock
+      key: daily_returns
+      type: List[float]
+    - description: List of volatility (standard deviation of returns) for each stock
+      key: volatility
+      type: List[float]
+    - description: List of 50-day moving averages for each stock
+      key: moving_averages_50_day
+      type: List[float]
+    - description: List of 200-day moving averages for each stock
+      key: moving_averages_200_day
+      type: List[float]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use the output of `clean_and_process_stock_data` node as input
+        reason: The `clean_and_process_stock_data` node provides the necessary input
+          data for calculating stock metrics.
+        text: Retrieve cleaned and processed stock data from the output of the `clean_and_process_stock_data`
+          node.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use pandas library to calculate daily returns
+        reason: Daily returns are a key metric for analyzing stock performance.
+        text: 'Calculate daily returns for each stock using the formula: `(current_price
+          - previous_price) / previous_price`.'
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use pandas library to calculate standard deviation of returns
+        reason: Volatility is a key metric for analyzing stock risk.
+        text: Calculate volatility (standard deviation of returns) for each stock
+          using a 30-day window.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use pandas library to calculate moving averages
+        reason: Moving averages are a key metric for analyzing stock trends.
+        text: 'Calculate 50-day and 200-day moving averages for each stock using the
+          formula: `moving_average = (sum(prices) / number_of_days)`.'
+      - complexity: LOW
+        impact: LOW
+        method: Use a dictionary to store the calculated metrics
+        reason: The calculated metrics need to be stored in a structured format for
+          downstream use.
+        text: Store the calculated metrics in the output structure.
+    prompt: Calculate daily returns, volatility (standard deviation of returns), and
+      moving averages (50-day and 200-day) for each stock.
+    shims: []
+  clean_and_process_stock_data:
+    agent: false
+    code_node_type: stub
+    description: Clean and process the retrieved stock data.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass RetrieveHistoricalStockDataOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for retrieve_historical_stock_data node outputs.\"\"\"\n    stock_symbol:\
+      \ str = Field(..., description=\"Stock symbol (e.g., AAPL, GOOG, SP500)\")\n\
+      \    historical_prices: List[float] = Field(..., description=\"List of daily\
+      \ closing prices over the past year\")\n    date: str = Field(..., description=\"\
+      Date in 'YYYY-MM-DD' format\")\n    is_valid: bool = Field(..., description=\"\
+      Whether the retrieved data is valid\")\n\n\nclass CleanAndProcessStockDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for clean_and_process_stock_data node outputs.\"\"\
+      \"\n    cleaned_data: List[float] = Field(..., description=\"List of cleaned\
+      \ stock prices\")\n    processed_data: List[float] = Field(..., description=\"\
+      List of processed stock prices with normalized values\")\n    date_formats:\
+      \ str = Field(..., description=\"List of date formats used for conversion\"\
+      )\n    missing_value_handling_status: bool = Field(..., description=\"Whether\
+      \ missing values were handled successfully\")\n\n\ndef clean_and_process_stock_data(retrieve_historical_stock_data_input:\
+      \ RetrieveHistoricalStockDataOutput, **kwargs) -> CleanAndProcessStockDataOutput:\n\
+      \    \"\"\"Clean and process the retrieved stock data.\n\n    Args:\n      \
+      \  retrieve_historical_stock_data_input: Input from the 'retrieve_historical_stock_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       CleanAndProcessStockDataOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return CleanAndProcessStockDataOutput(\n    \
+      \    cleaned_data=[],\n        processed_data=[],\n        date_formats=\"\"\
+      ,\n        missing_value_handling_status=False,\n    )"
+    name: clean_and_process_stock_data
+    nodes_depended_on:
+    - retrieve_historical_stock_data
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of cleaned stock prices
+      key: cleaned_data
+      type: List[float]
+    - description: List of processed stock prices with normalized values
+      key: processed_data
+      type: List[float]
+    - description: List of date formats used for conversion
+      key: date_formats
+      type: str
+    - description: Whether missing values were handled successfully
+      key: missing_value_handling_status
+      type: bool
+    prd:
+      bullets: []
+    prompt: Clean and process the retrieved stock data by handling missing values,
+      converting date formats, and normalizing prices.
+    shims: []
+  generate_insights_and_recommendations:
+    agent: false
+    code_node_type: stub
+    description: Generate insights and recommendations based on the analysis.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass AnalyzeSectorPerformanceOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for analyze_sector_performance node outputs.\"\"\"\n    sector_performance:\
+      \ List[str] = Field(..., description=\"List of sector names (e.g., technology,\
+      \ healthcare, finance)\")\n    sector_average_returns: List[float] = Field(...,\
+      \ description=\"List of average returns for each sector\")\n    sector_volatility:\
+      \ List[float] = Field(..., description=\"List of volatility (standard deviation\
+      \ of returns) for each sector\")\n    sector_counts: List[int] = Field(...,\
+      \ description=\"List of stock counts for each sector\")\n    is_valid: bool\
+      \ = Field(..., description=\"Whether the sector performance data is valid\"\
+      )\n\n\nclass IdentifyTrendingStocksOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for identify_trending_stocks node outputs.\"\"\"\n    stock_symbol: str =\
+      \ Field(..., description=\"The symbol of the stock (e.g., AAPL, GOOGL)\")\n\
+      \    trend: str = Field(..., description=\"The trend identifier (e.g., upward,\
+      \ downward)\")\n    trend_confidence: float = Field(..., description=\"A confidence\
+      \ score for the trend (e.g., 0.8 for a strong upward trend)\")\n    short_term_trend:\
+      \ str = Field(..., description=\"The short-term trend (50-day) identifier (e.g.,\
+      \ upward, downward)\")\n    long_term_trend: str = Field(..., description=\"\
+      The long-term trend (200-day) identifier (e.g., upward, downward)\")\n\n\nclass\
+      \ GenerateInsightsAndRecommendationsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for generate_insights_and_recommendations node outputs.\"\"\"\n    sector_performance_insights:\
+      \ str = Field(..., description=\"Summary of sector performance insights\")\n\
+      \    trending_stocks: List[str] = Field(..., description=\"List of trending\
+      \ stocks with their direction (up or down)\")\n    investment_opportunities:\
+      \ List[str] = Field(..., description=\"List of potential investment opportunities\"\
+      )\n    portfolio_adjustment_recommendations: List[str] = Field(..., description=\"\
+      List of recommendations for portfolio adjustments\")\n    analysis_summary:\
+      \ str = Field(..., description=\"Summary of the analysis\")\n\n\ndef generate_insights_and_recommendations(analyze_sector_performance_input:\
+      \ AnalyzeSectorPerformanceOutput, identify_trending_stocks_input: IdentifyTrendingStocksOutput,\
+      \ **kwargs) -> GenerateInsightsAndRecommendationsOutput:\n    \"\"\"Generate\
+      \ insights and recommendations based on the analysis.\n\n    Args:\n       \
+      \ analyze_sector_performance_input: Input from the 'analyze_sector_performance'\
+      \ node.\n        identify_trending_stocks_input: Input from the 'identify_trending_stocks'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       GenerateInsightsAndRecommendationsOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return GenerateInsightsAndRecommendationsOutput(\n\
+      \        sector_performance_insights=\"\",\n        trending_stocks=[],\n  \
+      \      investment_opportunities=[],\n        portfolio_adjustment_recommendations=[],\n\
+      \        analysis_summary=\"\",\n    )"
+    name: generate_insights_and_recommendations
+    nodes_depended_on:
+    - analyze_sector_performance
+    - identify_trending_stocks
+    nodes_dependent_on: []
+    output_structure:
+    - description: Summary of sector performance insights
+      key: sector_performance_insights
+      type: str
+    - description: List of trending stocks with their direction (up or down)
+      key: trending_stocks
+      type: List[str]
+    - description: List of potential investment opportunities
+      key: investment_opportunities
+      type: List[str]
+    - description: List of recommendations for portfolio adjustments
+      key: portfolio_adjustment_recommendations
+      type: List[str]
+    - description: Summary of the analysis
+      key: analysis_summary
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use sector performance data to identify top and bottom performing
+          sectors
+        reason: To provide insights on sector performance
+        text: Integrate sector performance data from analyze_sector_performance node
+      - complexity: LOW
+        impact: HIGH
+        method: Use trending stock data to identify stocks with upward and downward
+          trends
+        reason: To provide insights on trending stocks
+        text: Integrate trending stock data from identify_trending_stocks node
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use data analysis and machine learning techniques to identify potential
+          investment opportunities
+        reason: To provide insights on potential investment opportunities
+        text: Analyze sector performance data to identify potential investment opportunities
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use data analysis and machine learning techniques to generate recommendations
+        reason: To provide actionable recommendations for investors
+        text: Generate recommendations for portfolio adjustments based on analysis
+          results
+      - complexity: LOW
+        impact: HIGH
+        method: Use natural language processing techniques to generate a summary report
+        reason: To provide a clear and concise summary of the analysis
+        text: Summarize analysis results and insights into a comprehensive report
+    prompt: Synthesize the analysis to provide insights on sector performance, trending
+      stocks, and potential investment opportunities. Offer recommendations for portfolio
+      adjustments.
+    shims: []
+  identify_trending_stocks:
+    agent: false
+    code_node_type: stub
+    description: Identify stocks that are trending upwards or downwards.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CalculateStockMetricsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for calculate_stock_metrics node outputs.\"\"\"\n    stock_metrics: List[str]\
+      \ = Field(..., description=\"List of stock symbols with calculated metrics\"\
+      )\n    daily_returns: List[float] = Field(..., description=\"List of daily returns\
+      \ for each stock\")\n    volatility: List[float] = Field(..., description=\"\
+      List of volatility (standard deviation of returns) for each stock\")\n    moving_averages_50_day:\
+      \ List[float] = Field(..., description=\"List of 50-day moving averages for\
+      \ each stock\")\n    moving_averages_200_day: List[float] = Field(..., description=\"\
+      List of 200-day moving averages for each stock\")\n\n\nclass IdentifyTrendingStocksOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for identify_trending_stocks node outputs.\"\"\"\n\
+      \    stock_symbol: str = Field(..., description=\"The symbol of the stock (e.g.,\
+      \ AAPL, GOOGL)\")\n    trend: str = Field(..., description=\"The trend identifier\
+      \ (e.g., upward, downward)\")\n    trend_confidence: float = Field(..., description=\"\
+      A confidence score for the trend (e.g., 0.8 for a strong upward trend)\")\n\
+      \    short_term_trend: str = Field(..., description=\"The short-term trend (50-day)\
+      \ identifier (e.g., upward, downward)\")\n    long_term_trend: str = Field(...,\
+      \ description=\"The long-term trend (200-day) identifier (e.g., upward, downward)\"\
+      )\n\n\ndef identify_trending_stocks(calculate_stock_metrics_input: CalculateStockMetricsOutput,\
+      \ **kwargs) -> IdentifyTrendingStocksOutput:\n    \"\"\"Identify stocks that\
+      \ are trending upwards or downwards.\n\n    Args:\n        calculate_stock_metrics_input:\
+      \ Input from the 'calculate_stock_metrics' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        IdentifyTrendingStocksOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ IdentifyTrendingStocksOutput(\n        stock_symbol=\"\",\n        trend=\"\
+      \",\n        trend_confidence=0.0,\n        short_term_trend=\"\",\n       \
+      \ long_term_trend=\"\",\n    )"
+    name: identify_trending_stocks
+    nodes_depended_on:
+    - calculate_stock_metrics
+    nodes_dependent_on: []
+    output_structure:
+    - description: The symbol of the stock (e.g., AAPL, GOOGL)
+      key: stock_symbol
+      type: str
+    - description: The trend identifier (e.g., upward, downward)
+      key: trend
+      type: str
+    - description: A confidence score for the trend (e.g., 0.8 for a strong upward
+        trend)
+      key: trend_confidence
+      type: float
+    - description: The short-term trend (50-day) identifier (e.g., upward, downward)
+      key: short_term_trend
+      type: str
+    - description: The long-term trend (200-day) identifier (e.g., upward, downward)
+      key: long_term_trend
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use the output of 'calculate_stock_metrics' node directly
+        reason: This is necessary to access the moving averages and other metrics
+          required to determine trends.
+        text: Retrieve the list of stock symbols and their calculated metrics from
+          the output of the 'calculate_stock_metrics' node.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a simple moving average crossover strategy
+        reason: This will help identify stocks with upward or downward trends in the
+          short-term.
+        text: Calculate the short-term trend (50-day) for each stock by comparing
+          the current price to the 50-day moving average.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a simple moving average crossover strategy
+        reason: This will help identify stocks with upward or downward trends in the
+          long-term.
+        text: Calculate the long-term trend (200-day) for each stock by comparing
+          the current price to the 200-day moving average.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a combination of short-term and long-term trend indicators
+        reason: This will provide a comprehensive view of the stock's trend.
+        text: Determine the overall trend for each stock based on the short-term and
+          long-term trends.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a statistical method such as standard deviation or variance
+        reason: This will provide a quantitative measure of the trend's reliability.
+        text: Calculate the trend confidence score for each stock based on the strength
+          of the trend.
+      - complexity: LOW
+        impact: LOW
+        method: Use a simple data formatting approach
+        reason: This will provide the required output for the node.
+        text: Output the list of stocks with their corresponding trends, trend confidence
+          scores, short-term trends, and long-term trends.
+    prompt: Identify stocks with upward or downward trends in their prices over the
+      past 50 and 200 days.
+    shims: []
+  retrieve_historical_stock_data:
+    agent: false
+    code_node_type: stub
+    description: Retrieve historical stock prices for major indices and stocks.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass RetrieveHistoricalStockDataOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for retrieve_historical_stock_data node outputs.\"\"\"\n    stock_symbol:\
+      \ str = Field(..., description=\"Stock symbol (e.g., AAPL, GOOG, SP500)\")\n\
+      \    historical_prices: List[float] = Field(..., description=\"List of daily\
+      \ closing prices over the past year\")\n    date: str = Field(..., description=\"\
+      Date in 'YYYY-MM-DD' format\")\n    is_valid: bool = Field(..., description=\"\
+      Whether the retrieved data is valid\")\n\n\ndef retrieve_historical_stock_data(general_input:\
+      \ str, **kwargs) -> RetrieveHistoricalStockDataOutput:\n    \"\"\"Retrieve historical\
+      \ stock prices for major indices and stocks.\n\n    Args:\n        general_input:\
+      \ General input string for the root node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        RetrieveHistoricalStockDataOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return RetrieveHistoricalStockDataOutput(\n\
+      \        stock_symbol=\"\",\n        historical_prices=[],\n        date=\"\"\
+      ,\n        is_valid=False,\n    )"
+    name: retrieve_historical_stock_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: Stock symbol (e.g., AAPL, GOOG, SP500)
+      key: stock_symbol
+      type: str
+    - description: List of daily closing prices over the past year
+      key: historical_prices
+      type: List[float]
+    - description: Date in 'YYYY-MM-DD' format
+      key: date
+      type: str
+    - description: Whether the retrieved data is valid
+      key: is_valid
+      type: bool
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the `yfinance` library to interact with the Yahoo Finance API.
+          Specify the stock symbols and date range to retrieve the historical prices.
+        reason: The Yahoo Finance API provides reliable and accurate historical stock
+          price data.
+        text: Use the Yahoo Finance API to retrieve historical stock prices for the
+          specified stocks and indices.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use try-except blocks to catch and handle exceptions. Implement retry
+          logic for failed requests.
+        reason: API requests can fail due to network issues, rate limits, or other
+          reasons.
+        text: Handle API request errors and exceptions.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use data validation techniques, such as checking for missing values,
+          data types, and ranges.
+        reason: Invalid data can cause downstream processing issues.
+        text: Validate the retrieved data to ensure it conforms to the expected format.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a Pandas DataFrame to store the retrieved data.
+        reason: Efficient data storage and retrieval are crucial for large datasets.
+        text: Store the retrieved data in a suitable data structure for further processing.
+    prompt: Retrieve historical stock prices for the S&P500, Dow Jones, and Nasdaq
+      indices, as well as for Apple, Google, and Amazon stocks. Focus on daily closing
+      prices over the past year.
+    shims: []
+  summarize_analysis_results:
+    agent: false
+    code_node_type: stub
+    description: Summarize the results of the stock market analysis.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass GenerateInsightsAndRecommendationsOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for generate_insights_and_recommendations node outputs.\"\"\"\n    sector_performance_insights:\
+      \ str = Field(..., description=\"Summary of sector performance insights\")\n\
+      \    trending_stocks: List[str] = Field(..., description=\"List of trending\
+      \ stocks with their direction (up or down)\")\n    investment_opportunities:\
+      \ List[str] = Field(..., description=\"List of potential investment opportunities\"\
+      )\n    portfolio_adjustment_recommendations: List[str] = Field(..., description=\"\
+      List of recommendations for portfolio adjustments\")\n    analysis_summary:\
+      \ str = Field(..., description=\"Summary of the analysis\")\n\n\nclass VisualizeStockMarketDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for visualize_stock_market_data node outputs.\"\"\"\
+      \n    stock_price_charts: List[str] = Field(..., description=\"List of file\
+      \ paths or URLs to stock price charts\")\n    sector_performance_plots: List[str]\
+      \ = Field(..., description=\"List of file paths or URLs to sector performance\
+      \ plots\")\n    stock_returns_histogram: str = Field(..., description=\"File\
+      \ path or URL to stock returns histogram\")\n    volatility_heatmap: str = Field(...,\
+      \ description=\"File path or URL to volatility heatmap\")\n    sector_average_returns:\
+      \ List[float] = Field(..., description=\"List of average returns for each sector\"\
+      )\n    sector_volatility: List[float] = Field(..., description=\"List of volatility\
+      \ measures for each sector\")\n\n\nclass SummarizeAnalysisResultsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for summarize_analysis_results node outputs.\"\"\"\
+      \n    summary: str = Field(..., description=\"Overall summary of the stock market\
+      \ analysis\")\n    key_findings: List[str] = Field(..., description=\"List of\
+      \ key findings from the analysis\")\n    insights: List[str] = Field(..., description=\"\
+      List of insights gained from the analysis\")\n    recommendations: List[str]\
+      \ = Field(..., description=\"List of recommendations for investors\")\n    analysis_validity:\
+      \ bool = Field(..., description=\"Whether the analysis is valid and reliable\"\
+      )\n\n\ndef summarize_analysis_results(generate_insights_and_recommendations_input:\
+      \ GenerateInsightsAndRecommendationsOutput, visualize_stock_market_data_input:\
+      \ VisualizeStockMarketDataOutput, **kwargs) -> SummarizeAnalysisResultsOutput:\n\
+      \    \"\"\"Summarize the results of the stock market analysis.\n\n    Args:\n\
+      \        generate_insights_and_recommendations_input: Input from the 'generate_insights_and_recommendations'\
+      \ node.\n        visualize_stock_market_data_input: Input from the 'visualize_stock_market_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       SummarizeAnalysisResultsOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return SummarizeAnalysisResultsOutput(\n    \
+      \    summary=\"\",\n        key_findings=[],\n        insights=[],\n       \
+      \ recommendations=[],\n        analysis_validity=False,\n    )"
+    name: summarize_analysis_results
+    nodes_depended_on:
+    - generate_insights_and_recommendations
+    - visualize_stock_market_data
+    nodes_dependent_on: []
+    output_structure:
+    - description: Overall summary of the stock market analysis
+      key: summary
+      type: str
+    - description: List of key findings from the analysis
+      key: key_findings
+      type: List[str]
+    - description: List of insights gained from the analysis
+      key: insights
+      type: List[str]
+    - description: List of recommendations for investors
+      key: recommendations
+      type: List[str]
+    - description: Whether the analysis is valid and reliable
+      key: analysis_validity
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use API calls or data streaming to collect output data from the 'generate_insights_and_recommendations'
+          node.
+        reason: This step is necessary to gather the required insights and recommendations
+          for the summary.
+        text: Receive and aggregate output data from the 'generate_insights_and_recommendations'
+          node, including sector performance insights, trending stocks, investment
+          opportunities, and portfolio adjustment recommendations.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use API calls or data streaming to collect output data from the 'visualize_stock_market_data'
+          node.
+        reason: This step is necessary to gather the required visualizations for the
+          summary.
+        text: Receive and aggregate output data from the 'visualize_stock_market_data'
+          node, including stock price charts, sector performance plots, stock returns
+          histogram, and volatility heatmap.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use natural language processing (NLP) techniques to generate a coherent
+          and informative summary.
+        reason: This step is necessary to provide a comprehensive summary of the analysis.
+        text: Synthesize the aggregated data from both nodes to create an overall
+          summary of the stock market analysis.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use data processing techniques to extract and format key findings.
+        reason: This step is necessary to provide a clear and concise list of key
+          findings.
+        text: Extract key findings from the analysis and present them in a list.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use data processing techniques to compile and format insights.
+        reason: This step is necessary to provide a list of insights for investors.
+        text: Compile a list of insights gained from the analysis.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use NLP techniques and investment expertise to generate recommendations.
+        reason: This step is necessary to provide actionable recommendations for investors.
+        text: Develop a list of recommendations for investors based on the analysis.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use data validation techniques and quality control checks.
+        reason: This step is necessary to ensure the reliability of the analysis.
+        text: Validate the analysis by checking for data consistency and accuracy.
+    prompt: Summarize the key findings and insights from the stock market analysis,
+      including recommendations for investors.
+    shims: []
+  visualize_stock_market_data:
+    agent: false
+    code_node_type: stub
+    description: Visualize key stock market data and insights.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CalculateStockMetricsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for calculate_stock_metrics node outputs.\"\"\"\n    stock_metrics: List[str]\
+      \ = Field(..., description=\"List of stock symbols with calculated metrics\"\
+      )\n    daily_returns: List[float] = Field(..., description=\"List of daily returns\
+      \ for each stock\")\n    volatility: List[float] = Field(..., description=\"\
+      List of volatility (standard deviation of returns) for each stock\")\n    moving_averages_50_day:\
+      \ List[float] = Field(..., description=\"List of 50-day moving averages for\
+      \ each stock\")\n    moving_averages_200_day: List[float] = Field(..., description=\"\
+      List of 200-day moving averages for each stock\")\n\n\nclass AnalyzeSectorPerformanceOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for analyze_sector_performance node outputs.\"\"\"\
+      \n    sector_performance: List[str] = Field(..., description=\"List of sector\
+      \ names (e.g., technology, healthcare, finance)\")\n    sector_average_returns:\
+      \ List[float] = Field(..., description=\"List of average returns for each sector\"\
+      )\n    sector_volatility: List[float] = Field(..., description=\"List of volatility\
+      \ (standard deviation of returns) for each sector\")\n    sector_counts: List[int]\
+      \ = Field(..., description=\"List of stock counts for each sector\")\n    is_valid:\
+      \ bool = Field(..., description=\"Whether the sector performance data is valid\"\
+      )\n\n\nclass VisualizeStockMarketDataOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for visualize_stock_market_data node outputs.\"\"\"\n    stock_price_charts:\
+      \ List[str] = Field(..., description=\"List of file paths or URLs to stock price\
+      \ charts\")\n    sector_performance_plots: List[str] = Field(..., description=\"\
+      List of file paths or URLs to sector performance plots\")\n    stock_returns_histogram:\
+      \ str = Field(..., description=\"File path or URL to stock returns histogram\"\
+      )\n    volatility_heatmap: str = Field(..., description=\"File path or URL to\
+      \ volatility heatmap\")\n    sector_average_returns: List[float] = Field(...,\
+      \ description=\"List of average returns for each sector\")\n    sector_volatility:\
+      \ List[float] = Field(..., description=\"List of volatility measures for each\
+      \ sector\")\n\n\ndef visualize_stock_market_data(calculate_stock_metrics_input:\
+      \ CalculateStockMetricsOutput, analyze_sector_performance_input: AnalyzeSectorPerformanceOutput,\
+      \ **kwargs) -> VisualizeStockMarketDataOutput:\n    \"\"\"Visualize key stock\
+      \ market data and insights.\n\n    Args:\n        calculate_stock_metrics_input:\
+      \ Input from the 'calculate_stock_metrics' node.\n        analyze_sector_performance_input:\
+      \ Input from the 'analyze_sector_performance' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        VisualizeStockMarketDataOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ VisualizeStockMarketDataOutput(\n        stock_price_charts=[],\n        sector_performance_plots=[],\n\
+      \        stock_returns_histogram=\"\",\n        volatility_heatmap=\"\",\n \
+      \       sector_average_returns=[],\n        sector_volatility=[],\n    )"
+    name: visualize_stock_market_data
+    nodes_depended_on:
+    - calculate_stock_metrics
+    - analyze_sector_performance
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of file paths or URLs to stock price charts
+      key: stock_price_charts
+      type: List[str]
+    - description: List of file paths or URLs to sector performance plots
+      key: sector_performance_plots
+      type: List[str]
+    - description: File path or URL to stock returns histogram
+      key: stock_returns_histogram
+      type: str
+    - description: File path or URL to volatility heatmap
+      key: volatility_heatmap
+      type: str
+    - description: List of average returns for each sector
+      key: sector_average_returns
+      type: List[float]
+    - description: List of volatility measures for each sector
+      key: sector_volatility
+      type: List[float]
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Import libraries, load data, create plots, customize plots, save plots
+        reason: These libraries provide a wide range of visualization tools and are
+          widely used in the industry
+        text: Use matplotlib and seaborn libraries to create visualizations
+      - complexity: LOW
+        impact: HIGH
+        method: Use line plots, customize x-axis and y-axis labels, add title
+        reason: This will help to visualize the performance of individual stocks over
+          time
+        text: Create stock price charts using daily returns data from calculate_stock_metrics
+      - complexity: LOW
+        impact: HIGH
+        method: Use bar plots, customize x-axis and y-axis labels, add title
+        reason: This will help to visualize the performance of different sectors in
+          the stock market
+        text: Create sector performance plots using sector-level metrics from analyze_sector_performance
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use histogram plots, customize x-axis and y-axis labels, add title
+        reason: This will help to visualize the distribution of stock returns
+        text: Create stock returns histogram using daily returns data from calculate_stock_metrics
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use heatmap plots, customize color scheme, add title
+        reason: This will help to visualize the volatility of individual stocks
+        text: Create volatility heatmap using volatility data from calculate_stock_metrics
+    prompt: Create visualizations (e.g., plots, charts) to illustrate stock prices,
+      returns, volatility, and sector performance.
+    shims: []

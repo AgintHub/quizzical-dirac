@@ -1,0 +1,56 @@
+{
+  "break_down_workflow": {
+    "output": {
+      "output": "Based on the extracted workflow requirements, the workflow can be divided into the following sub-workflow components or stages:\n- Stage 1: Identify the workflow's specific goals\n- Stage 2: List the workflow's inputs\n- Stage 3: Define the workflow's outputs\nNo feedback loops or iterative processes were identified."
+    },
+    "description": "Divide the workflow into its constituent parts or sub-workflows."
+  },
+  "create_task_flowcharts": {
+    "output": {
+      "output": "Based on the input from parent node 'identify_atomic_tasks', the flowchart for each atomic task will be as follows:\n1. Identify the workflow's specific goals\n   - Input: Workflow goals\n   - Processing: Analyze and identify workflow goals\n   - Output: Goals identified\n2. List the workflow's inputs\n   - Input: Workflow inputs\n   - Processing: List and organize workflow inputs\n   - Output: Inputs listed\n3. Define the workflow's outputs\n   - Input: Workflow outputs\n   - Processing: Define and organize workflow outputs\n   - Output: Outputs defined\nThis flowchart will be used to create a comprehensive workflow plan."
+    },
+    "description": "Create flowcharts or state diagrams for each atomic task."
+  },
+  "define_aggregation_functions": {
+    "output": {
+      "output": "Based on the output of each task, will be aggregated or combined using the following operations: \n- Task1: Concatenation \n- Task2: Union \n- Task3: Intersection"
+    },
+    "description": "Determine how the output of each task will be aggregated or combined."
+  },
+  "determine_data_storage": {
+    "output": {
+      "output": "Based on the workflow requirements, we will use a relational database schema to store and access data. The database will be designed to accommodate the workflow's specific goals, inputs, and outputs. The storage format will be JSON, and access methods will include RESTful APIs and SQL queries."
+    },
+    "description": "Decide how data will be stored and accessed."
+  },
+  "extract_workflow_requirements": {
+    "output": {
+      "output": "- Identify the workflow's specific goals: Determine the objectives and targets of the workflow.\n- List the workflow's inputs: Identify all the inputs required for the workflow to function.\n- Define the workflow's outputs: Specify the expected results or products of the workflow."
+    },
+    "description": "Identify the workflow's specific goals, inputs, and outputs."
+  },
+  "identify_atomic_tasks": {
+    "output": {
+      "output": "Based on the break_down_workflow output, the individual tasks within each sub-workflow are:\n- Stage 1: Identify the workflow's specific goals\n- Stage 2: List the workflow's inputs\n- Stage 3: Define the workflow's outputs"
+    },
+    "description": "Identify the individual, atomic tasks within each sub-workflow."
+  },
+  "list_dependencies": {
+    "output": {
+      "output": "Based on the identify_atomic_tasks output, the dependencies between each task are:\n- Stage1: Identify the workflow's specific goals (input: test input, output: workflow goals)\n- Stage2: List the workflow's inputs (input: workflow goals, output: workflow inputs)\n- Stage3: Define the workflow's outputs (input: workflow inputs, output: workflow outputs)"
+    },
+    "description": "Identify the dependencies between tasks."
+  },
+  "map_sub-workflows": {
+    "output": {
+      "output": "Produced an SVG chart representing the sub-workflows and their dependencies based on the extracted workflow requirements and provided output from 'break_down_workflow'. The chart labels each node and edge with clear, descriptive text. Sub-workflows include Stage 1: Identify the workflow's specific goals, Stage 2: List the workflow's inputs, and Stage 3: Define the workflow's outputs."
+    },
+    "description": "Create a visual representation (e.g., graph, chart) of the sub-workflows and their dependencies."
+  },
+  "produce_workflow_plan": {
+    "output": {
+      "output": "Based on the provided inputs from parent nodes, here is a comprehensive workflow plan:\n\nTasks:\n1. Stage1: Identify the workflow's specific goals\n   - Input: test input\n   - Processing: Analyze and identify workflow goals\n   - Output: workflow goals\n\n2. Stage2: List the workflow's inputs\n   - Input: workflow goals\n   - Processing: List and organize workflow inputs\n   - Output: workflow inputs\n\n3. Stage3: Define the workflow's outputs\n   - Input: workflow inputs\n   - Processing: Define and organize workflow outputs\n   - Output: workflow outputs\n\nDependencies:\n- Stage1 depends on test input\n- Stage2 depends on Stage1\n- Stage3 depends on Stage2\n\nData Storage:\n- A relational database schema will be used to store and access data.\n- The database will accommodate the workflow's specific goals, inputs, and outputs.\n- The storage format will be JSON.\n- Access methods will include RESTful APIs and SQL queries.\n\nAggregation Functions:\n- Task1: Concatenation\n- Task2: Union\n- Task3: Intersection\n\nThis comprehensive workflow plan integrates all elements, including tasks, dependencies, data storage, and aggregation functions, to achieve the workflow's objectives."
+    },
+    "description": "Put all elements together to create a comprehensive workflow plan."
+  }
+}

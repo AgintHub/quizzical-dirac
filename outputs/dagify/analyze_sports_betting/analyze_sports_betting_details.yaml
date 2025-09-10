@@ -1,0 +1,71 @@
+dag_type: plain_text
+description: A workflow for analyzing sports betting data to gain insights and make
+  informed decisions.
+name: analyze_sports_betting
+nodes:
+  analyze_odds_and_outcomes:
+    agent: false
+    description: Analyze odds and outcomes data to identify relationships and trends.
+    name: analyze_odds_and_outcomes
+    nodes_depended_on:
+    - clean_and_process_data
+    nodes_dependent_on: []
+    prompt: Analyze odds and outcomes data to identify relationships and trends. Calculate
+      metrics such as odds accuracy, favorite win rates, and underdog upsets.
+  analyze_team_performance:
+    agent: false
+    description: Analyze team performance data to identify trends and patterns.
+    name: analyze_team_performance
+    nodes_depended_on:
+    - clean_and_process_data
+    nodes_dependent_on: []
+    prompt: Analyze team performance data to identify trends and patterns. Calculate
+      metrics such as win-loss ratios, points scored, and margin of victory.
+  clean_and_process_data:
+    agent: false
+    description: Clean and process the collected betting data.
+    name: clean_and_process_data
+    nodes_depended_on:
+    - collect_betting_data
+    nodes_dependent_on: []
+    prompt: Clean and process the collected betting data by handling missing values,
+      converting data types, and removing duplicates.
+  collect_betting_data:
+    agent: false
+    description: Gather sports betting data from various sources.
+    name: collect_betting_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Collect sports betting data from various sources such as sportsbooks,
+      APIs, or databases. Ensure data includes information on games, teams, odds,
+      and outcomes.
+  evaluate_and_refine_model:
+    agent: false
+    description: Evaluate and refine the analysis model to improve accuracy and effectiveness.
+    name: evaluate_and_refine_model
+    nodes_depended_on:
+    - generate_insights_and_recommendations
+    nodes_dependent_on: []
+    prompt: Evaluate and refine the analysis model to improve accuracy and effectiveness.
+      Test the model using historical data and adjust parameters as needed.
+  generate_insights_and_recommendations:
+    agent: false
+    description: Generate insights and recommendations based on the analysis.
+    name: generate_insights_and_recommendations
+    nodes_depended_on:
+    - analyze_team_performance
+    - analyze_odds_and_outcomes
+    nodes_dependent_on: []
+    prompt: Generate insights and recommendations based on the analysis of team performance,
+      odds, and outcomes. Identify trends, patterns, and correlations that can inform
+      betting decisions.
+  visualize_results:
+    agent: false
+    description: Visualize the results of the analysis to facilitate understanding
+      and decision-making.
+    name: visualize_results
+    nodes_depended_on:
+    - generate_insights_and_recommendations
+    nodes_dependent_on: []
+    prompt: Visualize the results of the analysis using plots, charts, and tables
+      to facilitate understanding and decision-making.

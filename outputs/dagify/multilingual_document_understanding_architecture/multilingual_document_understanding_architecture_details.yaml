@@ -1,0 +1,127 @@
+dag_type: plain_text
+description: A workflow for digitizing and extracting text from multi-lingual, noisy,
+  and complex documents while preserving layout and embedded elements. The workflow
+  ingests documents of various formats, pre-processes them, extracts text via OCR
+  and layout features, detects languages, classifies visual components, semantically
+  groups content, and finally produces standardized JSON and Markdown outputs with
+  quality assurance.
+name: multilingual_document_understanding_architecture
+nodes:
+  classify_layout_components:
+    agent: false
+    description: Classify each segmented layout component into categories such as
+      header, body text, table, image, chart, or map.
+    name: classify_layout_components
+    nodes_depended_on:
+    - layout_analysis
+    nodes_dependent_on: []
+    prompt: Based on the layout analysis, assign each segmented region a classification
+      (e.g., header, paragraph, table, image, chart). Include a brief rationale for
+      each classification.
+  detect_document_format:
+    agent: false
+    description: Determine the document's format to decide the appropriate extraction
+      methods.
+    name: detect_document_format
+    nodes_depended_on:
+    - ingest_document
+    nodes_dependent_on: []
+    prompt: Analyze the ingested document to identify its file format (e.g., PDF,
+      DOCX, image). Return the format type and any relevant metadata.
+  detect_languages:
+    agent: false
+    description: Identify and label the languages present in the extracted text content.
+    name: detect_languages
+    nodes_depended_on:
+    - perform_ocr
+    nodes_dependent_on: []
+    prompt: Analyze the text extracted via OCR to detect all languages present. Return
+      a list of detected languages along with confidence scores.
+  extract_embedded_elements:
+    agent: false
+    description: Detect and extract non-textual elements, such as tables, charts,
+      images, maps, and form fields from the document.
+    name: extract_embedded_elements
+    nodes_depended_on:
+    - preprocess_document
+    nodes_dependent_on: []
+    prompt: Identify and extract embedded elements (tables, charts, images, maps,
+      form fields) from the preprocessed document. Provide spatial and layout details
+      for each element identified.
+  format_output_json_markdown:
+    agent: false
+    description: Convert the semantically grouped content and extracted metadata into
+      standardized JSON and Markdown formats, including language identification.
+    name: format_output_json_markdown
+    nodes_depended_on:
+    - semantic_grouping
+    - detect_languages
+    nodes_dependent_on: []
+    prompt: Merge the semantically grouped content with the language detection output
+      and convert the combined result into a structured JSON and a human-readable
+      Markdown format. Ensure the output preserves the document's layout hierarchy
+      and element metadata.
+  ingest_document:
+    agent: false
+    description: Ingest the input document, which may be in formats such as PDF, DOCX,
+      PPT, or scanned image.
+    name: ingest_document
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Accept an input document in any common format (e.g., PDF, DOCX, PPT, scanned
+      image) and prepare it for further processing.
+  layout_analysis:
+    agent: false
+    description: Analyze the document layout to segment and delineate regions such
+      as headers, paragraphs, tables, and figures.
+    name: layout_analysis
+    nodes_depended_on:
+    - perform_ocr
+    - extract_embedded_elements
+    nodes_dependent_on: []
+    prompt: Perform a layout analysis that segments the document into logical regions
+      (e.g., headings, paragraphs, tables, images). Return positional and hierarchical
+      information for each segment.
+  perform_ocr:
+    agent: false
+    description: Extract textual content from image-based documents using multi-lingual
+      OCR, including handling handwritten text.
+    name: perform_ocr
+    nodes_depended_on:
+    - preprocess_document
+    nodes_dependent_on: []
+    prompt: Run a multi-lingual OCR process on the preprocessed document to extract
+      text. Include capabilities for recognizing handwritten text and non-Latin scripts.
+      Output the raw text content.
+  preprocess_document:
+    agent: false
+    description: Enhance the document quality by reducing noise and improving clarity,
+      especially for scanned or low-quality images.
+    name: preprocess_document
+    nodes_depended_on:
+    - detect_document_format
+    nodes_dependent_on: []
+    prompt: Apply preprocessing techniques such as image denoising, contrast enhancement,
+      and skew correction to the document to improve its readability.
+  quality_assurance:
+    agent: false
+    description: Validate the final output to ensure fidelity to the original layout,
+      accuracy of text extraction, and proper language tagging.
+    name: quality_assurance
+    nodes_depended_on:
+    - format_output_json_markdown
+    nodes_dependent_on: []
+    prompt: Perform a quality check on the produced JSON and Markdown outputs. Validate
+      that the layout, text, and language identifications match the original document.
+      Report any discrepancies or quality issues.
+  semantic_grouping:
+    agent: false
+    description: Group classified components into coherent sections preserving reading
+      order and visual hierarchy.
+    name: semantic_grouping
+    nodes_depended_on:
+    - classify_layout_components
+    nodes_dependent_on: []
+    prompt: Organize the classified components into semantically coherent groups that
+      reflect the document's logical structure and reading order. Output the grouping
+      structure.

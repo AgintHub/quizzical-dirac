@@ -1,0 +1,454 @@
+dag_type: stub
+description: A workflow to understand multi-lingual documents, extract text, preserve
+  layout, and output in JSON and Markdown formats.
+name: intelligent_multi-lingual_document_understanding
+nodes:
+  component_conversion:
+    agent: false
+    code_node_type: stub
+    description: Convert the localized components into natural language text.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ComponentLocalizationOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for component_localization node outputs.\"\"\"\n    component_types: List[str]\
+      \ = Field(..., description=\"The types of components localized and classified.\"\
+      )\n    component_locations: List[str] = Field(..., description=\"The locations\
+      \ of the components in the document.\")\n\n\nclass ComponentConversionOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for component_conversion node outputs.\"\"\"\n   \
+      \ converted_components: List[str] = Field(..., description=\"The converted components\
+      \ in natural language text.\")\n\n\ndef component_conversion(component_localization_input:\
+      \ ComponentLocalizationOutput, **kwargs) -> ComponentConversionOutput:\n   \
+      \ \"\"\"Convert the localized components into natural language text.\n\n   \
+      \ Args:\n        component_localization_input: Input from the 'component_localization'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       ComponentConversionOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return ComponentConversionOutput(\n        converted_components=[],\n\
+      \    )"
+    name: component_conversion
+    nodes_depended_on:
+    - component_localization
+    nodes_dependent_on: []
+    output_structure:
+    - description: The converted components in natural language text.
+      key: converted_components
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: API call to retrieve component types and locations
+        reason: This is the input required for the conversion process.
+        text: Receive the localized component types and locations from the component_localization
+          node.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a template engine (e.g., Jinja2) to render natural language text
+          for each component type
+        reason: This approach provides a scalable and maintainable way to handle various
+          component types.
+        text: Use a template-based approach to convert each component type into natural
+          language text.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a dictionary to map component locations to their corresponding
+          component types
+        reason: This ensures that the generated text accurately reflects the component's
+          location and type.
+        text: For each component location, use the corresponding component type to
+          generate the natural language text.
+      - complexity: LOW
+        impact: LOW
+        method: Use a natural language processing library (e.g., NLTK) to perform
+          basic post-processing
+        reason: This step refines the output to make it more readable and understandable.
+        text: Post-process the generated natural language text to ensure fluency and
+          coherence.
+      - complexity: LOW
+        impact: LOW
+        method: Use a data structure (e.g., list) to store and return the converted
+          components
+        reason: This is the final output required by the output_generation node.
+        text: Return the list of converted components in natural language text.
+    prompt: Convert the localized components into natural language text.
+    shims: []
+  component_localization:
+    agent: false
+    code_node_type: stub
+    description: Localize and classify components such as tables, images, maps, and
+      charts in the document.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass TextExtractionOutput(BaseModel):\n    \"\"\"Pydantic model for text_extraction\
+      \ node outputs.\"\"\"\n    extracted_text: str = Field(..., description=\"The\
+      \ extracted text.\")\n    layout_info: str = Field(..., description=\"The layout\
+      \ information of the extracted text.\")\n\n\nclass HandwrittenTextRecognitionOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for handwritten_text_recognition node outputs.\"\"\
+      \"\n    handwritten_text: str = Field(..., description=\"The recognized handwritten\
+      \ text.\")\n\n\nclass ComponentLocalizationOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for component_localization node outputs.\"\"\"\n    component_types:\
+      \ List[str] = Field(..., description=\"The types of components localized and\
+      \ classified.\")\n    component_locations: List[str] = Field(..., description=\"\
+      The locations of the components in the document.\")\n\n\ndef component_localization(text_extraction_input:\
+      \ TextExtractionOutput, handwritten_text_recognition_input: HandwrittenTextRecognitionOutput,\
+      \ **kwargs) -> ComponentLocalizationOutput:\n    \"\"\"Localize and classify\
+      \ components such as tables, images, maps, and charts in the document.\n\n \
+      \   Args:\n        text_extraction_input: Input from the 'text_extraction' node.\n\
+      \        handwritten_text_recognition_input: Input from the 'handwritten_text_recognition'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       ComponentLocalizationOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return ComponentLocalizationOutput(\n       \
+      \ component_types=[],\n        component_locations=[],\n    )"
+    name: component_localization
+    nodes_depended_on:
+    - text_extraction
+    - handwritten_text_recognition
+    nodes_dependent_on: []
+    output_structure:
+    - description: The types of components localized and classified.
+      key: component_types
+      type: List[str]
+    - description: The locations of the components in the document.
+      key: component_locations
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Analyze the layout information from text_extraction to identify potential
+          component locations.
+        reason: The text_extraction node provides layout information that can be used
+          to identify component locations.
+        text: Use the output from text_extraction to identify potential component
+          locations.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Analyze the recognized handwritten text from handwritten_text_recognition
+          to identify potential component text.
+        reason: The handwritten_text_recognition node provides recognized handwritten
+          text that may be part of a component.
+        text: Use the output from handwritten_text_recognition to identify handwritten
+          text that may be part of a component.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a library such as OpenCV or Tesseract to detect components.
+        reason: A component detection algorithm can be used to identify components
+          based on their visual characteristics.
+        text: Apply a component detection algorithm to identify components such as
+          tables, images, maps, and charts.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a machine learning model or a rule-based approach to classify
+          the detected components.
+        reason: Classification of components is necessary to provide a meaningful
+          output.
+        text: Classify the detected components into their respective types (e.g. table,
+          image, map, chart).
+      - complexity: LOW
+        impact: LOW
+        method: Use a templating engine or a simple formatting approach to output
+          the component types and locations.
+        reason: The output format is specified in the problem statement.
+        text: Output the component types and locations in the required format.
+    prompt: Localize and classify components such as tables, images, maps, and charts
+      in the document.
+    shims: []
+  document_preprocessing:
+    agent: false
+    code_node_type: stub
+    description: Preprocess the input document to convert it into a suitable format
+      for further processing.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DocumentPreprocessingOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for document_preprocessing node outputs.\"\"\"\n \
+      \   preprocessed_document: str = Field(..., description=\"The preprocessed document.\"\
+      )\n\n\ndef document_preprocessing(general_input: str, **kwargs) -> DocumentPreprocessingOutput:\n\
+      \    \"\"\"Preprocess the input document to convert it into a suitable format\
+      \ for further processing.\n\n    Args:\n        general_input: General input\
+      \ string for the root node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        DocumentPreprocessingOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return DocumentPreprocessingOutput(\n\
+      \        preprocessed_document=\"\",\n    )"
+    name: document_preprocessing
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: The preprocessed document.
+      key: preprocessed_document
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use regular expressions to identify and remove unnecessary characters.
+        reason: This step helps to normalize the document and reduce noise.
+        text: Remove any unnecessary characters, such as special characters, punctuation,
+          and extra whitespace, from the input document.
+      - complexity: LOW
+        impact: HIGH
+        method: Use a library function to convert the document to UTF-8 encoding.
+        reason: This step ensures that the document can be processed consistently
+          across different systems.
+        text: Convert the input document to a standard encoding format, such as UTF-8.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a natural language processing library to tokenize the document.
+        reason: This step helps to prepare the document for further processing, such
+          as language detection and text extraction.
+        text: Tokenize the input document into individual words or tokens.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a natural language processing library to remove stop words and
+          punctuation.
+        reason: This step helps to reduce noise and improve the accuracy of further
+          processing steps.
+        text: Remove stop words and punctuation from the tokenized document.
+    prompt: Preprocess the input document to convert it into a suitable format for
+      further processing.
+    shims: []
+  handwritten_text_recognition:
+    agent: false
+    code_node_type: stub
+    description: Recognize handwritten text in the document.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DocumentPreprocessingOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for document_preprocessing node outputs.\"\"\"\n \
+      \   preprocessed_document: str = Field(..., description=\"The preprocessed document.\"\
+      )\n\n\nclass HandwrittenTextRecognitionOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for handwritten_text_recognition node outputs.\"\"\"\n    handwritten_text:\
+      \ str = Field(..., description=\"The recognized handwritten text.\")\n\n\ndef\
+      \ handwritten_text_recognition(document_preprocessing_input: DocumentPreprocessingOutput,\
+      \ **kwargs) -> HandwrittenTextRecognitionOutput:\n    \"\"\"Recognize handwritten\
+      \ text in the document.\n\n    Args:\n        document_preprocessing_input:\
+      \ Input from the 'document_preprocessing' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        HandwrittenTextRecognitionOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ HandwrittenTextRecognitionOutput(\n        handwritten_text=\"\",\n    )"
+    name: handwritten_text_recognition
+    nodes_depended_on:
+    - document_preprocessing
+    nodes_dependent_on: []
+    output_structure:
+    - description: The recognized handwritten text.
+      key: handwritten_text
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use the output of the document_preprocessing node as input.
+        reason: The preprocessed document is necessary for handwritten text recognition.
+        text: Receive the preprocessed document from the document_preprocessing node.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a machine learning-based approach such as convolutional neural
+          networks (CNNs) or recurrent neural networks (RNNs) to recognize handwritten
+          text. Utilize libraries such as TensorFlow or PyTorch for implementation.
+        reason: This step is necessary to recognize the handwritten text in the document.
+        text: Apply a handwritten text recognition algorithm to the preprocessed document.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use techniques such as spell checking, grammar checking, and language
+          modeling to post-process the recognized text.
+        reason: This step is necessary to refine the recognized text and improve overall
+          accuracy.
+        text: Post-process the recognized handwritten text to correct errors and improve
+          accuracy.
+      - complexity: LOW
+        impact: LOW
+        method: Use the output structure defined for the handwritten_text_recognition
+          node to format the output.
+        reason: This step is necessary to provide the output in the required format.
+        text: Output the recognized handwritten text in the required format.
+    prompt: Recognize handwritten text in the document.
+    shims: []
+  language_detection:
+    agent: false
+    code_node_type: stub
+    description: Detect the languages present in the document.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DocumentPreprocessingOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for document_preprocessing node outputs.\"\"\"\n    preprocessed_document:\
+      \ str = Field(..., description=\"The preprocessed document.\")\n\n\nclass LanguageDetectionOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for language_detection node outputs.\"\"\"\n    languages:\
+      \ List[str] = Field(..., description=\"The languages detected in the document.\"\
+      )\n\n\ndef language_detection(document_preprocessing_input: DocumentPreprocessingOutput,\
+      \ **kwargs) -> LanguageDetectionOutput:\n    \"\"\"Detect the languages present\
+      \ in the document.\n\n    Args:\n        document_preprocessing_input: Input\
+      \ from the 'document_preprocessing' node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        LanguageDetectionOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return LanguageDetectionOutput(\n\
+      \        languages=[],\n    )"
+    name: language_detection
+    nodes_depended_on:
+    - document_preprocessing
+    nodes_dependent_on: []
+    output_structure:
+    - description: The languages detected in the document.
+      key: languages
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use the output of the document_preprocessing node as input.
+        reason: The preprocessed document is required to accurately detect languages.
+        text: Receive the preprocessed document from the document_preprocessing node.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Utilize a library's API to analyze the document and return a list
+          of detected languages.
+        reason: Language detection libraries provide accurate and efficient language
+          detection capabilities.
+        text: Use a language detection library (e.g. langdetect, polyglot) to analyze
+          the preprocessed document and detect languages.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Apply a threshold to the confidence scores to filter out languages
+          with low confidence.
+        reason: Low confidence scores may indicate inaccurate language detection.
+        text: Filter the detected languages to remove any languages with low confidence
+          scores.
+      - complexity: LOW
+        impact: LOW
+        method: Format the list of detected languages according to the output structure.
+        reason: The output structure requires a list of detected languages.
+        text: Return the list of detected languages in the output structure.
+    prompt: Detect the languages present in the document.
+    shims: []
+  output_generation:
+    agent: false
+    code_node_type: stub
+    description: Generate the output in JSON and Markdown formats.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass TextExtractionOutput(BaseModel):\n    \"\"\"Pydantic model for text_extraction\
+      \ node outputs.\"\"\"\n    extracted_text: str = Field(..., description=\"The\
+      \ extracted text.\")\n    layout_info: str = Field(..., description=\"The layout\
+      \ information of the extracted text.\")\n\n\nclass HandwrittenTextRecognitionOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for handwritten_text_recognition node outputs.\"\"\
+      \"\n    handwritten_text: str = Field(..., description=\"The recognized handwritten\
+      \ text.\")\n\n\nclass ComponentConversionOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for component_conversion node outputs.\"\"\"\n    converted_components:\
+      \ List[str] = Field(..., description=\"The converted components in natural language\
+      \ text.\")\n\n\nclass OutputGenerationOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for output_generation node outputs.\"\"\"\n    json_output: str = Field(...,\
+      \ description=\"The output in JSON format.\")\n    markdown_output: str = Field(...,\
+      \ description=\"The output in Markdown format.\")\n\n\ndef output_generation(text_extraction_input:\
+      \ TextExtractionOutput, handwritten_text_recognition_input: HandwrittenTextRecognitionOutput,\
+      \ component_conversion_input: ComponentConversionOutput, **kwargs) -> OutputGenerationOutput:\n\
+      \    \"\"\"Generate the output in JSON and Markdown formats.\n\n    Args:\n\
+      \        text_extraction_input: Input from the 'text_extraction' node.\n   \
+      \     handwritten_text_recognition_input: Input from the 'handwritten_text_recognition'\
+      \ node.\n        component_conversion_input: Input from the 'component_conversion'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       OutputGenerationOutput: Object containing outputs for this node.\n \
+      \   \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return OutputGenerationOutput(\n        json_output=\"\
+      \",\n        markdown_output=\"\",\n    )"
+    name: output_generation
+    nodes_depended_on:
+    - text_extraction
+    - handwritten_text_recognition
+    - component_conversion
+    nodes_dependent_on: []
+    output_structure:
+    - description: The output in JSON format.
+      key: json_output
+      type: str
+    - description: The output in Markdown format.
+      key: markdown_output
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a Python dictionary to store the combined data.
+        reason: This step is necessary to gather all the relevant information into
+          a single data structure for further processing.
+        text: Combine the extracted text, handwritten text, and converted components
+          into a single data structure.
+      - complexity: LOW
+        impact: HIGH
+        method: Use the `json` library in Python to convert the dictionary into a
+          JSON string.
+        reason: This step is necessary to generate the output in JSON format.
+        text: Use a JSON library to convert the combined data structure into a JSON
+          string.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a Markdown library such as `markdown` in Python to convert the
+          dictionary into a Markdown string.
+        reason: This step is necessary to generate the output in Markdown format.
+        text: Use a Markdown library to convert the combined data structure into a
+          Markdown string.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use string formatting techniques to format the JSON and Markdown strings.
+        reason: This step is necessary to ensure that the output is in the correct
+          format.
+        text: Format the JSON and Markdown strings according to the required output
+          structure.
+    prompt: Generate the output in JSON and Markdown formats.
+    shims: []
+  text_extraction:
+    agent: false
+    code_node_type: stub
+    description: Extract text from the document while preserving the layout.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DocumentPreprocessingOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for document_preprocessing node outputs.\"\"\"\n \
+      \   preprocessed_document: str = Field(..., description=\"The preprocessed document.\"\
+      )\n\n\nclass TextExtractionOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ text_extraction node outputs.\"\"\"\n    extracted_text: str = Field(...,\
+      \ description=\"The extracted text.\")\n    layout_info: str = Field(..., description=\"\
+      The layout information of the extracted text.\")\n\n\ndef text_extraction(document_preprocessing_input:\
+      \ DocumentPreprocessingOutput, **kwargs) -> TextExtractionOutput:\n    \"\"\"\
+      Extract text from the document while preserving the layout.\n\n    Args:\n \
+      \       document_preprocessing_input: Input from the 'document_preprocessing'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       TextExtractionOutput: Object containing outputs for this node.\n   \
+      \ \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output with\
+      \ placeholder values\n    return TextExtractionOutput(\n        extracted_text=\"\
+      \",\n        layout_info=\"\",\n    )"
+    name: text_extraction
+    nodes_depended_on:
+    - document_preprocessing
+    nodes_dependent_on: []
+    output_structure:
+    - description: The extracted text.
+      key: extracted_text
+      type: str
+    - description: The layout information of the extracted text.
+      key: layout_info
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Directly access the preprocessed_document field from the document_preprocessing
+          node's output.
+        reason: The document_preprocessing node provides a suitable format for text
+          extraction.
+        text: Use the preprocessed document from the document_preprocessing node as
+          input.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Utilize a library such as Apache Tika or PDFMiner to perform layout
+          analysis.
+        reason: This step is necessary to preserve the layout of the extracted text.
+        text: Apply a layout analysis algorithm to identify the text layout in the
+          document.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a library such as Apache Tika or PDFMiner to extract text based
+          on the layout analysis results.
+        reason: This step is necessary to obtain the extracted text while preserving
+          the layout.
+        text: Extract the text from the document using the identified layout information.
+      - complexity: LOW
+        impact: LOW
+        method: Create a JSON object with the extracted_text and layout_info fields.
+        reason: This step is necessary to provide the output in the required format.
+        text: Format the extracted text and layout information into the required output
+          structure.
+    prompt: Extract text from the document while preserving the layout.
+    shims: []

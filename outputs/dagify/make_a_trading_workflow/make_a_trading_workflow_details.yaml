@@ -1,0 +1,81 @@
+dag_type: plain_text
+description: A workflow for creating a trading workflow, covering market research,
+  strategy development, position management, risk management, and post-trade analysis.
+name: make_a_trading_workflow
+nodes:
+  analyze_position_management:
+    agent: false
+    description: Analyze position management techniques to optimize trading performance
+    name: analyze_position_management
+    nodes_depended_on:
+    - simulate_trading_strategy
+    nodes_dependent_on: []
+    prompt: Analyze position management techniques to optimize trading performance.
+      Review position sizing, risk management, and stop-loss strategies. Use libraries
+      such as Pandas and NumPy to analyze position-level data and identify areas for
+      improvement.
+  develop_risk_management_plan:
+    agent: false
+    description: Create a risk management plan to mitigate potential losses
+    name: develop_risk_management_plan
+    nodes_depended_on:
+    - analyze_position_management
+    nodes_dependent_on: []
+    prompt: Create a risk management plan that includes position-level risk management
+      techniques, such as stop-loss orders and risk-reward ratios. Describe the plan's
+      goals, risks, and potential returns. Use libraries such as PyAlgoTrade or Zipline
+      to implement the risk management plan.
+  develop_trading_strategy:
+    agent: false
+    description: Create a trading strategy based on market trends and patterns
+    name: develop_trading_strategy
+    nodes_depended_on:
+    - identify_market_trends
+    nodes_dependent_on: []
+    prompt: Based on the identified market trends, develop a trading strategy that
+      includes entry and exit rules, position sizing, and risk management techniques.
+      Describe the strategy's goals, risks, and potential returns. Use libraries such
+      as Zipline or Backtrader.
+  gather_market_data:
+    agent: false
+    description: Collect and analyze market data for various asset classes
+    name: gather_market_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Gather historical and real-time market data for various asset classes,
+      including stocks, bonds, currencies, and commodities. Use libraries such as
+      Yahoo Finance, Quandl, or Alpha Vantage. List the data sources used and the
+      relevant time frames.
+  identify_market_trends:
+    agent: false
+    description: Analyze market data to identify trends, patterns, and relationships
+    name: identify_market_trends
+    nodes_depended_on:
+    - gather_market_data
+    nodes_dependent_on: []
+    prompt: Use statistical and machine learning techniques to analyze the gathered
+      market data and identify trends, patterns, and relationships. Identify the most
+      significant trends, and assign a confidence level to each one. Use libraries
+      such as Pandas, NumPy, and Scikit-learn.
+  review_post_trade_analysis:
+    agent: false
+    description: Review and analyze post-trade data to optimize trading performance
+    name: review_post_trade_analysis
+    nodes_depended_on:
+    - develop_risk_management_plan
+    nodes_dependent_on: []
+    prompt: Review and analyze post-trade data to evaluate the performance of the
+      trading strategy and risk management plan. Use libraries such as Pandas and
+      NumPy to analyze trade-level data and identify areas for improvement. Compare
+      actual performance to simulated performance and make adjustments as needed.
+  simulate_trading_strategy:
+    agent: false
+    description: Backtest the trading strategy using historical market data
+    name: simulate_trading_strategy
+    nodes_depended_on:
+    - develop_trading_strategy
+    nodes_dependent_on: []
+    prompt: Backtest the developed trading strategy using historical market data to
+      evaluate its performance. Use libraries such as Zipline or Backtrader to simulate
+      the trading strategy and calculate its performance metrics, such as return,
+      Sharpe ratio, and drawdown.

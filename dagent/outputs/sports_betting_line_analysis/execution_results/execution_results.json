@@ -1,0 +1,56 @@
+{
+  "analyze_odds_shifts": {
+    "output": {
+      "output": "The analysis of betting line odds shifts for the Pacers vs OKC shows a significant change of 3.4% in favor of the Pacers. This shift is likely to impact the game's outcome, making the Pacers a stronger contender for winning. The betting line analysis recommends closely monitoring the game's progression and adjusting betting strategies accordingly."
+    },
+    "description": "Analyze betting line odds shifts"
+  },
+  "calculate_fair_values": {
+    "output": {
+      "output": "Estimated fair values for each betting line based on market conditions and statistical models: fair value of pacers vs okc = 1.85, fair value of okc vs pacers = 1.85\nData used for estimation: preprocessed betting line data, market conditions."
+    },
+    "description": "Estimate fair value of betting lines"
+  },
+  "clean_lines_data": {
+    "output": {
+      "output": "Preprocessed betting line data for analysis: removed non-essential columns, handled missing values, and standardized data types."
+    },
+    "description": "Preprocess betting line data for analysis"
+  },
+  "detect_market_biases": {
+    "output": {
+      "output": "No significant biases detected. The fair values for both pacers vs OKC and OKC vs pacers are equal at 1.85, indicating a balanced market. However, further analysis is recommended to confirm the absence of anomalies."
+    },
+    "description": "Detect biases in betting line movements"
+  },
+  "download_betting_lines": {
+    "output": {
+      "output": "Betting lines retrieved successfully for NFL, NBA, MLB, and NHL. Available now for parsing."
+    },
+    "description": "Download sports betting lines from credible sources"
+  },
+  "generate_statistics": {
+    "output": {
+      "output": "Common statistics for betting line data: mean = 5.2, median = 5.0, standard deviation = 1.8, calculated from preprocessed betting line data for analysis: removed non-essential columns, handled missing values, and standardized data types."
+    },
+    "description": "Calculate common statistics for betting line data"
+  },
+  "parse_lines_data": {
+    "output": {
+      "output": "Extracted betting lines data from raw format: NFL, NBA, MLB, and NHL.\nBetting lines data available for analysis."
+    },
+    "description": "Extract betting line data from raw format"
+  },
+  "summarize_findings": {
+    "output": {
+      "output": "The betting line analysis for the Pacers vs OKC game reveals a significant shift of 3.4% in favor of the Pacers, indicating they are a stronger contender. Key statistics for the betting line data include a mean of 5.2, median of 5.0, and standard deviation of 1.8. This analysis suggests closely monitoring the game's progression and adjusting betting strategies accordingly."
+    },
+    "description": "Provide a summary of betting line analysis results"
+  },
+  "visualize_insights": {
+    "output": {
+      "output": "The fair values for both pacers vs OKC and OKC vs pacers are equal at 1.85, indicating a balanced market. No significant biases were detected. However, further analysis is recommended to confirm the absence of anomalies."
+    },
+    "description": "Visualize betting line analysis insights"
+  }
+}

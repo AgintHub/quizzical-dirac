@@ -1,0 +1,86 @@
+dag_type: plain_text
+description: A workflow for performing alpha discovery in intraday trading, similar
+  to quant firms.
+name: alpha_discovery_workflow
+nodes:
+  backtest_trading_strategy:
+    agent: false
+    description: Backtest the trading strategy using historical data.
+    name: backtest_trading_strategy
+    nodes_depended_on:
+    - generate_trading_signals
+    nodes_dependent_on: []
+    prompt: Backtest the trading strategy using historical data, calculating performance
+      metrics such as return, risk, and Sharpe ratio.
+  build_alpha_models:
+    agent: false
+    description: Build alpha models using the selected alpha factors and engineered
+      features.
+    name: build_alpha_models
+    nodes_depended_on:
+    - feature_engineering
+    - select_alpha_factors
+    nodes_dependent_on: []
+    prompt: Train machine learning models, such as linear regression, decision trees,
+      and random forests, using the engineered features and alpha factors.
+  collect_market_data:
+    agent: false
+    description: Collect historical market data for analysis.
+    name: collect_market_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Collect 1-minute bar data for the S&P 500 index, including open, high,
+      low, and close prices, for the past 6 months.
+  evaluate_alpha_models:
+    agent: false
+    description: Evaluate the performance of the built alpha models.
+    name: evaluate_alpha_models
+    nodes_depended_on:
+    - build_alpha_models
+    nodes_dependent_on: []
+    prompt: Calculate performance metrics, such as return, risk, and Sharpe ratio,
+      for each alpha model.
+  feature_engineering:
+    agent: false
+    description: Engineer relevant features from the preprocessed market data.
+    name: feature_engineering
+    nodes_depended_on:
+    - preprocess_market_data
+    nodes_dependent_on: []
+    prompt: Calculate moving averages, RSI, Bollinger Bands, and other relevant technical
+      indicators.
+  generate_trading_signals:
+    agent: false
+    description: Generate trading signals using the selected alpha model.
+    name: generate_trading_signals
+    nodes_depended_on:
+    - select_best_alpha_model
+    nodes_dependent_on: []
+    prompt: Use the selected alpha model to generate buy and sell signals for the
+      S&P 500 index.
+  preprocess_market_data:
+    agent: false
+    description: Clean and preprocess the collected market data.
+    name: preprocess_market_data
+    nodes_depended_on:
+    - collect_market_data
+    nodes_dependent_on: []
+    prompt: Handle missing values, normalize prices, and convert data to a suitable
+      format for analysis.
+  select_alpha_factors:
+    agent: false
+    description: Select a set of alpha factors to use for alpha discovery.
+    name: select_alpha_factors
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Choose a set of alpha factors, such as momentum, mean reversion, and statistical
+      arbitrage.
+  select_best_alpha_model:
+    agent: false
+    description: Select the best alpha model based on performance metrics.
+    name: select_best_alpha_model
+    nodes_depended_on:
+    - evaluate_alpha_models
+    nodes_dependent_on: []
+    prompt: Choose the alpha model with the best performance metrics, such as highest
+      return and Sharpe ratio.

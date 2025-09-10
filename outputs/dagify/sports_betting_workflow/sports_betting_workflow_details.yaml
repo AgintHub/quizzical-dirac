@@ -1,0 +1,52 @@
+dag_type: plain_text
+description: A workflow for placing and managing sports bets
+name: sports_betting_workflow
+nodes:
+  analyze_statistics_and_trends:
+    agent: false
+    description: Examine data on past performances, injuries, and other relevant factors
+    name: analyze_statistics_and_trends
+    nodes_depended_on:
+    - research_teams_and_odds
+    nodes_dependent_on: []
+    prompt: Analyze statistics and trends for the chosen sport and teams
+  choose_sport:
+    agent: false
+    description: Select a sport to focus on for betting
+    name: choose_sport
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Choose a sport to bet on (e.g. football, basketball, baseball)
+  monitor_and_adjust:
+    agent: false
+    description: Keep track of the bet's status and make adjustments to the betting
+      line if needed
+    name: monitor_and_adjust
+    nodes_depended_on:
+    - place_bets
+    nodes_dependent_on: []
+    prompt: Monitor the bet's progress and adjust as necessary
+  place_bets:
+    agent: false
+    description: ' Initiate the betting process through a sportsbook or platform'
+    name: place_bets
+    nodes_depended_on:
+    - set_betting_line
+    nodes_dependent_on: []
+    prompt: Place the bets according to the set betting line
+  research_teams_and_odds:
+    agent: false
+    description: Gather information on competing teams and their odds
+    name: research_teams_and_odds
+    nodes_depended_on:
+    - choose_sport
+    nodes_dependent_on: []
+    prompt: Research teams and odds for the chosen sport
+  set_betting_line:
+    agent: false
+    description: Determine the amount to wager on each team or outcome
+    name: set_betting_line
+    nodes_depended_on:
+    - analyze_statistics_and_trends
+    nodes_dependent_on: []
+    prompt: Set a betting line for the chosen teams and sport

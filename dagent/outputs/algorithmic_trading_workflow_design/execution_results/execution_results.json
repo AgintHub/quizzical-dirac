@@ -1,0 +1,110 @@
+{
+  "choose_asset_universe": {
+    "output": {
+      "output": "1. Large-cap US equities (S&P 500 constituents)\n2. Highly liquid US index & sector ETFs (e.g., SPY, QQQ, XLF)\n3. EUR/USD spot FX\n4. USD/JPY spot FX\n5. E-mini S&P 500 index futures (ES)\n6. 10-Year US Treasury note futures (ZN)\n7. Gold COMEX futures (GC)\n8. WTI Crude Oil futures (CL)"
+    },
+    "description": "Select the set of tradable assets the workflow will cover."
+  },
+  "clarify_trading_objectives": {
+    "output": {
+      "output": "- Target annualized Sharpe ratio \u2265 1.5 while outperforming benchmark total return\n- Limit peak\u2010to\u2010trough portfolio drawdown to 10 % or less\n- Cap per-trade risk at 2 % of equity and portfolio Value-at-Risk at 5 % daily\n- Focus on medium-term holding period (1 day \u2013 4 weeks) to balance turnover and costs\n- Maintain 95 %+ liquidity: exit full portfolio within one trading day under normal market conditions\n- Design fully automated, scalable workflow with real-time monitoring and fail-safe risk controls"
+    },
+    "description": "List the primary goals for the trading workflow in concise bullets."
+  },
+  "compile_workflow_diagram": {
+    "output": {
+      "output": "Market & Reference Data \u2192 Data Ingestion \u2192 Data Quality Checks \u2192 Feature Engineering (Bollinger %B, RSI Divergence, MA Spread, Price Dispersion ATR%, Order-Book Imbalance, Volume Z-Score, Close-VWAP Dev., Opening Gap %, CoT Z-Score, Yield-Curve Steepness) \u2192 Signal Generation / Alpha Models (Bollinger Reversion Quick Flip, RSI Swing Catalyst, Trend Persistence Momentum) \u2192 Portfolio Construction & Position Sizing \u2192 Pre-Trade Risk Checks \u2192 Order Creation \u2192 Smart Order Routing \u2192 Trade Execution \u2192 Trade Confirmation \u2192 Settlement \u2192 P&L & Risk Engine \u2192 Performance Reporting (Exec. Summary \u2192 KPI Dashboard \u2192 Risk Metrics \u2192 Trade Logs \u2192 Alerts Summary)\n\nParallel/Feedback Flows:\n\u2022 Data Quality Checks \u2198\n  \u21b3 Monitoring & Alerts (Stale Feed, Missing Quote, Latency Spike, Heartbeat Failure, etc.)\n\u2022 Pre-Trade Risk Checks \u2194 Monitoring & Alerts (VaR Breach, Position Limit, Order Size Limit)\n\u2022 Execution \u2194 Monitoring & Alerts (Order Reject, Slippage, Drawdown, Margin Util.)\n\u2022 P&L & Risk Engine \u2192 Monitoring & Alerts \u2192 Portfolio Construction (adaptive sizing)\n\nOverall Direction: Data \u2192 Features \u2192 Signals \u2192 Orders \u2192 Execution \u2192 Post-Trade \u2192 Reporting, with continuous Monitoring & Alerts enveloping the live stages."
+    },
+    "description": "Integrate all components into a single high-level diagram description."
+  },
+  "define_data_sources": {
+    "output": {
+      "output": "Raw data feeds & update frequency for mean-reversion trading on selected assets:\n\n1. Equity, ETF, Futures & FX Trade/Quote (Level-1) Tick Data \u2013 real-time sub-second (streaming)\n2. Historical OHLCV Bars (1-sec, 1-min, 5-min, 30-min, 60-min, daily) \u2013 end of each bar\n3. Full Depth Order Book (Level-2) for equities, ETFs & futures \u2013 real-time millisecond\n4. Corporate Actions (splits, dividends, symbol changes) \u2013 as announced; consolidated daily file\n5. Fundamentals (income statement, balance sheet, cash-flow) \u2013 quarterly & annually\n6. Earnings Announcements & Guidance Calendar \u2013 event-driven; intraday updates\n7. Index & ETF Constituents/Weights (e.g., S&P 500) \u2013 daily after close; intra-day flashes on rebalance days\n8. Macroeconomic Releases (CPI, NFP, GDP, Fed decisions) \u2013 scheduled event timestamps; surprise data real-time on release\n9. Treasury Yield Curve & Benchmark Rates (SOFR, Fed Funds) \u2013 real-time for futures; official close daily\n10. FX Benchmarks (WM/Reuters 4 pm fix, ECB fix) \u2013 hourly & daily\n11. Implied Volatility Surfaces & Option Chain Greeks \u2013 snapshot every 5-min; end-of-day full surface\n12. Commitment of Traders (CFTC) & Large Trader Reports \u2013 weekly (Friday release)\n13. Real-time News Headlines (Dow Jones, Bloomberg, Reuters) \u2013 millisecond streaming\n14. Company-specific News & Press Releases \u2013 event-driven; seconds latency\n15. Social Media & Retail Sentiment (Twitter, StockTwits, Reddit) \u2013 1-min polling; sentiment score daily aggregate\n16. Web Search Trends (Google Trends) \u2013 hourly; weekly aggregate series\n17. ESG & Controversy Scores \u2013 monthly update; event-driven revisions\n18. Exchange Calendars & Trading Halts \u2013 real-time updates\n19. Futures Contract Specs & Expiry Calendars \u2013 static reference; roll schedule weekly check\n20. Corporate Event Calendar (M&A, buybacks, investor days) \u2013 daily refresh\n21. Intraday Market Statistics (ADV, uptick/downtick, TRIN, TICK) \u2013 1-min\n22. Short-Interest & Securities Lending Rates \u2013 daily (equities); weekly full file\n23. Settlement Prices & Official Closes \u2013 end-of-session for futures & FX\n24. Reference Data (CUSIP/ISIN mappings, sector classifications, float) \u2013 monthly; ad-hoc corrections\n\nThese feeds collectively power research, feature engineering, and live mean-reversion execution across S&P 500 equities, liquid ETFs, FX pairs, and listed futures."
+    },
+    "description": "Enumerate raw data feeds needed for trading and research."
+  },
+  "define_performance_reporting_layout": {
+    "output": {
+      "output": "- Executive Summary\n  - High-level performance overview\n  - Strategy compliance status\n  - Market condition snapshot\n\n- KPI Dashboard\n  - Annualized Sharpe ratio\n  - Benchmark-adjusted CAGR (alpha)\n  - Maximum peak-to-trough drawdown\n  - Portfolio turnover ratio\n\n- Risk Metrics\n  - 95% one-day Value-at-Risk utilization\n  - Stress test results\n  - Liquidity exposure analysis\n\n- Trade Logs\n  - Time-stamped execution records\n  - Order type/size/venue details\n  - Slippage measurements\n\n- Alerts Summary\n  - VaR limit breaches\n  - Position limit exceedances\n  - Margin utilization alerts\n  - System latency/heartbeat failures"
+    },
+    "description": "Plan the structure of periodic performance reports."
+  },
+  "define_signal_features": {
+    "output": {
+      "output": "Mean-reversion raw feature candidates:\n1. Bollinger Band %B (20-period, 2 SD)\n2. RSI (14-period) divergence\n3. 20/50-period moving average crossover spread\n4. Price dispersion (high-low range % of ATR(14))\n5. Order book imbalance (Level-2 bid/ask volume ratio)\n6. Volume Z-score vs 30-day rolling average\n7. Recent close vs VWAP (1h) deviation\n8. Opening gap % vs overnight range\n9. CoT report net positioning Z-score\n10. 2s10s Treasury yield curve steepness"
+    },
+    "description": "List raw features that will feed signal generation."
+  },
+  "design_backtest_experiments": {
+    "output": {
+      "output": "1. **Bollinger Reversion Quick Flip**: 20-day lookback, 1-day holding, tight stop-loss (1.5x ATR)\n2. **RSI Swing Catalyst**: 60-day lookback, 5-day holding, medium risk (3% daily VaR cap)\n3. **Trend Persistence Momentum**: 50/200-day spread, 14-day holding, aggressive sizing (5% sector exposure)"
+    },
+    "description": "Outline discrete backtest scenarios to run."
+  },
+  "design_order_execution_logic": {
+    "output": {
+      "output": "Execution method selected: VWAP (Volume-Weighted Average Price) algorithm.\n\nKey parameters\n1. Target participation rate: 10 % of real-time market volume (configurable 5\u201315 %).\n2. Slippage buffer: 5 bps (0.05 %) versus running VWAP; child orders cancelled/re-priced if slippage exceeds buffer.\n3. Time-bucket interval: 5-minute slices to match intraday volume curve.\n4. Max slice size: 2 % of ADV or 25 000 shares per slice, whichever is smaller.\n5. Limit price offset: 3 ticks outside reference mid-price (tightens when volatility > 1 %).\n6. Start / end time: 09:35 ET \u2013 15:50 ET; algorithm tapers volume in last 10 minutes.\n7. Catch-up / slow-down threshold: \u00b13 % deviation from scheduled fill curve triggers temporary participation change to 15 % or 5 % respectively.\n8. Minimum fill size: 100 shares per child order.\n9. Child order type: IOC limit with hidden flag; fallback to DAY limit if not filled.\n10. Venue selection: Smart-router across major US lit exchanges + approved dark pools.\n11. Latency budget: \u2264 50 ms per child order, consistent with system latency requirement."
+    },
+    "description": "Define the algorithm for sending orders to market."
+  },
+  "design_risk_constraints": {
+    "output": {
+      "output": "10%, 20%, 5%, 2%"
+    },
+    "description": "Establish hard trading limits."
+  },
+  "draft_monitoring_alerts": {
+    "output": {
+      "output": "Automated Alert Checklist for Live Trading:\n\n1. Breach of VaR Limit \u2013 \u201cAlert: Portfolio VaR has exceeded the 10% threshold. Review risk exposures immediately.\u201d\n2. Position Limit Exceeded \u2013 \u201cAlert: Aggregate position has surpassed 20% capital limit. No further sizing allowed.\u201d\n3. Pre-Trade Risk Check Failed \u2013 \u201cAlert: Order blocked. Risk check failed against configured limits.\u201d\n4. Single Order Size Limit Breach \u2013 \u201cAlert: Order size exceeds allowed maximum. Action required.\u201d\n5. Order Rejected by Venue \u2013 \u201cAlert: Exchange rejected order. Inspect reject code and re-route if necessary.\u201d\n6. Stale Data Feed (>5 s) \u2013 \u201cAlert: Market data feed stale for 5+ seconds. Switching to backup or halt trading.\u201d\n7. Missing Price or Quote \u2013 \u201cAlert: Critical instrument has no valid quote. Pricing suspended.\u201d\n8. Execution Slippage >X bps \u2013 \u201cAlert: Realised slippage above tolerance. Investigate liquidity/latency.\u201d\n9. Latency Spike (>2\u00d7 Baseline) \u2013 \u201cAlert: Gateway latency spike detected. Check network and co-location.\u201d\n10. Drawdown Threshold 5% \u2013 \u201cAlert: Daily P&L drawdown exceeded 5%. Triggering risk review.\u201d\n11. Margin Utilisation >80% \u2013 \u201cAlert: Margin usage critical (>80%). Add funds or reduce exposure.\u201d\n12. Settlement Delay (>T+2) \u2013 \u201cAlert: Trade unsettled beyond T+2. Contact operations.\u201d\n13. Confirmation Mismatch \u2013 \u201cAlert: Broker confirmation differs from booked trade. Reconcile immediately.\u201d\n14. Heartbeat/Health Check Failure \u2013 \u201cAlert: System heartbeat lost. Trading processes may be down.\u201d\n15. Concentration Limit Breach (2% per instrument) \u2013 \u201cAlert: Instrument weight >2% limit. Rebalance portfolio.\u201d"
+    },
+    "description": "Specify automated alerts for live trading."
+  },
+  "draft_position_sizing_rules": {
+    "output": {
+      "output": "Position-Sizing Logic:\n1. Normalised signal strength S must be bounded \u22121 \u2264 S \u2264 +1.\n2. Raw size candidate = |S| \u00d7 10 % of portfolio ( maps full-strength signal to 10 % cap defined by risk limits ).\n3. Convert to risk size using stop-loss distance:\n   risk-based size = 2 % / |SL|, where |SL| is the percentage distance between entry price and stop level.\n4. Position size = min( raw size candidate , risk-based size ).\n5. Portfolio guards after sizing:\n   \u2022 Running sector exposure \u2264 20 % of equity.\n   \u2022 Intraday mark-to-market loss \u2264 5 %: if breached, reduce all open sizes proportionally.\n6. Direction = sign(S)."
+    },
+    "description": "Formulate position size calculation logic."
+  },
+  "identify_latency_requirements": {
+    "output": {
+      "output": "50 ms"
+    },
+    "description": "Specify order-to-market latency tolerance."
+  },
+  "map_trade_lifecycle": {
+    "output": {
+      "output": "generate signal\nsize position\nrisk check\ncreate order\nroute\nexecute\nconfirm\nsettle"
+    },
+    "description": "Create a stepwise chain from signal to settlement."
+  },
+  "outline_data_cleaning_steps": {
+    "output": {
+      "output": "- Deduplicate\n- Validate\n- Align\n- Synchronize\n- Timestamp-correct\n- Standardize\n- Normalize\n- Adjust\n- Convert\n- Impute\n- Forward-fill\n- Backfill\n- Winsorize\n- Clip\n- Filter\n- Resample\n- Aggregate\n- Merge\n- Flag\n- Compress"
+    },
+    "description": "Sketch atomic data cleansing actions."
+  },
+  "outline_feature_engineering_methods": {
+    "output": {
+      "output": "| Feature | Transformation |\n|---------|----------------|\n| 1. Bollinger Band %B | Z-score normalization (rolling 20 periods) |\n| 2. RSI divergence | Centered rolling Z-score (14-period window) |\n| 3. MA crossover spread | Standardization (mean=0, SD=1 scaling) |\n| 4. Price dispersion ATR% | Robust scaling (IQR normalization) |\n| 5. Order book imbalance | Log-ratio transformation with Laplace smoothing |\n| 6. Volume Z-score | Exponential weighting (halflife=15 days) |\n| 7. Close-VWAP deviation | Quantile normalization (5th-95th percentiles) |\n| 8. Opening gap % | Recentered scaling (align to overnight range midpoint) |\n| 9. CoT positioning Z-score | Detrended normalization (30d rolling window) |\n| 10. Yield curve steepness | First-difference scaling + min-max normalization |"
+    },
+    "description": "Detail transformations applied to raw features."
+  },
+  "produce_final_trading_workflow_document": {
+    "output": {
+      "output": "# Algorithmic Trading Workflow: Multi-Strategy System\n\n## Objectives\nThis algorithmic trading system implements a multi-strategy approach combining mean-reversion and momentum tactics to identify market inefficiencies while maintaining robust risk controls. The system aims to deliver consistent alpha through adaptive position sizing and comprehensive real-time monitoring.\n\n## Data Pipeline\nThe workflow begins with Market & Reference Data ingestion, followed by rigorous Data Quality Checks to ensure integrity. Detected anomalies (stale feeds, missing quotes, latency spikes) trigger immediate alerts through the Monitoring system, maintaining data reliability.\n\n## Signal Generation\nFeature Engineering extracts market insights through ten technical indicators:\n- Bollinger %B and RSI Divergence for overbought/oversold conditions\n- MA Spread and Price Dispersion ATR% for volatility analysis\n- Order-Book Imbalance and Volume Z-Score for market microstructure\n- Specialized indicators including Close-VWAP Deviation, Opening Gap %, CoT Z-Score, and Yield-Curve Steepness\n\nThese features feed three distinct Alpha Models:\n- Bollinger Reversion Quick Flip (mean-reversion)\n- RSI Swing Catalyst (oscillator-based)\n- Trend Persistence Momentum (directional)\n\n## Risk Management\nPortfolio Construction implements position sizing based on signal strength and market conditions. Pre-Trade Risk Checks enforce position limits, VaR constraints, and order size limits. The P&L & Risk Engine continuously evaluates portfolio exposure, providing feedback for adaptive sizing.\n\n## Execution Flow\nThe system generates orders via Smart Order Routing to optimize execution quality. Trade Execution interfaces with markets, with real-time monitoring for rejects, slippage, drawdowns, and margin utilization. Post-execution, Trade Confirmation and Settlement processes ensure proper accounting.\n\n## Monitoring & Reporting\nA comprehensive Monitoring & Alerts system envelops all live stages, providing immediate notification of anomalies. Performance Reporting includes:\n- Executive Summary of overall performance\n- KPI Dashboard with key metrics\n- Detailed Risk Metrics analysis\n- Complete Trade Logs\n- Alerts Summary for system health\n\n## Workflow Diagram\nThe system follows a linear progression from Data \u2192 Features \u2192 Signals \u2192 Orders \u2192 Execution \u2192 Post-Trade \u2192 Reporting, with continuous Monitoring & Alerts systems providing critical feedback loops. Notably, the P&L & Risk Engine directly influences Portfolio Construction for adaptive risk management, creating a self-optimizing system."
+    },
+    "description": "Generate the complete trading workflow write-up."
+  },
+  "select_trading_style": {
+    "output": {
+      "output": "Mean-reversion trading style selected to exploit predictable asset price patterns through disciplined risk-managed entries/exits, aligning with Sharpe ratio targets, drawdown constraints, and medium-term holding periods requiring high liquidity."
+    },
+    "description": "Define the overall trading style guiding strategy design."
+  },
+  "specify_backtest_metrics": {
+    "output": {
+      "output": "- Annualized Sharpe ratio\n- Benchmark-adjusted CAGR (alpha)\n- Maximum peak-to-trough drawdown\n- 95% one-day Value-at-Risk utilization\n- Portfolio turnover ratio"
+    },
+    "description": "Select evaluation metrics for simulation results."
+  }
+}

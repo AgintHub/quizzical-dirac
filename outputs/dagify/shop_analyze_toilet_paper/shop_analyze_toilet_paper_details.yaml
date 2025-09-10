@@ -1,0 +1,92 @@
+dag_type: plain_text
+description: This workflow gathers toilet paper product listings from online retailers,
+  extracts their specifications and customer reviews, analyzes the softness quality,
+  ranks the products, and selects the softest option for purchase.
+name: shop_analyze_toilet_paper
+nodes:
+  analyze_softness:
+    agent: false
+    description: Analyze both the extracted product specifications and customer reviews
+      to estimate a softness score for each toilet paper product.
+    name: analyze_softness
+    nodes_depended_on:
+    - extract_specifications
+    - extract_reviews
+    nodes_dependent_on: []
+    prompt: Based on the extracted specifications and reviews, evaluate each product
+      to assign a numerical softness score. Consider factors such as material quality,
+      number of plies, and customer feedback related to softness. Provide a score
+      for each product.
+  extract_reviews:
+    agent: false
+    description: Gather customer reviews for each toilet paper listing that mention
+      softness or comfort.
+    name: extract_reviews
+    nodes_depended_on:
+    - scrape_listings
+    nodes_dependent_on: []
+    prompt: Collect customer reviews for every toilet paper product listed, filtering
+      for reviews that mention 'soft', 'comfort', or similar adjectives. Return the
+      reviews along with the associated product identifier.
+  extract_specifications:
+    agent: false
+    description: Extract product specification details, including material, ply count,
+      and any stated softness measurements, from each toilet paper listing.
+    name: extract_specifications
+    nodes_depended_on:
+    - scrape_listings
+    nodes_dependent_on: []
+    prompt: For each toilet paper product in the listing, extract detailed specifications
+      such as material composition, ply count, and any available softness ratings
+      or descriptive keywords from the product description.
+  finalize_purchase:
+    agent: false
+    description: Prepare the final shopping decision, including all necessary product
+      details and purchase links for the selected softest toilet paper.
+    name: finalize_purchase
+    nodes_depended_on:
+    - select_softest
+    nodes_dependent_on: []
+    prompt: Compile the final shopping decision by summarizing the details of the
+      selected softest toilet paper product, including product specifications, price,
+      seller information, and direct purchase links. Present this as the final output
+      for the shopping workflow.
+  identify_retailers:
+    agent: false
+    description: Identify online retailers and marketplaces known to sell toilet paper.
+    name: identify_retailers
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: List several online retailers and marketplaces that sell toilet paper
+      products. Provide the names and website URLs for each.
+  rank_toiletpapers:
+    agent: false
+    description: Rank the toilet paper products based on their calculated softness
+      scores.
+    name: rank_toiletpapers
+    nodes_depended_on:
+    - analyze_softness
+    nodes_dependent_on: []
+    prompt: Sort the list of toilet paper products in descending order based on their
+      softness scores. Return the ordered list with product identifiers and corresponding
+      scores.
+  scrape_listings:
+    agent: false
+    description: Scrape toilet paper product listings from the identified retailers.
+    name: scrape_listings
+    nodes_depended_on:
+    - identify_retailers
+    nodes_dependent_on: []
+    prompt: Using the list of retailers provided, scrape their websites for toilet
+      paper product listings. Return a list of products with basic details (e.g.,
+      product name, price, URL).
+  select_softest:
+    agent: false
+    description: Select the top-ranked toilet paper product as the softest option.
+    name: select_softest
+    nodes_depended_on:
+    - rank_toiletpapers
+    nodes_dependent_on: []
+    prompt: Choose the top product from the ranked list as the softest toilet paper.
+      Provide the product details and the rationale for its selection based on the
+      softness score.

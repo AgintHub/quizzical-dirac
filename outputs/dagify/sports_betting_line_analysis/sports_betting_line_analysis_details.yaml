@@ -1,0 +1,83 @@
+dag_type: plain_text
+description: Analytics on sports betting lines
+name: sports_betting_line_analysis
+nodes:
+  analyze_odds_shifts:
+    agent: false
+    description: Analyze betting line odds shifts
+    name: analyze_odds_shifts
+    nodes_depended_on:
+    - clean_lines_data
+    nodes_dependent_on: []
+    prompt: Investigate changes in betting line odds and their potential impact on
+      outcomes
+  calculate_fair_values:
+    agent: false
+    description: Estimate fair value of betting lines
+    name: calculate_fair_values
+    nodes_depended_on:
+    - clean_lines_data
+    nodes_dependent_on: []
+    prompt: Estimate fair values for each betting line based on market conditions
+      and statistical models
+  clean_lines_data:
+    agent: false
+    description: Preprocess betting line data for analysis
+    name: clean_lines_data
+    nodes_depended_on:
+    - parse_lines_data
+    nodes_dependent_on: []
+    prompt: Remove non-essential columns, handle missing values, and standardize data
+      types
+  detect_market_biases:
+    agent: false
+    description: Detect biases in betting line movements
+    name: detect_market_biases
+    nodes_depended_on:
+    - calculate_fair_values
+    nodes_dependent_on: []
+    prompt: Identify potential market biases and anomalies in betting line movements
+  download_betting_lines:
+    agent: false
+    description: Download sports betting lines from credible sources
+    name: download_betting_lines
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Retrieve recent sports betting lines for major sports leagues (e.g., NFL,
+      NBA, MLB, NHL)
+  generate_statistics:
+    agent: false
+    description: Calculate common statistics for betting line data
+    name: generate_statistics
+    nodes_depended_on:
+    - clean_lines_data
+    nodes_dependent_on: []
+    prompt: Compute key statistics for betting line data, such as mean, median, and
+      standard deviation
+  parse_lines_data:
+    agent: false
+    description: Extract betting line data from raw format
+    name: parse_lines_data
+    nodes_depended_on:
+    - download_betting_lines
+    nodes_dependent_on: []
+    prompt: Parse and extract betting line data into a structured format (e.g., CSV,
+      JSON)
+  summarize_findings:
+    agent: false
+    description: Provide a summary of betting line analysis results
+    name: summarize_findings
+    nodes_depended_on:
+    - analyze_odds_shifts
+    - generate_statistics
+    nodes_dependent_on: []
+    prompt: Compile and condense key findings into a concise report
+  visualize_insights:
+    agent: false
+    description: Visualize betting line analysis insights
+    name: visualize_insights
+    nodes_depended_on:
+    - calculate_fair_values
+    - detect_market_biases
+    nodes_dependent_on: []
+    prompt: Create data visualizations to illustrate key findings and trends

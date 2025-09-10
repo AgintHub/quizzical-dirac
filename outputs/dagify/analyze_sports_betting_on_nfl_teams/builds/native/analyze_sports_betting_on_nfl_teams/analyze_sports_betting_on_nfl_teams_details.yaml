@@ -1,0 +1,647 @@
+dag_type: stub
+description: Generated workflow from UI.
+name: analyze_sports_betting_on_nfl_teams
+nodes:
+  analyze_betting_odds:
+    agent: false
+    code_node_type: stub
+    description: Analyze the sports betting odds data to identify trends and patterns,
+      and provide insights on the odds.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CleanAndProcessDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ clean_and_process_data node outputs.\"\"\"\n    cleaned_teams_data: List[str]\
+      \ = Field(..., description=\"List of cleaned team names\")\n    processed_win_loss_records:\
+      \ List[str] = Field(..., description=\"List of processed win-loss records\"\
+      )\n    cleaned_points_scored: List[float] = Field(..., description=\"List of\
+      \ cleaned points scored\")\n    cleaned_odds: List[float] = Field(..., description=\"\
+      List of cleaned betting odds\")\n    processed_point_spreads: List[float] =\
+      \ Field(..., description=\"List of processed point spreads\")\n    cleaned_over_unders:\
+      \ List[float] = Field(..., description=\"List of cleaned over/unders\")\n  \
+      \  data_is_valid: bool = Field(..., description=\"Whether the cleaned data is\
+      \ valid\")\n\n\nclass AnalyzeBettingOddsOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for analyze_betting_odds node outputs.\"\"\"\n    over_under_rates:\
+      \ List[float] = Field(..., description=\"List of over/under rates for each team\"\
+      )\n    point_spread_distributions: List[float] = Field(..., description=\"List\
+      \ of point spread distributions for each team\")\n    trends_and_patterns: str\
+      \ = Field(..., description=\"Description of trends and patterns identified in\
+      \ the betting odds data\")\n    insights: str = Field(..., description=\"Insights\
+      \ on the betting odds, including recommendations\")\n    is_data_valid: bool\
+      \ = Field(..., description=\"Whether the data is valid for analysis\")\n\n\n\
+      def analyze_betting_odds(clean_and_process_data_input: CleanAndProcessDataOutput,\
+      \ **kwargs) -> AnalyzeBettingOddsOutput:\n    \"\"\"Analyze the sports betting\
+      \ odds data to identify trends and patterns, and provide insights on the odds.\n\
+      \n    Args:\n        clean_and_process_data_input: Input from the 'clean_and_process_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       AnalyzeBettingOddsOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return AnalyzeBettingOddsOutput(\n        over_under_rates=[],\n\
+      \        point_spread_distributions=[],\n        trends_and_patterns=\"\",\n\
+      \        insights=\"\",\n        is_data_valid=False,\n    )"
+    name: analyze_betting_odds
+    nodes_depended_on:
+    - clean_and_process_data
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of over/under rates for each team
+      key: over_under_rates
+      type: List[float]
+    - description: List of point spread distributions for each team
+      key: point_spread_distributions
+      type: List[float]
+    - description: Description of trends and patterns identified in the betting odds
+        data
+      key: trends_and_patterns
+      type: str
+    - description: Insights on the betting odds, including recommendations
+      key: insights
+      type: str
+    - description: Whether the data is valid for analysis
+      key: is_data_valid
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use data validation techniques to check for missing values and outliers
+        reason: To ensure that the data is accurate and reliable for analysis
+        text: Load and validate the cleaned and processed data from the 'clean_and_process_data'
+          node
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use statistical methods such as mean and standard deviation to calculate
+          over/under rates
+        reason: To provide insights on the odds and identify trends and patterns
+        text: Calculate the over/under rates for each team using the cleaned and processed
+          data
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use statistical methods such as histogram and density plots to calculate
+          point spread distributions
+        reason: To provide insights on the odds and identify trends and patterns
+        text: Calculate the point spread distributions for each team using the cleaned
+          and processed data
+      - complexity: HIGH
+        impact: HIGH
+        method: Use techniques such as regression analysis, time series analysis,
+          and data visualization to identify trends and patterns
+        reason: To provide insights on the odds and identify trends and patterns
+        text: Identify trends and patterns in the betting odds data using statistical
+          methods and data visualization techniques
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use techniques such as decision trees and clustering to generate insights
+          and recommendations
+        reason: To provide actionable insights for users
+        text: Generate insights on the betting odds, including recommendations
+    prompt: Analyze the sports betting odds data, including identifying trends and
+      patterns. Provide insights on the odds, including over/under rates and point
+      spread distributions.
+    shims: []
+  calculate_team_performance_metrics:
+    agent: false
+    code_node_type: stub
+    description: Calculate performance metrics for NFL teams, including their win
+      rates, points scored, and other relevant statistics.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CleanAndProcessDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ clean_and_process_data node outputs.\"\"\"\n    cleaned_teams_data: List[str]\
+      \ = Field(..., description=\"List of cleaned team names\")\n    processed_win_loss_records:\
+      \ List[str] = Field(..., description=\"List of processed win-loss records\"\
+      )\n    cleaned_points_scored: List[float] = Field(..., description=\"List of\
+      \ cleaned points scored\")\n    cleaned_odds: List[float] = Field(..., description=\"\
+      List of cleaned betting odds\")\n    processed_point_spreads: List[float] =\
+      \ Field(..., description=\"List of processed point spreads\")\n    cleaned_over_unders:\
+      \ List[float] = Field(..., description=\"List of cleaned over/unders\")\n  \
+      \  data_is_valid: bool = Field(..., description=\"Whether the cleaned data is\
+      \ valid\")\n\n\nclass CalculateTeamPerformanceMetricsOutput(BaseModel):\n  \
+      \  \"\"\"Pydantic model for calculate_team_performance_metrics node outputs.\"\
+      \"\"\n    team_names: List[str] = Field(..., description=\"List of NFL team\
+      \ names\")\n    win_rates: List[float] = Field(..., description=\"List of win\
+      \ rates for each team, ranging from 0 to 1\")\n    points_scored: List[int]\
+      \ = Field(..., description=\"List of points scored by each team\")\n    points_allowed:\
+      \ List[int] = Field(..., description=\"List of points allowed by each team\"\
+      )\n    yards_gained: List[int] = Field(..., description=\"List of yards gained\
+      \ by each team\")\n\n\ndef calculate_team_performance_metrics(clean_and_process_data_input:\
+      \ CleanAndProcessDataOutput, **kwargs) -> CalculateTeamPerformanceMetricsOutput:\n\
+      \    \"\"\"Calculate performance metrics for NFL teams, including their win\
+      \ rates, points scored, and other relevant statistics.\n\n    Args:\n      \
+      \  clean_and_process_data_input: Input from the 'clean_and_process_data' node.\n\
+      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        CalculateTeamPerformanceMetricsOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ CalculateTeamPerformanceMetricsOutput(\n        team_names=[],\n        win_rates=[],\n\
+      \        points_scored=[],\n        points_allowed=[],\n        yards_gained=[],\n\
+      \    )"
+    name: calculate_team_performance_metrics
+    nodes_depended_on:
+    - clean_and_process_data
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of NFL team names
+      key: team_names
+      type: List[str]
+    - description: List of win rates for each team, ranging from 0 to 1
+      key: win_rates
+      type: List[float]
+    - description: List of points scored by each team
+      key: points_scored
+      type: List[int]
+    - description: List of points allowed by each team
+      key: points_allowed
+      type: List[int]
+    - description: List of yards gained by each team
+      key: yards_gained
+      type: List[int]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use the 'cleaned_teams_data' output field from the 'clean_and_process_data'
+          node
+        reason: The 'clean_and_process_data' node provides the necessary cleaned team
+          data for calculating performance metrics
+        text: Retrieve cleaned team data from the output of the 'clean_and_process_data'
+          node
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the 'processed_win_loss_records' output field from the 'clean_and_process_data'
+          node and apply a formula to calculate win rates
+        reason: Win rates are a crucial performance metric for NFL teams
+        text: Calculate win rates for each team using their win-loss records
+      - complexity: LOW
+        impact: HIGH
+        method: Use the 'cleaned_points_scored' output field from the 'clean_and_process_data'
+          node
+        reason: Points scored and allowed are essential performance metrics for NFL
+          teams
+        text: Calculate points scored and allowed for each team
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use the 'processed_win_loss_records' output field from the 'clean_and_process_data'
+          node and apply a formula to calculate yards gained
+        reason: Yards gained is a relevant performance metric for NFL teams
+        text: Calculate yards gained for each team
+      - complexity: LOW
+        impact: HIGH
+        method: Use a data structure such as a Pandas DataFrame to compile the metrics
+        reason: The output should be a comprehensive list of teams with their performance
+          metrics
+        text: Compile the calculated metrics into a list of teams with their corresponding
+          metrics
+    prompt: Calculate performance metrics for NFL teams, including their win rates,
+      points scored, and other relevant statistics. Provide a list of teams with their
+      corresponding metrics.
+    shims: []
+  clean_and_process_data:
+    agent: false
+    code_node_type: stub
+    description: Clean and process the collected data, including handling missing
+      values and outliers.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CollectNflTeamsDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ collect_nfl_teams_data node outputs.\"\"\"\n    team_name: str = Field(...,\
+      \ description=\"Name of the NFL team\")\n    win_loss_record: str = Field(...,\
+      \ description=\"Win-loss record of the team (e.g., 10-5)\")\n    points_scored:\
+      \ int = Field(..., description=\"Total points scored by the team\")\n    standings:\
+      \ str = Field(..., description=\"Current standings of the team (e.g., 1st in\
+      \ division)\")\n    statistics: str = Field(..., description=\"List of additional\
+      \ statistics for the team (e.g., passing yards, rushing yards, etc.)\")\n\n\n\
+      class CollectBettingOddsDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ collect_betting_odds_data node outputs.\"\"\"\n    teams: List[str] = Field(...,\
+      \ description=\"List of NFL team names\")\n    point_spreads: List[float] =\
+      \ Field(..., description=\"List of point spreads corresponding to each team\"\
+      )\n    moneylines: List[float] = Field(..., description=\"List of moneyline\
+      \ odds corresponding to each team\")\n    over_unders: List[float] = Field(...,\
+      \ description=\"List of over/under odds corresponding to each team\")\n\n\n\
+      class CleanAndProcessDataOutput(BaseModel):\n    \"\"\"Pydantic model for clean_and_process_data\
+      \ node outputs.\"\"\"\n    cleaned_teams_data: List[str] = Field(..., description=\"\
+      List of cleaned team names\")\n    processed_win_loss_records: List[str] = Field(...,\
+      \ description=\"List of processed win-loss records\")\n    cleaned_points_scored:\
+      \ List[float] = Field(..., description=\"List of cleaned points scored\")\n\
+      \    cleaned_odds: List[float] = Field(..., description=\"List of cleaned betting\
+      \ odds\")\n    processed_point_spreads: List[float] = Field(..., description=\"\
+      List of processed point spreads\")\n    cleaned_over_unders: List[float] = Field(...,\
+      \ description=\"List of cleaned over/unders\")\n    data_is_valid: bool = Field(...,\
+      \ description=\"Whether the cleaned data is valid\")\n\n\ndef clean_and_process_data(collect_nfl_teams_data_input:\
+      \ CollectNflTeamsDataOutput, collect_betting_odds_data_input: CollectBettingOddsDataOutput,\
+      \ **kwargs) -> CleanAndProcessDataOutput:\n    \"\"\"Clean and process the collected\
+      \ data, including handling missing values and outliers.\n\n    Args:\n     \
+      \   collect_nfl_teams_data_input: Input from the 'collect_nfl_teams_data' node.\n\
+      \        collect_betting_odds_data_input: Input from the 'collect_betting_odds_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       CleanAndProcessDataOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return CleanAndProcessDataOutput(\n        cleaned_teams_data=[],\n\
+      \        processed_win_loss_records=[],\n        cleaned_points_scored=[],\n\
+      \        cleaned_odds=[],\n        processed_point_spreads=[],\n        cleaned_over_unders=[],\n\
+      \        data_is_valid=False,\n    )"
+    name: clean_and_process_data
+    nodes_depended_on:
+    - collect_nfl_teams_data
+    - collect_betting_odds_data
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of cleaned team names
+      key: cleaned_teams_data
+      type: List[str]
+    - description: List of processed win-loss records
+      key: processed_win_loss_records
+      type: List[str]
+    - description: List of cleaned points scored
+      key: cleaned_points_scored
+      type: List[float]
+    - description: List of cleaned betting odds
+      key: cleaned_odds
+      type: List[float]
+    - description: List of processed point spreads
+      key: processed_point_spreads
+      type: List[float]
+    - description: List of cleaned over/unders
+      key: cleaned_over_unders
+      type: List[float]
+    - description: Whether the cleaned data is valid
+      key: data_is_valid
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use regular expressions to detect and replace missing team names
+        reason: Ensures consistency in team names across datasets
+        text: Handle missing values in team names by replacing them with standardized
+          names
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use string manipulation to extract win-loss records and convert to
+          a standardized format
+        reason: Enables accurate calculation of team performance metrics
+        text: Clean and process win-loss records by converting them to a standardized
+          format
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use statistical methods (e.g., winsorization) to handle outliers in
+          points scored
+        reason: Prevents extreme values from skewing analysis results
+        text: Handle outliers in points scored by winsorizing the data
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use string manipulation to extract betting odds and convert to a standardized
+          format
+        reason: Enables accurate analysis of betting odds
+        text: Clean and process betting odds by converting them to a standardized
+          format
+      - complexity: LOW
+        impact: HIGH
+        method: Use data validation techniques (e.g., data profiling) to verify data
+          quality
+        reason: Ensures accuracy and reliability of analysis results
+        text: Validate the cleaned data to ensure it meets analysis requirements
+    prompt: Clean and process the collected data, including handling missing values
+      and outliers. Prepare the data for analysis.
+    shims: []
+  collect_betting_odds_data:
+    agent: false
+    code_node_type: stub
+    description: Collect data on sports betting odds for NFL teams, including point
+      spreads, moneylines, and over/unders.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CollectBettingOddsDataOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for collect_betting_odds_data node outputs.\"\"\"\n    teams: List[str] =\
+      \ Field(..., description=\"List of NFL team names\")\n    point_spreads: List[float]\
+      \ = Field(..., description=\"List of point spreads corresponding to each team\"\
+      )\n    moneylines: List[float] = Field(..., description=\"List of moneyline\
+      \ odds corresponding to each team\")\n    over_unders: List[float] = Field(...,\
+      \ description=\"List of over/under odds corresponding to each team\")\n\n\n\
+      def collect_betting_odds_data(general_input: str, **kwargs) -> CollectBettingOddsDataOutput:\n\
+      \    \"\"\"Collect data on sports betting odds for NFL teams, including point\
+      \ spreads, moneylines, and over/unders.\n\n    Args:\n        general_input:\
+      \ General input string for the root node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        CollectBettingOddsDataOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return CollectBettingOddsDataOutput(\n\
+      \        teams=[],\n        point_spreads=[],\n        moneylines=[],\n    \
+      \    over_unders=[],\n    )"
+    name: collect_betting_odds_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of NFL team names
+      key: teams
+      type: List[str]
+    - description: List of point spreads corresponding to each team
+      key: point_spreads
+      type: List[float]
+    - description: List of moneyline odds corresponding to each team
+      key: moneylines
+      type: List[float]
+    - description: List of over/under odds corresponding to each team
+      key: over_unders
+      type: List[float]
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use BeautifulSoup for HTML parsing, Scrapy for web scraping, and handle
+          anti-scraping measures
+        reason: This approach allows for efficient and automated collection of data
+          from a variety of sources.
+        text: Use a web scraping library such as BeautifulSoup or Scrapy to collect
+          data on sports betting odds from a reliable online sportsbook.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use regular expressions for data extraction, handle data inconsistencies
+        reason: This step ensures that the collected data is accurate and relevant
+          to the analysis.
+        text: Identify and extract relevant data points including team names, point
+          spreads, moneyline odds, and over/under odds.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use pandas for data manipulation, SQL for database management
+        reason: This approach enables efficient data manipulation and analysis.
+        text: Store the collected data in a structured format such as a pandas DataFrame
+          or a SQL database.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use data validation techniques such as data profiling, data quality
+          checks
+        reason: This step ensures that the data is reliable and trustworthy.
+        text: Implement data validation to ensure that the collected data is accurate
+          and consistent.
+    prompt: Collect data on sports betting odds for NFL teams, including point spreads,
+      moneylines, and over/unders. Provide a list of teams with their corresponding
+      odds.
+    shims: []
+  collect_nfl_teams_data:
+    agent: false
+    code_node_type: stub
+    description: Collect data on NFL teams, including their performance, standings,
+      and statistics.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass CollectNflTeamsDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for collect_nfl_teams_data node outputs.\"\"\"\n \
+      \   team_name: str = Field(..., description=\"Name of the NFL team\")\n    win_loss_record:\
+      \ str = Field(..., description=\"Win-loss record of the team (e.g., 10-5)\"\
+      )\n    points_scored: int = Field(..., description=\"Total points scored by\
+      \ the team\")\n    standings: str = Field(..., description=\"Current standings\
+      \ of the team (e.g., 1st in division)\")\n    statistics: str = Field(..., description=\"\
+      List of additional statistics for the team (e.g., passing yards, rushing yards,\
+      \ etc.)\")\n\n\ndef collect_nfl_teams_data(general_input: str, **kwargs) ->\
+      \ CollectNflTeamsDataOutput:\n    \"\"\"Collect data on NFL teams, including\
+      \ their performance, standings, and statistics.\n\n    Args:\n        general_input:\
+      \ General input string for the root node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        CollectNflTeamsDataOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return CollectNflTeamsDataOutput(\n\
+      \        team_name=\"\",\n        win_loss_record=\"\",\n        points_scored=0,\n\
+      \        standings=\"\",\n        statistics=\"\",\n    )"
+    name: collect_nfl_teams_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: Name of the NFL team
+      key: team_name
+      type: str
+    - description: Win-loss record of the team (e.g., 10-5)
+      key: win_loss_record
+      type: str
+    - description: Total points scored by the team
+      key: points_scored
+      type: int
+    - description: Current standings of the team (e.g., 1st in division)
+      key: standings
+      type: str
+    - description: List of additional statistics for the team (e.g., passing yards,
+        rushing yards, etc.)
+      key: statistics
+      type: str
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use web scraping techniques or API integration to collect data
+        reason: This approach ensures that the data is accurate and up-to-date
+        text: Collect NFL teams data from a reliable source such as the official NFL
+          website or a sports data API
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use data parsing techniques to extract relevant data points
+        reason: This step is necessary to transform the raw data into a usable format
+        text: Extract relevant data points for each team, including team name, win-loss
+          record, points scored, and standings
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use data cleaning and preprocessing techniques such as data normalization
+          and imputation
+        reason: This step ensures that the data is accurate and consistent
+        text: Clean and preprocess the data to handle missing values and outliers
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use data structuring techniques such as data frames or JSON objects
+        reason: This step is necessary to provide a usable output
+        text: Organize the data into a structured format, including a list of teams
+          with their corresponding data
+    prompt: Collect data on NFL teams, including their win-loss records, points scored,
+      and standings. Provide a list of teams with their corresponding data.
+    shims: []
+  generate_insights:
+    agent: false
+    code_node_type: stub
+    description: Generate insights on NFL teams based on their performance metrics
+      and betting odds analysis.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CalculateTeamPerformanceMetricsOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for calculate_team_performance_metrics node outputs.\"\"\"\n    team_names:\
+      \ List[str] = Field(..., description=\"List of NFL team names\")\n    win_rates:\
+      \ List[float] = Field(..., description=\"List of win rates for each team, ranging\
+      \ from 0 to 1\")\n    points_scored: List[int] = Field(..., description=\"List\
+      \ of points scored by each team\")\n    points_allowed: List[int] = Field(...,\
+      \ description=\"List of points allowed by each team\")\n    yards_gained: List[int]\
+      \ = Field(..., description=\"List of yards gained by each team\")\n\n\nclass\
+      \ AnalyzeBettingOddsOutput(BaseModel):\n    \"\"\"Pydantic model for analyze_betting_odds\
+      \ node outputs.\"\"\"\n    over_under_rates: List[float] = Field(..., description=\"\
+      List of over/under rates for each team\")\n    point_spread_distributions: List[float]\
+      \ = Field(..., description=\"List of point spread distributions for each team\"\
+      )\n    trends_and_patterns: str = Field(..., description=\"Description of trends\
+      \ and patterns identified in the betting odds data\")\n    insights: str = Field(...,\
+      \ description=\"Insights on the betting odds, including recommendations\")\n\
+      \    is_data_valid: bool = Field(..., description=\"Whether the data is valid\
+      \ for analysis\")\n\n\nclass GenerateInsightsOutput(BaseModel):\n    \"\"\"\
+      Pydantic model for generate_insights node outputs.\"\"\"\n    recommended_teams_to_bet_on:\
+      \ List[str] = Field(..., description=\"List of team names recommended to bet\
+      \ on\")\n    recommended_teams_to_avoid: List[str] = Field(..., description=\"\
+      List of team names recommended to avoid betting on\")\n    top_performing_teams:\
+      \ List[str] = Field(..., description=\"List of top performing team names based\
+      \ on metrics\")\n    worst_performing_teams: List[str] = Field(..., description=\"\
+      List of worst performing team names based on metrics\")\n    betting_odds_trends:\
+      \ str = Field(..., description=\"Summary of trends and patterns in betting odds\"\
+      )\n    over_under_insights: str = Field(..., description=\"Insights on over/under\
+      \ rates\")\n    point_spread_distribution: str = Field(..., description=\"Distribution\
+      \ of point spreads\")\n\n\ndef generate_insights(calculate_team_performance_metrics_input:\
+      \ CalculateTeamPerformanceMetricsOutput, analyze_betting_odds_input: AnalyzeBettingOddsOutput,\
+      \ **kwargs) -> GenerateInsightsOutput:\n    \"\"\"Generate insights on NFL teams\
+      \ based on their performance metrics and betting odds analysis.\n\n    Args:\n\
+      \        calculate_team_performance_metrics_input: Input from the 'calculate_team_performance_metrics'\
+      \ node.\n        analyze_betting_odds_input: Input from the 'analyze_betting_odds'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       GenerateInsightsOutput: Object containing outputs for this node.\n \
+      \   \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return GenerateInsightsOutput(\n        recommended_teams_to_bet_on=[],\n\
+      \        recommended_teams_to_avoid=[],\n        top_performing_teams=[],\n\
+      \        worst_performing_teams=[],\n        betting_odds_trends=\"\",\n   \
+      \     over_under_insights=\"\",\n        point_spread_distribution=\"\",\n \
+      \   )"
+    name: generate_insights
+    nodes_depended_on:
+    - calculate_team_performance_metrics
+    - analyze_betting_odds
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of team names recommended to bet on
+      key: recommended_teams_to_bet_on
+      type: List[str]
+    - description: List of team names recommended to avoid betting on
+      key: recommended_teams_to_avoid
+      type: List[str]
+    - description: List of top performing team names based on metrics
+      key: top_performing_teams
+      type: List[str]
+    - description: List of worst performing team names based on metrics
+      key: worst_performing_teams
+      type: List[str]
+    - description: Summary of trends and patterns in betting odds
+      key: betting_odds_trends
+      type: str
+    - description: Insights on over/under rates
+      key: over_under_insights
+      type: str
+    - description: Distribution of point spreads
+      key: point_spread_distribution
+      type: str
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use team's win rates, points scored, and points allowed to determine
+          top and worst performing teams
+        reason: To provide a comprehensive view of team performance
+        text: Integrate team performance metrics from 'calculate_team_performance_metrics'
+          node
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use over/under rates, point spread distributions, and trends and patterns
+          to inform betting recommendations
+        reason: To identify trends and patterns in betting odds
+        text: Analyze betting odds data from 'analyze_betting_odds' node
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a combination of team performance metrics and betting odds analysis
+          to determine recommendations
+        reason: To provide actionable insights for users
+        text: Determine recommended teams to bet on and avoid
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use natural language processing to summarize trends and patterns
+        reason: To provide context for betting recommendations
+        text: Generate summary of trends and patterns in betting odds
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use statistical analysis to identify trends and patterns in over/under
+          rates and point spread distributions
+        reason: To provide additional context for betting recommendations
+        text: Create insights on over/under rates and point spread distributions
+    prompt: Generate insights on NFL teams based on their performance metrics and
+      betting odds analysis. Provide recommendations on which teams to bet on and
+      which to avoid.
+    shims: []
+  visualize_results:
+    agent: false
+    code_node_type: stub
+    description: Visualize the results of the analysis, including charts and graphs.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass GenerateInsightsOutput(BaseModel):\n    \"\"\"Pydantic model for generate_insights\
+      \ node outputs.\"\"\"\n    recommended_teams_to_bet_on: List[str] = Field(...,\
+      \ description=\"List of team names recommended to bet on\")\n    recommended_teams_to_avoid:\
+      \ List[str] = Field(..., description=\"List of team names recommended to avoid\
+      \ betting on\")\n    top_performing_teams: List[str] = Field(..., description=\"\
+      List of top performing team names based on metrics\")\n    worst_performing_teams:\
+      \ List[str] = Field(..., description=\"List of worst performing team names based\
+      \ on metrics\")\n    betting_odds_trends: str = Field(..., description=\"Summary\
+      \ of trends and patterns in betting odds\")\n    over_under_insights: str =\
+      \ Field(..., description=\"Insights on over/under rates\")\n    point_spread_distribution:\
+      \ str = Field(..., description=\"Distribution of point spreads\")\n\n\nclass\
+      \ VisualizeResultsOutput(BaseModel):\n    \"\"\"Pydantic model for visualize_results\
+      \ node outputs.\"\"\"\n    visualization_type: str = Field(..., description=\"\
+      Type of visualization (e.g., chart, graph, table)\")\n    team_performance_metrics:\
+      \ List[float] = Field(..., description=\"List of team performance metrics (e.g.,\
+      \ win rates, points scored)\")\n    betting_odds_trends: List[str] = Field(...,\
+      \ description=\"List of trends and patterns in betting odds\")\n    insights_summary:\
+      \ str = Field(..., description=\"Summary of the insights generated by the analysis\"\
+      )\n    recommendations: List[str] = Field(..., description=\"List of recommendations\
+      \ on which teams to bet on and which to avoid\")\n\n\ndef visualize_results(generate_insights_input:\
+      \ GenerateInsightsOutput, **kwargs) -> VisualizeResultsOutput:\n    \"\"\"Visualize\
+      \ the results of the analysis, including charts and graphs.\n\n    Args:\n \
+      \       generate_insights_input: Input from the 'generate_insights' node.\n\
+      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        VisualizeResultsOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ VisualizeResultsOutput(\n        visualization_type=\"\",\n        team_performance_metrics=[],\n\
+      \        betting_odds_trends=[],\n        insights_summary=\"\",\n        recommendations=[],\n\
+      \    )"
+    name: visualize_results
+    nodes_depended_on:
+    - generate_insights
+    nodes_dependent_on: []
+    output_structure:
+    - description: Type of visualization (e.g., chart, graph, table)
+      key: visualization_type
+      type: str
+    - description: List of team performance metrics (e.g., win rates, points scored)
+      key: team_performance_metrics
+      type: List[float]
+    - description: List of trends and patterns in betting odds
+      key: betting_odds_trends
+      type: List[str]
+    - description: Summary of the insights generated by the analysis
+      key: insights_summary
+      type: str
+    - description: List of recommendations on which teams to bet on and which to avoid
+      key: recommendations
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Utilize matplotlib for creating static plots and seaborn for creating
+          informative and attractive statistical graphics
+        reason: These libraries provide a wide range of visualization tools and are
+          well-suited for data analysis
+        text: Use a combination of matplotlib and seaborn libraries to create visualizations
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use matplotlib's plot function to create a line chart, with team performance
+          metrics on the y-axis and time on the x-axis
+        reason: This will help to identify trends and patterns in team performance
+        text: Create a line chart to display team performance metrics over time
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use matplotlib's bar function to create a bar chart, with betting
+          odds on the y-axis and teams on the x-axis
+        reason: This will help to visualize the trends and patterns in betting odds
+        text: Create a bar chart to display betting odds trends
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use matplotlib's scatter function to create a scatter plot, with team
+          performance metrics on one axis and betting odds on the other axis
+        reason: This will help to identify correlations between team performance and
+          betting odds
+        text: Create a scatter plot to display the relationship between team performance
+          metrics and betting odds
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a library such as pandas to create a summary statistics table,
+          with insights on team performance and betting odds
+        reason: This will provide a clear and concise representation of the insights
+        text: Use a summary statistics table to display insights generated by the
+          analysis
+    prompt: Visualize the results of the analysis, including charts and graphs. Provide
+      a clear and concise representation of the insights.
+    shims: []

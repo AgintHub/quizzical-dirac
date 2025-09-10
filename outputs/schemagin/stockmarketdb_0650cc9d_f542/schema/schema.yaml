@@ -1,0 +1,125 @@
+tables:
+  companies:
+    name: companies
+    columns:
+      id:
+        name: id
+        data_type: int
+        nullable: false
+        description: Unique identifier for the company.
+      name:
+        name: name
+        data_type: string
+        nullable: false
+        description: Name of the company.
+      ticker:
+        name: ticker
+        data_type: string
+        nullable: false
+        description: Stock ticker symbol.
+      sector:
+        name: sector
+        data_type: string
+        nullable: true
+        description: Sector in which the company operates.
+      description:
+        name: description
+        data_type: string
+        nullable: true
+        description: Additional company information.
+    primary_key:
+    - id
+    description: Table containing companies listed in the stock market.
+  stock_prices:
+    name: stock_prices
+    columns:
+      company_id:
+        name: company_id
+        data_type: int
+        nullable: false
+        description: References the company trading the stock.
+      trading_date:
+        name: trading_date
+        data_type: date
+        nullable: false
+        description: Date for the stock prices.
+      open:
+        name: open
+        data_type: double
+        nullable: false
+        description: Opening price of the stock on trading_date.
+      high:
+        name: high
+        data_type: double
+        nullable: false
+        description: Highest price of the stock on trading_date.
+      low:
+        name: low
+        data_type: double
+        nullable: false
+        description: Lowest price of the stock on trading_date.
+      close:
+        name: close
+        data_type: double
+        nullable: false
+        description: Closing price of the stock on trading_date.
+      volume:
+        name: volume
+        data_type: int
+        nullable: false
+        description: Trading volume for the day.
+    primary_key:
+    - company_id
+    - trading_date
+    foreign_keys:
+    - column: company_id
+      target_table: companies
+      target_column: id
+      constraint_name: fk_stock_prices_company
+    description: Table capturing daily stock prices for companies.
+  trades:
+    name: trades
+    columns:
+      id:
+        name: id
+        data_type: int
+        nullable: false
+        description: Unique identifier for each trade.
+      company_id:
+        name: company_id
+        data_type: int
+        nullable: false
+        description: References the company whose stock is traded.
+      trade_date:
+        name: trade_date
+        data_type: date
+        nullable: false
+        description: Date when the trade occurred.
+      trade_time:
+        name: trade_time
+        data_type: string
+        nullable: false
+        description: Time when the trade occurred, formatted as HH:MM:SS.
+      quantity:
+        name: quantity
+        data_type: int
+        nullable: false
+        description: Number of shares traded.
+      trade_price:
+        name: trade_price
+        data_type: double
+        nullable: false
+        description: Price per share during the trade.
+      trade_type:
+        name: trade_type
+        data_type: string
+        nullable: false
+        description: 'Type of trade: ''buy'' or ''sell''.'
+    primary_key:
+    - id
+    foreign_keys:
+    - column: company_id
+      target_table: companies
+      target_column: id
+      constraint_name: fk_trades_company
+    description: Table recording individual trades of stocks.

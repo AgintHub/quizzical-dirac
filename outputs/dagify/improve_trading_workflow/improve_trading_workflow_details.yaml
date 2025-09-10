@@ -1,0 +1,63 @@
+dag_type: plain_text
+description: Create a more efficient trading workflow by refactoring and optimizing
+  the existing process
+name: improve_trading_workflow
+nodes:
+  identify_bottlenecks:
+    agent: false
+    description: Pinpoint the root causes of inefficiencies in the trading workflow
+    name: identify_bottlenecks
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Analyze the current trading workflow to identify areas where processing
+      is slow or inefficient. Provide specific examples and timelines.
+  optimize_data_feeds:
+    agent: false
+    description: Improve the quality and efficiency of data feeds for trading
+    name: optimize_data_feeds
+    nodes_depended_on:
+    - prioritize_refactoring
+    nodes_dependent_on:
+    - streamline_trading_rules
+    prompt: Enhance data feeds by removing redundant or unnecessary data. Provide
+      documentation on the changes and their benefits.
+  prioritize_refactoring:
+    agent: false
+    description: Classify and rank potential refactoring opportunities
+    name: prioritize_refactoring
+    nodes_depended_on:
+    - identify_bottlenecks
+    nodes_dependent_on:
+    - optimize_data_feeds
+    prompt: Determine which bottlenecks to address first, based on impact and feasibility.
+      Provide a ranked list of refactoring tasks with estimated timelines.
+  simplify_logic_flows:
+    agent: false
+    description: Improve the trading logic's clarity and readability
+    name: simplify_logic_flows
+    nodes_depended_on:
+    - prioritize_refactoring
+    nodes_dependent_on:
+    - streamline_trading_rules
+    prompt: Simplify and consolidate logic flows to reduce complexity and improve
+      maintainability. Document the changes and their benefits.
+  streamline_trading_rules:
+    agent: false
+    description: Enhance the trading rules for clarity, consistency, and maintainability
+    name: streamline_trading_rules
+    nodes_depended_on:
+    - simplify_logic_flows
+    nodes_dependent_on:
+    - simplify_logic_flows
+    prompt: Refine trading rules to eliminate unnecessary complexity and improve consistency.
+      Document the new rules and their benefits.
+  validate_trading_environment:
+    agent: false
+    description: Verify the trading environment's accuracy and integrity
+    name: validate_trading_environment
+    nodes_depended_on:
+    - simplify_logic_flows
+    nodes_dependent_on:
+    - validate_trading_environment
+    prompt: Thoroughly test the trading environment for errors, edge cases, and inconsistencies.
+      Document issues and solutions.

@@ -1,0 +1,270 @@
+dag_type: plain_text
+description: A workflow for understanding documents, featuring parallel paths for
+  OCR and LLM processing that converge.
+name: intelligent_multilingual_document_understanding_workflow_with_parallel_ocr_llm_paths
+nodes:
+  classify_layout_components:
+    agent: false
+    description: Classify each segmented layout component into categories using a
+      trained classification model.
+    name: classify_layout_components
+    nodes_depended_on:
+    - layout_analysis
+    nodes_dependent_on:
+    - semantic_grouping
+    prompt: Based on the layout analysis results, assign each segmented region a classification
+      (e.g., header, paragraph, table, image) using a trained classification model.
+      Include a brief rationale for each classification.
+  deploy_layout_analysis_model:
+    agent: false
+    description: Deploy a sophisticated layout prediction model on the server node
+      for document segmentation.
+    name: deploy_layout_analysis_model
+    nodes_depended_on:
+    - provision_server_node
+    - provision_monitoring_logging
+    nodes_dependent_on:
+    - layout_analysis
+    prompt: Deploy a sophisticated layout prediction model on the provisioned server
+      node. Ensure it is optimized for processing document images and can output detailed
+      segment information and that monitoring is configured.
+  deploy_ocr_service:
+    agent: false
+    description: Provision and configure a highly available, auto-scaling OCR service
+      on the server node.
+    name: deploy_ocr_service
+    nodes_depended_on:
+    - provision_server_node
+    - provision_monitoring_logging
+    nodes_dependent_on:
+    - perform_ocr
+    prompt: Provision a highly available OCR service with auto-scaling capabilities
+      on the provisioned server node. Configure it to support multi-lingual OCR, including
+      handwritten text recognition. Ensure the service is ready to receive document
+      processing requests and that monitoring is configured.
+  detect_document_format:
+    agent: false
+    description: Determine the document's format using a lightweight library deployed
+      on a containerized microservice.
+    name: detect_document_format
+    nodes_depended_on:
+    - ingest_document
+    - provision_server_node
+    nodes_dependent_on:
+    - preprocess_document
+    prompt: Analyze the ingested document to identify its file format (e.g., PDF,
+      DOCX, image). Deploy the format detection library on a containerized microservice
+      running on the provisioned server node optimized for rapid execution. Return
+      the format type and any relevant metadata.
+  detect_languages:
+    agent: false
+    description: Identify and label the languages present in the extracted text content.
+    name: detect_languages
+    nodes_depended_on:
+    - perform_ocr
+    nodes_dependent_on:
+    - format_output_json_markdown
+    prompt: Analyze the text extracted via OCR to detect all languages present. Employ
+      an efficient language detection engine to process the text streams. Return a
+      list of detected languages along with confidence scores for each detected language.
+  extract_embedded_elements:
+    agent: false
+    description: Detect and extract non-textual elements, such as tables, charts,
+      and images, using specialized models.
+    name: extract_embedded_elements
+    nodes_depended_on:
+    - preprocess_document
+    - provision_server_node
+    nodes_dependent_on:
+    - layout_analysis
+    prompt: Identify and extract embedded elements (tables, charts, images, maps,
+      form fields) from the preprocessed document using specialized models running
+      on dedicated compute on the provisioned server node. Provide spatial and layout
+      details for each element identified. Output extracted elements and their metadata.
+  format_output_json_markdown:
+    agent: false
+    description: Convert the semantically grouped content and extracted metadata into
+      standardized JSON and Markdown formats.
+    name: format_output_json_markdown
+    nodes_depended_on:
+    - semantic_grouping
+    - detect_languages
+    - provision_database
+    - provision_monitoring_logging
+    nodes_dependent_on:
+    - quality_assurance
+    prompt: Merge the semantically grouped content with the language detection output.
+      Convert the combined result into a structured JSON and a human-readable Markdown
+      format. Store the final output in the provisioned database and log the process.
+      Ensure the output preserves the document's layout hierarchy and element metadata
+      accurately.
+  ingest_document:
+    agent: false
+    description: Ingest the input document from its source, store it in cloud storage,
+      and log its metadata into the database.
+    name: ingest_document
+    nodes_depended_on:
+    - provision_server_node
+    - provision_storage
+    - provision_database
+    nodes_dependent_on:
+    - detect_document_format
+    - preprocess_document
+    prompt: Accept an input document in any common format (e.g., PDF, DOCX, PPT, scanned
+      image). Use a scalable ingestion service hosted on the provisioned server node.
+      Store the document in the provisioned cloud storage and log its metadata, including
+      file type, size, and ingestion timestamp, into the provisioned database. Return
+      the cloud storage location.
+  layout_analysis:
+    agent: false
+    description: Analyze the document layout to segment and delineate regions utilizing
+      OCR and embedded element extraction outputs.
+    name: layout_analysis
+    nodes_depended_on:
+    - perform_ocr
+    - extract_embedded_elements
+    - deploy_layout_analysis_model
+    nodes_dependent_on:
+    - classify_layout_components
+    prompt: Perform layout analysis to segment the document into logical regions (e.g.,
+      headings, paragraphs, tables, images) using the deployed sophisticated layout
+      prediction model on the server node. Utilize bounding box information from OCR
+      and extracted element data. Return positional and hierarchical information for
+      each segment.
+  perform_ocr:
+    agent: false
+    description: Extract textual content from the preprocessed document using multi-lingual
+      OCR, including handwritten text.
+    name: perform_ocr
+    nodes_depended_on:
+    - preprocess_document
+    - deploy_ocr_service
+    nodes_dependent_on:
+    - detect_languages
+    - layout_analysis
+    prompt: Execute a multi-lingual OCR process on the preprocessed document using
+      the provisioned highly available OCR service with auto-scaling. Support recognition
+      of handwritten text and non-Latin scripts. Output the raw text content and its
+      bounding box information.
+  preprocess_document:
+    agent: false
+    description: Enhance document quality by reducing noise and improving clarity
+      using GPU-accelerated compute.
+    name: preprocess_document
+    nodes_depended_on:
+    - ingest_document
+    - detect_document_format
+    - provision_server_node
+    nodes_dependent_on:
+    - perform_ocr
+    - extract_embedded_elements
+    prompt: Fetch the document from cloud storage based on the detected format. Apply
+      preprocessing techniques such as image denoising, contrast enhancement, and
+      skew correction on a GPU-accelerated compute instance running on the provisioned
+      server node. Optimize preprocessing for document readability and subsequent
+      OCR/layout analysis. Output the preprocessed document location.
+  provision_database:
+    agent: false
+    description: Provision and configure a managed database service within the VPC
+      to store metadata, processing results, and extracted information.
+    name: provision_database
+    nodes_depended_on:
+    - provision_vpc
+    nodes_dependent_on:
+    - ingest_document
+    - format_output_json_markdown
+    prompt: Provision a managed database service (e.g., RDS, Cloud SQL) within the
+      VPC. Configure the database schema and access controls for storing document
+      metadata and processing outputs.
+  provision_monitoring_logging:
+    agent: false
+    description: Set up comprehensive monitoring and logging infrastructure to track
+      the health and performance of all deployed services and resources.
+    name: provision_monitoring_logging
+    nodes_depended_on:
+    - provision_vpc
+    nodes_dependent_on:
+    - deploy_layout_analysis_model
+    - deploy_ocr_service
+    prompt: Configure cloud-native monitoring and logging services (e.g., CloudWatch,
+      Stackdriver) within the VPC. Set up dashboards and alerting for key metrics
+      and log aggregation across all workflow components.
+  provision_network_resources:
+    agent: false
+    description: Provision essential network and security resources within the cloud
+      environment, including a Virtual Private Cloud (VPC), subnets, and security
+      groups, to ensure a secure and isolated network for all operations.
+    name: provision_network_resources
+    nodes_depended_on: []
+    nodes_dependent_on:
+    - provision_vpc
+    prompt: Provision a Virtual Private Cloud (VPC) in the designated cloud region.
+      Configure subnets, route tables, and security groups to establish a secure and
+      isolated network environment. This VPC will host all subsequent cloud infrastructure
+      for document processing.
+  provision_server_node:
+    agent: false
+    description: Provision and configure a scalable virtual server instance within
+      the VPC to host various document processing microservices.
+    name: provision_server_node
+    nodes_depended_on:
+    - provision_vpc
+    nodes_dependent_on:
+    - deploy_layout_analysis_model
+    - deploy_ocr_service
+    - detect_document_format
+    - preprocess_document
+    prompt: Provision a scalable server instance (e.g., EC2, Compute Engine) within
+      the provisioned VPC. Configure the instance with necessary operating systems
+      and dependencies for hosting microservices. This server node will be used to
+      deploy and run various document processing services.
+  provision_storage:
+    agent: false
+    description: Provision reliable and scalable object storage within the cloud environment
+      to store ingested documents and intermediate processing artifacts.
+    name: provision_storage
+    nodes_depended_on:
+    - provision_vpc
+    nodes_dependent_on:
+    - ingest_document
+    prompt: Provision a scalable object storage service (e.g., S3, GCS) within the
+      VPC. Configure appropriate access policies and lifecycle management for efficient
+      document storage and retrieval.
+  provision_vpc:
+    agent: false
+    description: Set up the foundational Virtual Private Cloud (VPC) and its associated
+      networking components.
+    name: provision_vpc
+    nodes_depended_on:
+    - provision_network_resources
+    nodes_dependent_on:
+    - provision_server_node
+    - provision_storage
+    - provision_database
+    - provision_monitoring_logging
+    prompt: Configure the core VPC network, including CIDR blocks and basic routing,
+      to serve as the foundation for all cloud resources.
+  quality_assurance:
+    agent: false
+    description: Validate the final output for fidelity to the original layout and
+      accuracy of data extraction.
+    name: quality_assurance
+    nodes_depended_on:
+    - format_output_json_markdown
+    nodes_dependent_on: []
+    prompt: Perform a quality check on the produced JSON and Markdown outputs. Use
+      automated QA checks with defined metrics and confidence thresholds to validate
+      layout fidelity, text extraction accuracy, and language tagging against the
+      original document. Report any discrepancies, errors, or quality issues identified.
+  semantic_grouping:
+    agent: false
+    description: Group classified components into coherent sections, preserving reading
+      order and visual hierarchy.
+    name: semantic_grouping
+    nodes_depended_on:
+    - classify_layout_components
+    nodes_dependent_on:
+    - format_output_json_markdown
+    prompt: Organize the classified components into semantically coherent groups that
+      reflect the document's logical structure and reading order. Output the grouping
+      structure, maintaining element hierarchy.

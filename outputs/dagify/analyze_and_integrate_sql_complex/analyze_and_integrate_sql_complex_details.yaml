@@ -1,0 +1,57 @@
+dag_type: plain_text
+description: A more complex workflow for analyzing SQL schema and integrating data
+name: analyze_and_integrate_sql_complex
+nodes:
+  analyze_sql_schema:
+    agent: false
+    description: Extract the schema of the SQL database and identify potential issues
+    name: analyze_sql_schema
+    nodes_depended_on:
+    - introduce_nested_dependencies
+    nodes_dependent_on: []
+    prompt: Analyze the SQL schema for issues and improvements
+  collect_integration_data:
+    agent: false
+    description: Gather metrics and statistics from the integrated process
+    name: collect_integration_data
+    nodes_depended_on:
+    - introduce_nested_dependencies
+    nodes_dependent_on: []
+    prompt: Collect data from the integrated process for further analysis
+  define_complexity_requirements:
+    agent: false
+    description: Analyze the existing workflow to determine its current level of complexity
+    name: define_complexity_requirements
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Clearly outline the current complexity of the workflow and identify areas
+      for improvement
+  generate_reporting:
+    agent: false
+    description: Combine insights from both tasks to produce a cohesive report
+    name: generate_reporting
+    nodes_depended_on:
+    - collect_integration_data
+    - analyze_sql_schema
+    nodes_dependent_on: []
+    prompt: Generate a comprehensive report based on integrated data and analyzed
+      schema
+  introduce_nested_dependencies:
+    agent: false
+    description: Establish complex relationships between tasks to support concurrent
+      execution
+    name: introduce_nested_dependencies
+    nodes_depended_on:
+    - define_complexity_requirements
+    nodes_dependent_on:
+    - analyze_sql_schema
+    - collect_integration_data
+    prompt: Configure nested dependencies to ensure proper execution flow
+  validate_report:
+    agent: false
+    description: Inspect the report for any discrepancies or missing information
+    name: validate_report
+    nodes_depended_on:
+    - generate_reporting
+    nodes_dependent_on: []
+    prompt: Verify the accuracy and completeness of the generated report

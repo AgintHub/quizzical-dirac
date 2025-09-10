@@ -1,0 +1,391 @@
+dag_type: stub
+description: Construct an explicitly typed, maximally concurrent, incredibly-detailed,
+  type-safe Workflow DAG (Directed Acyclic Graph).
+name: buildworkflow
+nodes:
+  createworkflowdesign:
+    agent: false
+    code_node_type: stub
+    description: Design the workflow structure and architecture.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DefineprojectscopeOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for defineprojectscope node outputs.\"\"\"\n    project_scope:\
+      \ str = Field(..., description=\"Statement of the project scope and constraints.\"\
+      )\n\n\nclass CreateworkflowdesignOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for createworkflowdesign node outputs.\"\"\"\n    workflow_design: str = Field(...,\
+      \ description=\"Description of the workflow design and architecture.\")\n\n\n\
+      def createworkflowdesign(defineprojectscope_input: DefineprojectscopeOutput,\
+      \ **kwargs) -> CreateworkflowdesignOutput:\n    \"\"\"Design the workflow structure\
+      \ and architecture.\n\n    Args:\n        defineprojectscope_input: Input from\
+      \ the 'defineprojectscope' node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        CreateworkflowdesignOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return CreateworkflowdesignOutput(\n\
+      \        workflow_design=\"\",\n    )"
+    name: createworkflowdesign
+    nodes_depended_on:
+    - defineprojectscope
+    nodes_dependent_on: []
+    output_structure:
+    - description: Description of the workflow design and architecture.
+      key: workflow_design
+      type: str
+    prd:
+      bullets:
+      - complexity: Medium
+        impact: Enables node functionality in the DAG
+        method: Implement function that processes inputs and produces expected outputs
+        reason: Required to process Design the workflow structure and architecture.
+        text: Implement createworkflowdesign functionality
+    prompt: Design a high-level architecture for the workflow, including data flows
+      and processing tasks.
+    shims: []
+  decomposeworkflowobjective:
+    agent: false
+    code_node_type: stub
+    description: Break down the workflow objective into smaller, more manageable tasks.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DefineworkflowobjectiveOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for defineworkflowobjective node outputs.\"\"\"\n\
+      \    objective_statement: str = Field(..., description=\"Clear and concise statement\
+      \ of the workflow's objective.\")\n\n\nclass DecomposeworkflowobjectiveOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for decomposeworkflowobjective node outputs.\"\"\"\
+      \n    task_list: str = Field(..., description=\"List of tasks or sub-objectives.\"\
+      )\n\n\ndef decomposeworkflowobjective(defineworkflowobjective_input: DefineworkflowobjectiveOutput,\
+      \ **kwargs) -> DecomposeworkflowobjectiveOutput:\n    \"\"\"Break down the workflow\
+      \ objective into smaller, more manageable tasks.\n\n    Args:\n        defineworkflowobjective_input:\
+      \ Input from the 'defineworkflowobjective' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        DecomposeworkflowobjectiveOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ DecomposeworkflowobjectiveOutput(\n        task_list=\"\",\n    )"
+    name: decomposeworkflowobjective
+    nodes_depended_on:
+    - defineworkflowobjective
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of tasks or sub-objectives.
+      key: task_list
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use the output of the parent node (defineworkflowobjective) and parse
+          the objective statement.
+        reason: This is required to understand what the workflow is trying to achieve.
+        text: Read the workflow objective statement from the parent node (defineworkflowobjective).
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use natural language processing (NLP) techniques to identify key words
+          and phrases.
+        reason: These words and phrases will help identify the key tasks and sub-objectives.
+        text: Identify key words and phrases in the objective statement that indicate
+          tasks or sub-objectives.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a task decomposition approach, such as the Work Breakdown Structure
+          (WBS) method.
+        reason: This will help to identify the key tasks and sub-objectives required
+          to achieve the workflow objective.
+        text: Break down the objective statement into smaller, more manageable tasks
+          or sub-objectives.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Conduct stakeholder interviews or surveys to verify the tasks and
+          sub-objectives.
+        reason: This is required to ensure that the tasks and sub-objectives are accurate
+          and relevant.
+        text: Verify the tasks and sub-objectives with relevant stakeholders.
+    prompt: Identify the key tasks or sub-objectives required to achieve the workflow
+      objective.
+    shims: []
+  defineprojectscope:
+    agent: false
+    code_node_type: stub
+    description: Establish the boundaries and constraints of the workflow project.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass IdentifyinputrequirementsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for identifyinputrequirements node outputs.\"\"\"\n\
+      \    input_requirements: str = Field(..., description=\"List of required inputs.\"\
+      )\n\n\nclass DefineprojectscopeOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for defineprojectscope node outputs.\"\"\"\n    project_scope: str = Field(...,\
+      \ description=\"Statement of the project scope and constraints.\")\n\n\ndef\
+      \ defineprojectscope(identifyinputrequirements_input: IdentifyinputrequirementsOutput,\
+      \ **kwargs) -> DefineprojectscopeOutput:\n    \"\"\"Establish the boundaries\
+      \ and constraints of the workflow project.\n\n    Args:\n        identifyinputrequirements_input:\
+      \ Input from the 'identifyinputrequirements' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        DefineprojectscopeOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return DefineprojectscopeOutput(\n\
+      \        project_scope=\"\",\n    )"
+    name: defineprojectscope
+    nodes_depended_on:
+    - identifyinputrequirements
+    nodes_dependent_on: []
+    output_structure:
+    - description: Statement of the project scope and constraints.
+      key: project_scope
+      type: str
+    prd:
+      bullets:
+      - complexity: Medium
+        impact: Enables node functionality in the DAG
+        method: Implement function that processes inputs and produces expected outputs
+        reason: Required to process Establish the boundaries and constraints of the
+          workflow project.
+        text: Implement defineprojectscope functionality
+    prompt: Define the scope of the workflow project, including any assumptions or
+      constraints.
+    shims: []
+  defineworkflowobjective:
+    agent: false
+    code_node_type: stub
+    description: Identify the specific goal or objective of the workflow.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DefineworkflowobjectiveOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for defineworkflowobjective node outputs.\"\"\"\n\
+      \    objective_statement: str = Field(..., description=\"Clear and concise statement\
+      \ of the workflow's objective.\")\n\n\ndef defineworkflowobjective(general_input:\
+      \ str, **kwargs) -> DefineworkflowobjectiveOutput:\n    \"\"\"Identify the specific\
+      \ goal or objective of the workflow.\n\n    Args:\n        general_input: General\
+      \ input string for the root node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        DefineworkflowobjectiveOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return DefineworkflowobjectiveOutput(\n\
+      \        objective_statement=\"\",\n    )"
+    name: defineworkflowobjective
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: Clear and concise statement of the workflow's objective.
+      key: objective_statement
+      type: str
+    prd:
+      bullets: []
+    prompt: What is the primary objective of this workflow?
+    shims: []
+  evaluateworkflowperformance:
+    agent: false
+    code_node_type: stub
+    description: Assess the performance of the workflow execution.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ExecuteworkflowOutput(BaseModel):\n    \"\"\"Pydantic model for executeworkflow\
+      \ node outputs.\"\"\"\n    workflow_output: List[str] = Field(..., description=\"\
+      Output of the workflow execution\")\n\n\nclass EvaluateworkflowperformanceOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for evaluateworkflowperformance node outputs.\"\"\"\
+      \n    performance_metrics: List[str] = Field(..., description=\"List of performance\
+      \ metrics.\")\n\n\ndef evaluateworkflowperformance(executeworkflow_input: ExecuteworkflowOutput,\
+      \ **kwargs) -> EvaluateworkflowperformanceOutput:\n    \"\"\"Assess the performance\
+      \ of the workflow execution.\n\n    Args:\n        executeworkflow_input: Input\
+      \ from the 'executeworkflow' node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        EvaluateworkflowperformanceOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return EvaluateworkflowperformanceOutput(\n\
+      \        performance_metrics=[],\n    )"
+    name: evaluateworkflowperformance
+    nodes_depended_on:
+    - executeworkflow
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of performance metrics.
+      key: performance_metrics
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: Medium
+        impact: Enables node functionality in the DAG
+        method: Implement function that processes inputs and produces expected outputs
+        reason: Required to process Assess the performance of the workflow execution.
+        text: Implement evaluateworkflowperformance functionality
+    prompt: Evaluate the performance of the workflow execution, including metrics
+      such as speed and accuracy.
+    shims: []
+  executeworkflow:
+    agent: false
+    code_node_type: stub
+    description: Run the workflow using the refined design and execute the tasks
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass RefineworkflowdesignOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ refineworkflowdesign node outputs.\"\"\"\n    refined_workflow_design: str\
+      \ = Field(..., description=\"Description of the refined workflow design and\
+      \ architecture.\")\n\n\nclass ExecuteworkflowOutput(BaseModel):\n    \"\"\"\
+      Pydantic model for executeworkflow node outputs.\"\"\"\n    workflow_output:\
+      \ List[str] = Field(..., description=\"Output of the workflow execution\")\n\
+      \n\ndef executeworkflow(refineworkflowdesign_input: RefineworkflowdesignOutput,\
+      \ **kwargs) -> ExecuteworkflowOutput:\n    \"\"\"Run the workflow using the\
+      \ refined design and execute the tasks\n\n    Args:\n        refineworkflowdesign_input:\
+      \ Input from the 'refineworkflowdesign' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        ExecuteworkflowOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return ExecuteworkflowOutput(\n\
+      \        workflow_output=[],\n    )"
+    name: executeworkflow
+    nodes_depended_on:
+    - refineworkflowdesign
+    nodes_dependent_on: []
+    output_structure:
+    - description: Output of the workflow execution
+      key: workflow_output
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a message queue to manage task execution, Apply a graph data structure
+          to represent the workflow, and Implement error handling using a custom error
+          handling library
+        reason: This approach provides a structured way to handle workflow execution
+          and data processing
+        text: Implement a data processor to handle task execution, data flow, and
+          error handling based on the refined design
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a thread pool executor to manage task execution, Apply a load
+          balancer to distribute tasks across threads, and Implement task tracking
+          using a task management system
+        reason: This approach provides high performance and scalability for workflow
+          execution
+        text: Develop a task executor that can handle multiple tasks concurrently
+          based on the workflow design
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a logging framework to log workflow execution events, Apply a
+          data visualization tool to visualize task execution and error handling,
+          and Implement data analytics to analyze workflow execution data
+        reason: This approach provides insights into workflow execution and helps
+          identify areas for improvement
+        text: Implement a data logger to track workflow execution, task execution,
+          and error handling
+    prompt: Execute the workflow by running the tasks and processing the data according
+      to the refined design
+    shims: []
+  identifyinputrequirements:
+    agent: false
+    code_node_type: stub
+    description: Determine the necessary inputs for the workflow.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DecomposeworkflowobjectiveOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for decomposeworkflowobjective node outputs.\"\"\"\
+      \n    task_list: str = Field(..., description=\"List of tasks or sub-objectives.\"\
+      )\n\n\nclass IdentifyinputrequirementsOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for identifyinputrequirements node outputs.\"\"\"\n    input_requirements:\
+      \ str = Field(..., description=\"List of required inputs.\")\n\n\ndef identifyinputrequirements(decomposeworkflowobjective_input:\
+      \ DecomposeworkflowobjectiveOutput, **kwargs) -> IdentifyinputrequirementsOutput:\n\
+      \    \"\"\"Determine the necessary inputs for the workflow.\n\n    Args:\n \
+      \       decomposeworkflowobjective_input: Input from the 'decomposeworkflowobjective'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       IdentifyinputrequirementsOutput: Object containing outputs for this\
+      \ node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub\
+      \ output with placeholder values\n    return IdentifyinputrequirementsOutput(\n\
+      \        input_requirements=\"\",\n    )"
+    name: identifyinputrequirements
+    nodes_depended_on:
+    - decomposeworkflowobjective
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of required inputs.
+      key: input_requirements
+      type: str
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a combination of data filtering and mapping techniques to extract
+          the required input fields.
+        reason: This approach allows for a clear separation of concerns and enables
+          efficient data extraction.
+        text: Implement a data processing pipeline to extract required input fields
+          from the task list output of the `decomposeworkflowobjective` node.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Implement a set of validation rules using a programming language like
+          Python, and utilize a library or framework for data validation.
+        reason: This step is crucial to prevent data inconsistencies and ensure the
+          integrity of the workflow.
+        text: Define a data validation process to ensure that the extracted input
+          fields meet the required criteria.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a data storage library or framework to create a data structure
+          that can hold the validated input field values.
+        reason: This step is necessary to prepare the input values for use in downstream
+          workflow tasks.
+        text: Create a data output structure to store the validated input field values.
+      - complexity: LOW
+        impact: LOW
+        method: Use a version control system like Git to store documentation and track
+          changes to the workflow.
+        reason: This step is essential for maintaining workflow documentation and
+          ensuring reproducibility.
+        text: Document the input requirements and their validation criteria for future
+          reference.
+    prompt: What inputs are required to execute the workflow tasks?
+    shims: []
+  iterateonworkflowimprovements:
+    agent: false
+    code_node_type: stub
+    description: Iterate on the workflow design based on performance evaluation and
+      feedback.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass EvaluateworkflowperformanceOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for evaluateworkflowperformance node outputs.\"\"\"\n    performance_metrics:\
+      \ List[str] = Field(..., description=\"List of performance metrics.\")\n\n\n\
+      class IterateonworkflowimprovementsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for iterateonworkflowimprovements node outputs.\"\"\"\n    improved_workflow_design:\
+      \ str = Field(..., description=\"Description of the improved workflow design\
+      \ and architecture.\")\n\n\ndef iterateonworkflowimprovements(evaluateworkflowperformance_input:\
+      \ EvaluateworkflowperformanceOutput, **kwargs) -> IterateonworkflowimprovementsOutput:\n\
+      \    \"\"\"Iterate on the workflow design based on performance evaluation and\
+      \ feedback.\n\n    Args:\n        evaluateworkflowperformance_input: Input from\
+      \ the 'evaluateworkflowperformance' node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        IterateonworkflowimprovementsOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return IterateonworkflowimprovementsOutput(\n\
+      \        improved_workflow_design=\"\",\n    )"
+    name: iterateonworkflowimprovements
+    nodes_depended_on:
+    - evaluateworkflowperformance
+    nodes_dependent_on: []
+    output_structure:
+    - description: Description of the improved workflow design and architecture.
+      key: improved_workflow_design
+      type: str
+    prd:
+      bullets:
+      - complexity: Medium
+        impact: Enables node functionality in the DAG
+        method: Implement function that processes inputs and produces expected outputs
+        reason: Required to process Iterate on the workflow design based on performance
+          evaluation and feedback.
+        text: Implement iterateonworkflowimprovements functionality
+    prompt: Refine the workflow design based on performance evaluation and feedback,
+      making iterative improvements.
+    shims: []
+  refineworkflowdesign:
+    agent: false
+    code_node_type: stub
+    description: Iteratively refine the workflow design based on feedback and testing.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass CreateworkflowdesignOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for createworkflowdesign node outputs.\"\"\"\n   \
+      \ workflow_design: str = Field(..., description=\"Description of the workflow\
+      \ design and architecture.\")\n\n\nclass RefineworkflowdesignOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for refineworkflowdesign node outputs.\"\"\"\n   \
+      \ refined_workflow_design: str = Field(..., description=\"Description of the\
+      \ refined workflow design and architecture.\")\n\n\ndef refineworkflowdesign(createworkflowdesign_input:\
+      \ CreateworkflowdesignOutput, **kwargs) -> RefineworkflowdesignOutput:\n   \
+      \ \"\"\"Iteratively refine the workflow design based on feedback and testing.\n\
+      \n    Args:\n        createworkflowdesign_input: Input from the 'createworkflowdesign'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       RefineworkflowdesignOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return RefineworkflowdesignOutput(\n        refined_workflow_design=\"\
+      \",\n    )"
+    name: refineworkflowdesign
+    nodes_depended_on:
+    - createworkflowdesign
+    nodes_dependent_on: []
+    output_structure:
+    - description: Description of the refined workflow design and architecture.
+      key: refined_workflow_design
+      type: str
+    prd:
+      bullets: []
+    prompt: Refine the workflow design based on testing and feedback, making iterative
+      improvements.
+    shims: []

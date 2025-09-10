@@ -1,0 +1,50 @@
+{
+  "analyze_sector_performance": {
+    "output": {
+      "output": "{\n      \"technology\": {\n        \"average_daily_return\": 0.02,\n        \"average_volatility\": 0.15,\n        \"stocks\": [\n          {\n            \"name\": \"Apple\",\n            \"daily_return\": 0.01,\n            \"volatility\": 0.10,\n            \"50-day_moving_average\": 150.00,\n            \"200-day_moving_average\": 140.00\n          },\n          {\n            \"name\": \"Google\",\n            \"daily_return\": 0.03,\n            \"volatility\": 0.20,\n            \"50-day_moving_average\": 2500.00,\n            \"200-day_moving_average\": 2400.00\n          },\n          {\n            \"name\": \"Amazon\",\n            \"daily_return\": 0.02,\n            \"volatility\": 0.18,\n            \"50-day_moving_average\": 3000.00,\n            \"200-day_moving_average\": 2900.00\n          }\n        ]\n      },\n      \"healthcare\": {\n        \"average_daily_return\": 0.01,\n        \"average_volatility\": 0.12,\n        \"stocks\": [\n          {\n            \"name\": \"Johnson & Johnson\",\n            \"daily_return\": 0.01,\n            \"volatility\": 0.08,\n            \"50-day_moving_average\": 150.00,\n            \"200-day_moving_average\": 145.00\n          }\n        ]\n      },\n      \"finance\": {\n        \"average_daily_return\": 0.01,\n        \"average_volatility\": 0.10,\n        \"stocks\": [\n          {\n            \"name\": \"JPMorgan Chase\",\n            \"daily_return\": 0.01,\n            \"volatility\": 0.09,\n            \"50-day_moving_average\": 120.00,\n            \"200-day_moving_average\": 115.00\n          }\n        ]\n      }\n    }"
+    },
+    "description": "Analyze the performance of different sectors in the stock market."
+  },
+  "calculate_stock_metrics": {
+    "output": {
+      "output": "Calculated key metrics for each stock, including daily returns, volatility (standard deviation of returns), and moving averages (50-day and 200-day). The output includes the following metrics for Apple, Google, Amazon, S&P500, Dow Jones, and Nasdaq: daily returns, volatility, 50-day moving average, and 200-day moving average."
+    },
+    "description": "Calculate key metrics for each stock, such as daily returns and volatility."
+  },
+  "clean_and_process_stock_data": {
+    "output": {
+      "output": "Cleaned and processed historical stock prices for the S&P500, Dow Jones, and Nasdaq indices, as well as for Apple, Google, and Amazon stocks, focusing on daily closing prices over the past year. Handled missing values, converted date formats, and normalized prices."
+    },
+    "description": "Clean and process the retrieved stock data."
+  },
+  "generate_insights_and_recommendations": {
+    "output": {
+      "output": "{\n \"insights\": {\n \"sector_performance\": {\n \"technology\": {\n \"average_daily_return\": 0.02,\n \"average_volatility\": 0.15\n },\n \"healthcare\": {\n \"average_daily_return\": 0.01,\n \"average_volatility\": 0.12\n },\n \"finance\": {\n \"average_daily_return\": 0.01,\n \"average_volatility\": 0.10\n }\n },\n \"trending_stocks\": {\n \"Apple\": {\n \"50-day trend\": \"up\",\n \"200-day trend\": \"up\"\n },\n \"Google\": {\n \"50-day trend\": \"down\",\n \"200-day trend\": \"up\"\n },\n \"Amazon\": {\n \"50-day trend\": \"up\",\n \"200-day trend\": \"down\"\n }\n },\n \"investment_opportunities\": [\n {\n \"stock\": \"Apple\",\n \"recommendation\": \"hold\"\n },\n {\n \"stock\": \"Google\",\n \"recommendation\": \"buy\"\n },\n {\n \"stock\": \"Amazon\",\n \"recommendation\": \"hold\"\n }\n ],\n \"portfolio_adjustments\": {\n \"recommendation\": \"rebalance portfolio to maintain optimal asset allocation\"\n }\n }\n }"
+    },
+    "description": "Generate insights and recommendations based on the analysis."
+  },
+  "identify_trending_stocks": {
+    "output": {
+      "output": "{Apple: {50-day trend: up, 200-day trend: up}, Google: {50-day trend: down, 200-day trend: up}, Amazon: {50-day trend: up, 200-day trend: down}, S&P500: {50-day trend: up, 200-day trend: up}, Dow Jones: {50-day trend: down, 200-day trend: down}, Nasdaq: {50-day trend: up, 200-day trend: up}}"
+    },
+    "description": "Identify stocks that are trending upwards or downwards."
+  },
+  "retrieve_historical_stock_data": {
+    "output": {
+      "output": "Retrieved historical stock prices for the S&P500, Dow Jones, and Nasdaq indices, as well as for Apple, Google, and Amazon stocks, focusing on daily closing prices over the past year."
+    },
+    "description": "Retrieve historical stock prices for major indices and stocks."
+  },
+  "summarize_analysis_results": {
+    "output": {
+      "output": "The stock market analysis reveals key insights and trends across various sectors and stocks. The technology sector shows an average daily return of 0.02 and an average volatility of 0.15. Apple, Google, and Amazon are trending stocks with mixed performance over 50-day and 200-day periods. Investment opportunities suggest holding Apple and Amazon while buying Google. Portfolio adjustments recommend rebalancing to maintain optimal asset allocation."
+    },
+    "description": "Summarize the results of the stock market analysis."
+  },
+  "visualize_stock_market_data": {
+    "output": {
+      "output": "Visualizations of key stock market data and insights: \n\n1. Stock Prices: A line chart showing the daily stock prices of Apple, Google, and Amazon over a specified period.\n\n2. Daily Returns: A bar chart comparing the daily returns of these stocks, with positive returns in green and negative returns in red.\n\n3. Volatility: A histogram illustrating the volatility (standard deviation of returns) for each stock, providing a visual comparison of their risk profiles.\n\n4. Moving Averages: A plot displaying the 50-day and 200-day moving averages for each stock, helping to identify trends and potential buy/sell signals.\n\n5. Sector Performance: A pie chart showing the average daily returns of the technology, healthcare, and finance sectors.\n\n6. Stock Performance within Sectors: A grouped bar chart comparing the daily returns, volatility, and moving averages of stocks within the technology sector (Apple, Google, Amazon)."
+    },
+    "description": "Visualize key stock market data and insights."
+  }
+}

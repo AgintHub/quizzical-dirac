@@ -1,0 +1,343 @@
+dag_type: spec
+description: Generated workflow from UI.
+name: gamble_for_me
+nodes:
+  check_budget:
+    agent: false
+    description: Check if the budget is depleted
+    name: check_budget
+    nodes_depended_on:
+    - update_budget
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the budget is depleted
+      key: is_budget_depleted
+      type: bool
+    - description: The current budget value
+      key: current_budget
+      type: float
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Access the 'new_budget' field from the 'update_budget' node's output
+        reason: The 'update_budget' node provides the most recent budget value
+        text: Retrieve the updated budget value from the output of the 'update_budget'
+          node
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a simple comparison operator (e.g., <) to evaluate the budget
+          value against the threshold
+        reason: A budget value below the threshold indicates depletion
+        text: Compare the current budget value to a threshold value (e.g., 0) to determine
+          if the budget is depleted
+      - complexity: LOW
+        impact: LOW
+        method: Use a boolean expression to represent the budget depletion status
+        reason: The output requires a boolean value
+        text: Return a boolean value indicating whether the budget is depleted
+      - complexity: LOW
+        impact: LOW
+        method: Return the current budget value as a float
+        reason: The output requires the current budget value
+        text: Return the current budget value as a float
+    prompt: Check if the budget is depleted. Provide a boolean value (true/false).
+  define_gambling_game:
+    agent: false
+    description: Specify the type of gambling game to play
+    name: define_gambling_game
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: The name of the gambling game to play
+      key: game_name
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a predefined list of game names, Implement input validation using
+          regular expressions or string matching
+        reason: This approach provides a clear and controlled way for the user to
+          select a game, reducing errors and ensuring a smooth user experience.
+        text: Implement a game selection mechanism that presents the user with a list
+          of available games (e.g., roulette, blackjack, slots) and validates their
+          input to ensure it matches one of the available games.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use an NLP library or ML framework (e.g., NLTK, spaCy, TensorFlow)
+          to train and integrate a game selection model
+        reason: This approach provides a more user-friendly and intuitive experience,
+          allowing the user to express their intent in a more natural way.
+        text: Integrate a natural language processing (NLP) or machine learning (ML)
+          model to enable the user to input their game selection in a more flexible
+          and natural way (e.g., 'I'd like to play roulette').
+      - complexity: LOW
+        impact: LOW
+        method: Use a try-catch block to handle exceptions, Implement a retry mechanism
+          with a limited number of attempts
+        reason: This approach ensures that the system remains robust and user-friendly
+          even in cases where the user provides invalid input.
+        text: Implement a fallback mechanism to handle cases where the user's input
+          is invalid or unclear, providing a clear error message and prompting the
+          user to try again.
+    prompt: Choose a gambling game to simulate (e.g., roulette, blackjack, slots).
+      Provide the name of the game.
+  determine_bet_amount:
+    agent: false
+    description: Determine the bet amount for the current game
+    name: determine_bet_amount
+    nodes_depended_on:
+    - set_gambling_budget
+    nodes_dependent_on: []
+    output_structure:
+    - description: The determined bet amount for the current game
+      key: bet_amount
+      type: float
+    - description: Whether the bet amount is within the remaining budget
+      key: is_within_budget
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use the output of the set_gambling_budget node to retrieve the initial
+          budget
+        reason: The initial budget is required to determine a reasonable bet amount
+        text: Retrieve the initial budget from the set_gambling_budget node
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a fixed fraction (e.g., 0.1) of the initial budget to calculate
+          the default bet amount
+        reason: A default bet amount is needed to ensure the game can proceed
+        text: Calculate a default bet amount as a fraction of the initial budget (e.g.,
+          10%)
+      - complexity: LOW
+        impact: HIGH
+        method: Compare the default bet amount to the remaining budget and set is_within_budget
+          accordingly
+        reason: The bet amount must be within the budget to avoid overspending
+        text: Check if the default bet amount is within the remaining budget
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use game-specific logic to adjust the bet amount (e.g., based on game
+          type, risk level, or other factors)
+        reason: Game-specific rules or strategies may dictate a specific bet amount
+        text: Adjust the bet amount based on game-specific rules or strategies (if
+          applicable)
+    prompt: Determine the bet amount for the current game. Provide a numerical value.
+  end_game:
+    agent: false
+    description: End the game if the budget is depleted
+    name: end_game
+    nodes_depended_on:
+    - check_budget
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the game has been ended
+      key: game_ended
+      type: bool
+    - description: Reason for ending the game (e.g., budget depleted)
+      key: reason
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use the is_budget_depleted field from the check_budget node's output
+        reason: This step is necessary to determine if the game should be ended
+        text: Check if the budget is depleted using the output from the check_budget
+          node
+      - complexity: LOW
+        impact: HIGH
+        method: Use a simple conditional statement to set the output fields
+        reason: This step is necessary to end the game and provide a reason for ending
+          it
+        text: If the budget is depleted, set game_ended to true and reason to 'budget
+          depleted'
+      - complexity: LOW
+        impact: LOW
+        method: Use a simple conditional statement to set the output fields
+        reason: This step is necessary to indicate that the game should not be ended
+        text: If the budget is not depleted, set game_ended to false and reason to
+          an empty string
+    prompt: End the game if the budget is depleted.
+  repeat_game:
+    agent: false
+    description: Repeat the game if the budget is not depleted.
+    name: repeat_game
+    nodes_depended_on:
+    - check_budget
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the game should be repeated based on the budget.
+      key: should_repeat
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Access the 'is_budget_depleted' and 'current_budget' fields from the
+          'check_budget' node output.
+        reason: The 'check_budget' node provides the necessary information to determine
+          if the game should be repeated.
+        text: Retrieve the budget depletion status and current budget from the 'check_budget'
+          node output.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a simple conditional statement to evaluate the 'is_budget_depleted'
+          field. If it is false, set 'should_repeat' to true.
+        reason: If the budget is not depleted, the game should be repeated.
+        text: Evaluate the budget depletion status to determine if the game should
+          be repeated.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a boolean return type to output the 'should_repeat' value.
+        reason: The 'should_repeat' value determines the next course of action in
+          the game workflow.
+        text: Return the 'should_repeat' value as a boolean output.
+    prompt: Repeat the game if the budget is not depleted.
+  set_gambling_budget:
+    agent: false
+    description: Set the initial budget for the gambling session
+    name: set_gambling_budget
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: The initial budget for the gambling session
+      key: initial_budget
+      type: float
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use a regular expression to validate the input value as a positive
+          number
+        reason: This step is necessary to prevent invalid or negative budget values
+          from being set.
+        text: Implement a numerical input validation to ensure the provided budget
+          value is a positive number.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a encryption library to securely store the initial budget value
+        reason: This step is necessary to protect sensitive user data.
+        text: Use a secure method to store the initial budget value, such as encrypting
+          sensitive data.
+      - complexity: LOW
+        impact: LOW
+        method: Use a floating-point data type to store the initial budget value
+        reason: This step is necessary to provide flexibility in setting the initial
+          budget.
+        text: Set the initial budget value as a floating-point number to allow for
+          decimal values.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a predefined default value for the initial budget
+        reason: This step is necessary to ensure a budget value is always set.
+        text: Provide a default initial budget value if no value is provided by the
+          user.
+    prompt: Set the initial budget for the gambling session. Provide a numerical value.
+  simulate_game:
+    agent: false
+    description: Simulate the gambling game
+    name: simulate_game
+    nodes_depended_on:
+    - define_gambling_game
+    - determine_bet_amount
+    nodes_dependent_on: []
+    output_structure:
+    - description: The outcome of the game (e.g., win, lose)
+      key: game_outcome
+      type: str
+    - description: The amount won or lost in the game
+      key: amount_won_or_lost
+      type: float
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use the 'game_name' field from the 'define_gambling_game' node's output
+        reason: The game name is required to determine the simulation logic
+        text: Retrieve the game name from the output of the 'define_gambling_game'
+          node
+      - complexity: LOW
+        impact: LOW
+        method: Use the 'bet_amount' field from the 'determine_bet_amount' node's
+          output
+        reason: The bet amount is required to calculate the winnings or losses
+        text: Retrieve the bet amount from the output of the 'determine_bet_amount'
+          node
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a game simulation library or implement game logic for each supported
+          game type (e.g., roulette, blackjack, slots)
+        reason: The simulation logic varies depending on the game type
+        text: Simulate the game based on the game name and bet amount
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use probability calculations and game rules to determine the outcome
+        reason: The game outcome affects the budget update and subsequent game decisions
+        text: Determine the game outcome (win or lose) based on the simulation
+      - complexity: LOW
+        impact: LOW
+        method: Use basic arithmetic operations to calculate the winnings or losses
+        reason: The amount won or lost affects the budget update
+        text: Calculate the amount won or lost based on the game outcome and bet amount
+      - complexity: LOW
+        impact: LOW
+        method: Use a standard data structure to return the output fields
+        reason: The output is required for subsequent nodes to make decisions
+        text: Return the game outcome and amount won or lost as output
+    prompt: Simulate the gambling game. Provide the outcome of the game (e.g., win,
+      lose).
+  update_budget:
+    agent: false
+    description: Update the budget based on the game outcome
+    name: update_budget
+    nodes_depended_on:
+    - simulate_game
+    nodes_dependent_on: []
+    output_structure:
+    - description: The updated budget value
+      key: new_budget
+      type: float
+    - description: Whether the budget update was successful
+      key: update_success
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Access the game_outcome and amount_won_or_lost fields from the simulate_game
+          node output
+        reason: The game outcome and amount won or lost are necessary to determine
+          the new budget value
+        text: Retrieve the game outcome and amount won or lost from the simulate_game
+          node output
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the game outcome and amount won or lost to calculate the new budget
+          value. If the game outcome is 'win', add the amount won to the current budget.
+          If the game outcome is 'lose', subtract the amount lost from the current
+          budget.
+        reason: The new budget value is calculated by adding the amount won or lost
+          to the current budget
+        text: Determine the new budget value based on the game outcome and amount
+          won or lost
+      - complexity: LOW
+        impact: MEDIUM
+        method: Verify that the new budget value is greater than or equal to 0
+        reason: A valid budget value is necessary to ensure the game can continue
+        text: Check if the new budget value is valid (e.g., non-negative)
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Store the new budget value as the current budget
+        reason: The budget needs to be updated to reflect the new value
+        text: Update the budget with the new budget value
+      - complexity: LOW
+        impact: LOW
+        method: Set the update_success field to True if the budget update was successful,
+          and False otherwise
+        reason: The update_success field indicates whether the budget update was successful
+        text: Set the update_success field to True if the budget update was successful
+    prompt: Update the budget based on the game outcome. Provide the new budget value.

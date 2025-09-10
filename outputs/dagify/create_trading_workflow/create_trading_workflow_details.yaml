@@ -1,0 +1,72 @@
+dag_type: plain_text
+description: A workflow for creating a trading system, covering market data ingestion,
+  trade execution, risk management, and performance analysis.
+name: create_trading_workflow
+nodes:
+  analyze_performance:
+    agent: false
+    description: Track and analyze the trading system's performance over time
+    name: analyze_performance
+    nodes_depended_on:
+    - manage_risk
+    nodes_dependent_on: []
+    prompt: Track and analyze the trading system's performance over time, including
+      metrics such as profit/loss, Sharpe ratio, and drawdown. Report any key findings
+      or insights.
+  execute_trades:
+    agent: false
+    description: Send trade execution orders to the exchange or other trading venues
+    name: execute_trades
+    nodes_depended_on:
+    - generate_trading_signals
+    nodes_dependent_on: []
+    prompt: Send buy or sell orders to the exchange or other trading venues based
+      on the generated trading signals. Monitor order execution and report any issues
+      or errors.
+  generate_trading_signals:
+    agent: false
+    description: Use machine learning or rule-based models to generate trading signals
+    name: generate_trading_signals
+    nodes_depended_on:
+    - ingest_market_data
+    nodes_dependent_on: []
+    prompt: Apply your trading strategy to the ingested market data and generate trading
+      signals (e.g., buy or sell recommendations) for each asset.
+  ingest_market_data:
+    agent: false
+    description: Collect and transform market data from various sources
+    name: ingest_market_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Connect to various market data feeds (e.g., APIs, CSV files) and collect
+      data for the next trading day. Process data into a uniform format and store
+      in a database or data warehouse.
+  manage_risk:
+    agent: false
+    description: Monitor and adjust the trading system's risk exposure
+    name: manage_risk
+    nodes_depended_on:
+    - execute_trades
+    nodes_dependent_on: []
+    prompt: Monitor the trading system's risk exposure and adjust positions or stop-losses
+      as needed to maintain a acceptable risk level. Report any risk issues or alerts.
+  optimize_trading_strategy:
+    agent: false
+    description: Refine the trading strategy based on performance analysis
+    name: optimize_trading_strategy
+    nodes_depended_on:
+    - analyze_performance
+    nodes_dependent_on: []
+    prompt: Refine the trading strategy based on performance analysis, including potential
+      adjustments to the trading model, risk management, or position sizing. Report
+      any changes to the trading system.
+  update_market_data:
+    agent: false
+    description: Update market data in the system for the next trading day
+    name: update_market_data
+    nodes_depended_on:
+    - optimize_trading_strategy
+    nodes_dependent_on: []
+    prompt: Update market data in the system for the next trading day, incorporating
+      any changes to the trading strategy or risk management. Prepare the system for
+      the next trading day.

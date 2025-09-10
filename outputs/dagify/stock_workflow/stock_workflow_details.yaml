@@ -1,0 +1,646 @@
+dag_type: stub
+description: Generated workflow from UI.
+name: stock_workflow
+nodes:
+  calculate_stock_valuation:
+    agent: false
+    code_node_type: stub
+    description: Calculate the valuation of the stock
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DetermineStockTypeOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ determine_stock_type node outputs.\"\"\"\n    stock_type: str = Field(...,\
+      \ description=\"The type of stock to create (e.g., common, preferred, growth)\"\
+      )\n    rationale: str = Field(..., description=\"Key factors or rationale for\
+      \ choosing this stock type\")\n    characteristics: str = Field(..., description=\"\
+      List of characteristics of the chosen stock type\")\n    is_valid: bool = Field(...,\
+      \ description=\"Whether the determined stock type meets all requirements\")\n\
+      \n\nclass CalculateStockValuationOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for calculate_stock_valuation node outputs.\"\"\"\n    valuation: float =\
+      \ Field(..., description=\"The estimated valuation of the stock\")\n    valuation_methods:\
+      \ List[str] = Field(..., description=\"List of valuation methods used (e.g.,\
+      \ DCF, Comparable Companies, etc.)\")\n    assumptions: List[str] = Field(...,\
+      \ description=\"List of assumptions made during the valuation process\")\n \
+      \   sensitivity_analysis: bool = Field(..., description=\"Whether a sensitivity\
+      \ analysis was performed\")\n\n\ndef calculate_stock_valuation(determine_stock_type_input:\
+      \ DetermineStockTypeOutput, **kwargs) -> CalculateStockValuationOutput:\n  \
+      \  \"\"\"Calculate the valuation of the stock\n\n    Args:\n        determine_stock_type_input:\
+      \ Input from the 'determine_stock_type' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        CalculateStockValuationOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ CalculateStockValuationOutput(\n        valuation=0.0,\n        valuation_methods=[],\n\
+      \        assumptions=[],\n        sensitivity_analysis=False,\n    )"
+    name: calculate_stock_valuation
+    nodes_depended_on:
+    - determine_stock_type
+    nodes_dependent_on: []
+    output_structure:
+    - description: The estimated valuation of the stock
+      key: valuation
+      type: float
+    - description: List of valuation methods used (e.g., DCF, Comparable Companies,
+        etc.)
+      key: valuation_methods
+      type: List[str]
+    - description: List of assumptions made during the valuation process
+      key: assumptions
+      type: List[str]
+    - description: Whether a sensitivity analysis was performed
+      key: sensitivity_analysis
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use the stock type and characteristics to inform the valuation approach
+        reason: To determine the appropriate valuation methods and assumptions for
+          the stock
+        text: Retrieve the stock type and characteristics from the output of the 'determine_stock_type'
+          node
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a combination of Discounted Cash Flow (DCF) and Comparable Companies
+          analysis
+        reason: To ensure that the valuation is accurate and reliable
+        text: Select the relevant financial models and industry benchmarks for the
+          stock valuation
+      - complexity: HIGH
+        impact: HIGH
+        method: Apply the DCF and Comparable Companies analysis to the stock's financial
+          data
+        reason: To provide an accurate estimate of the stock's valuation
+        text: Estimate the valuation of the stock using the selected financial models
+          and industry benchmarks
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a standardized template to document the valuation process and
+          results
+        reason: To provide transparency and credibility to the valuation process
+        text: Document the valuation methods used, assumptions made, and sensitivity
+          analysis performed
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a structured output format to convey the valuation results
+        reason: To provide the necessary information for subsequent nodes in the workflow
+        text: Output the estimated valuation, valuation methods used, assumptions
+          made, and sensitivity analysis performed
+    prompt: Using financial models and industry benchmarks, estimate the valuation
+      of the stock.
+    shims: []
+  define_stock_requirements:
+    agent: false
+    code_node_type: stub
+    description: Define the requirements for the stock
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DefineStockRequirementsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for define_stock_requirements node outputs.\"\"\"\n    stock_type: str = Field(...,\
+      \ description=\"Type of stock (e.g., common, preferred, growth, etc.)\")\n \
+      \   stock_name: str = Field(..., description=\"Name of the stock\")\n    attributes:\
+      \ List[str] = Field(..., description=\"List of relevant attributes (e.g., par\
+      \ value, dividend rate, voting rights, etc.)\")\n\n\ndef define_stock_requirements(general_input:\
+      \ str, **kwargs) -> DefineStockRequirementsOutput:\n    \"\"\"Define the requirements\
+      \ for the stock\n\n    Args:\n        general_input: General input string for\
+      \ the root node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n\
+      \        DefineStockRequirementsOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return DefineStockRequirementsOutput(\n     \
+      \   stock_type=\"\",\n        stock_name=\"\",\n        attributes=[],\n   \
+      \ )"
+    name: define_stock_requirements
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: Type of stock (e.g., common, preferred, growth, etc.)
+      key: stock_type
+      type: str
+    - description: Name of the stock
+      key: stock_name
+      type: str
+    - description: List of relevant attributes (e.g., par value, dividend rate, voting
+        rights, etc.)
+      key: attributes
+      type: List[str]
+    prd:
+      bullets: []
+    prompt: List the key characteristics of the stock to be created, including type,
+      name, and any relevant attributes.
+    shims: []
+  define_stock_structure:
+    agent: false
+    code_node_type: stub
+    description: Define the structure of the stock
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CalculateStockValuationOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for calculate_stock_valuation node outputs.\"\"\"\n    valuation: float =\
+      \ Field(..., description=\"The estimated valuation of the stock\")\n    valuation_methods:\
+      \ List[str] = Field(..., description=\"List of valuation methods used (e.g.,\
+      \ DCF, Comparable Companies, etc.)\")\n    assumptions: List[str] = Field(...,\
+      \ description=\"List of assumptions made during the valuation process\")\n \
+      \   sensitivity_analysis: bool = Field(..., description=\"Whether a sensitivity\
+      \ analysis was performed\")\n\n\nclass DefineStockStructureOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for define_stock_structure node outputs.\"\"\"\n \
+      \   par_value: float = Field(..., description=\"The par value of the stock\"\
+      )\n    dividend_rate: float = Field(..., description=\"The dividend rate of\
+      \ the stock, represented as a decimal value\")\n    voting_rights: str = Field(...,\
+      \ description=\"Description of the voting rights associated with the stock\"\
+      )\n    has_voting_rights: bool = Field(..., description=\"Whether the stock\
+      \ has voting rights\")\n\n\ndef define_stock_structure(calculate_stock_valuation_input:\
+      \ CalculateStockValuationOutput, **kwargs) -> DefineStockStructureOutput:\n\
+      \    \"\"\"Define the structure of the stock\n\n    Args:\n        calculate_stock_valuation_input:\
+      \ Input from the 'calculate_stock_valuation' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        DefineStockStructureOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return DefineStockStructureOutput(\n\
+      \        par_value=0.0,\n        dividend_rate=0.0,\n        voting_rights=\"\
+      \",\n        has_voting_rights=False,\n    )"
+    name: define_stock_structure
+    nodes_depended_on:
+    - calculate_stock_valuation
+    nodes_dependent_on: []
+    output_structure:
+    - description: The par value of the stock
+      key: par_value
+      type: float
+    - description: The dividend rate of the stock, represented as a decimal value
+      key: dividend_rate
+      type: float
+    - description: Description of the voting rights associated with the stock
+      key: voting_rights
+      type: str
+    - description: Whether the stock has voting rights
+      key: has_voting_rights
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use the output from calculate_stock_valuation to inform the stock
+          structure definition.
+        reason: This step ensures that the stock structure definition is informed
+          by the stock's valuation and relevant characteristics.
+        text: Review the output from the calculate_stock_valuation node to determine
+          the stock's valuation and relevant characteristics.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use financial models and industry benchmarks to determine the par
+          value.
+        reason: The par value is a critical component of the stock's structure and
+          must be determined based on relevant financial models and industry benchmarks.
+        text: Determine the par value of the stock based on industry benchmarks and
+          financial models.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use market data and financial models to calculate the dividend rate.
+        reason: The dividend rate is an important component of the stock's structure
+          and must be calculated based on the stock's type and relevant market data.
+        text: Calculate the dividend rate of the stock based on the stock's type and
+          relevant market data.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use regulatory requirements and industry benchmarks to define the
+          voting rights.
+        reason: The voting rights are a critical component of the stock's structure
+          and must be defined based on the stock's type and relevant regulatory requirements.
+        text: Define the voting rights associated with the stock based on the stock's
+          type and relevant regulatory requirements.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use regulatory requirements and industry benchmarks to determine whether
+          the stock has voting rights.
+        reason: This step ensures that the stock's voting rights are accurately reflected
+          in the stock's structure.
+        text: Determine whether the stock has voting rights based on the stock's type
+          and relevant regulatory requirements.
+    prompt: Determine the stock's structural components, including par value, dividend
+      rate, and voting rights.
+    shims: []
+  determine_stock_type:
+    agent: false
+    code_node_type: stub
+    description: Determine the type of stock to create
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DefineStockRequirementsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for define_stock_requirements node outputs.\"\"\"\n    stock_type: str = Field(...,\
+      \ description=\"Type of stock (e.g., common, preferred, growth, etc.)\")\n \
+      \   stock_name: str = Field(..., description=\"Name of the stock\")\n    attributes:\
+      \ List[str] = Field(..., description=\"List of relevant attributes (e.g., par\
+      \ value, dividend rate, voting rights, etc.)\")\n\n\nclass ResearchStockMarketOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for research_stock_market node outputs.\"\"\"\n  \
+      \  market_conditions_summary: str = Field(..., description=\"Summary of current\
+      \ stock market conditions\")\n    industry_trends: List[str] = Field(..., description=\"\
+      List of industry trends\")\n    competitor_analysis: str = Field(..., description=\"\
+      Summary of competitor analysis\")\n    market_outlook: str = Field(..., description=\"\
+      Outlook for the stock market\")\n\n\nclass DetermineStockTypeOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for determine_stock_type node outputs.\"\"\"\n   \
+      \ stock_type: str = Field(..., description=\"The type of stock to create (e.g.,\
+      \ common, preferred, growth)\")\n    rationale: str = Field(..., description=\"\
+      Key factors or rationale for choosing this stock type\")\n    characteristics:\
+      \ str = Field(..., description=\"List of characteristics of the chosen stock\
+      \ type\")\n    is_valid: bool = Field(..., description=\"Whether the determined\
+      \ stock type meets all requirements\")\n\n\ndef determine_stock_type(define_stock_requirements_input:\
+      \ DefineStockRequirementsOutput, research_stock_market_input: ResearchStockMarketOutput,\
+      \ **kwargs) -> DetermineStockTypeOutput:\n    \"\"\"Determine the type of stock\
+      \ to create\n\n    Args:\n        define_stock_requirements_input: Input from\
+      \ the 'define_stock_requirements' node.\n        research_stock_market_input:\
+      \ Input from the 'research_stock_market' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        DetermineStockTypeOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return DetermineStockTypeOutput(\n\
+      \        stock_type=\"\",\n        rationale=\"\",\n        characteristics=\"\
+      \",\n        is_valid=False,\n    )"
+    name: determine_stock_type
+    nodes_depended_on:
+    - define_stock_requirements
+    - research_stock_market
+    nodes_dependent_on: []
+    output_structure:
+    - description: The type of stock to create (e.g., common, preferred, growth)
+      key: stock_type
+      type: str
+    - description: Key factors or rationale for choosing this stock type
+      key: rationale
+      type: str
+    - description: List of characteristics of the chosen stock type
+      key: characteristics
+      type: str
+    - description: Whether the determined stock type meets all requirements
+      key: is_valid
+      type: bool
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a requirements gathering approach to analyze the output from 'define_stock_requirements',
+          focusing on stock type, name, and relevant attributes.
+        reason: This analysis is necessary to understand the requirements and constraints
+          of the stock to be created.
+        text: Analyze the stock requirements output from the 'define_stock_requirements'
+          node to identify key characteristics and attributes of the stock to be created.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a market analysis approach to review the output from 'research_stock_market',
+          focusing on market conditions, industry trends, and competitor analysis.
+        reason: This review is necessary to understand the market context and trends
+          that may impact the stock type decision.
+        text: Review the market research output from the 'research_stock_market' node
+          to understand current market conditions, industry trends, and competitor
+          analysis.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a decision-making framework to evaluate the outputs from 'define_stock_requirements'
+          and 'research_stock_market', considering factors such as risk, return, and
+          market demand.
+        reason: This evaluation is necessary to make an informed decision about the
+          stock type based on the requirements and market context.
+        text: Evaluate the stock requirements and market research outputs to determine
+          the most suitable type of stock to create.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a documentation approach to record the stock type, rationale,
+          and characteristics, ensuring clarity and accuracy.
+        reason: This documentation is necessary to provide transparency and justification
+          for the stock type decision.
+        text: Document the rationale and characteristics of the chosen stock type.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a validation approach to compare the determined stock type against
+          the output from 'define_stock_requirements', checking for consistency and
+          completeness.
+        reason: This validation is necessary to ensure that the chosen stock type
+          meets all the requirements and constraints.
+        text: Validate the determined stock type against the stock requirements to
+          ensure it meets all requirements.
+    prompt: Based on the stock requirements and market research, decide on the type
+      of stock to create (e.g., common, preferred, growth, etc.).
+    shims: []
+  draft_stock_offering:
+    agent: false
+    code_node_type: stub
+    description: Draft the stock offering document
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DefineStockStructureOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ define_stock_structure node outputs.\"\"\"\n    par_value: float = Field(...,\
+      \ description=\"The par value of the stock\")\n    dividend_rate: float = Field(...,\
+      \ description=\"The dividend rate of the stock, represented as a decimal value\"\
+      )\n    voting_rights: str = Field(..., description=\"Description of the voting\
+      \ rights associated with the stock\")\n    has_voting_rights: bool = Field(...,\
+      \ description=\"Whether the stock has voting rights\")\n\n\nclass DraftStockOfferingOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for draft_stock_offering node outputs.\"\"\"\n   \
+      \ offering_document_title: str = Field(..., description=\"Title of the stock\
+      \ offering document\")\n    key_terms: List[str] = Field(..., description=\"\
+      List of key terms included in the offering document\")\n    risk_factors: List[str]\
+      \ = Field(..., description=\"List of risk factors associated with the stock\
+      \ offering\")\n    investment_considerations: List[str] = Field(..., description=\"\
+      List of investment considerations for the stock offering\")\n    par_value:\
+      \ float = Field(..., description=\"Par value of the stock\")\n    dividend_rate:\
+      \ float = Field(..., description=\"Dividend rate of the stock\")\n    voting_rights:\
+      \ str = Field(..., description=\"Description of voting rights associated with\
+      \ the stock\")\n    is_draft_complete: bool = Field(..., description=\"Whether\
+      \ the draft stock offering document is complete\")\n\n\ndef draft_stock_offering(define_stock_structure_input:\
+      \ DefineStockStructureOutput, **kwargs) -> DraftStockOfferingOutput:\n    \"\
+      \"\"Draft the stock offering document\n\n    Args:\n        define_stock_structure_input:\
+      \ Input from the 'define_stock_structure' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        DraftStockOfferingOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return DraftStockOfferingOutput(\n\
+      \        offering_document_title=\"\",\n        key_terms=[],\n        risk_factors=[],\n\
+      \        investment_considerations=[],\n        par_value=0.0,\n        dividend_rate=0.0,\n\
+      \        voting_rights=\"\",\n        is_draft_complete=False,\n    )"
+    name: draft_stock_offering
+    nodes_depended_on:
+    - define_stock_structure
+    nodes_dependent_on: []
+    output_structure:
+    - description: Title of the stock offering document
+      key: offering_document_title
+      type: str
+    - description: List of key terms included in the offering document
+      key: key_terms
+      type: List[str]
+    - description: List of risk factors associated with the stock offering
+      key: risk_factors
+      type: List[str]
+    - description: List of investment considerations for the stock offering
+      key: investment_considerations
+      type: List[str]
+    - description: Par value of the stock
+      key: par_value
+      type: float
+    - description: Dividend rate of the stock
+      key: dividend_rate
+      type: float
+    - description: Description of voting rights associated with the stock
+      key: voting_rights
+      type: str
+    - description: Whether the draft stock offering document is complete
+      key: is_draft_complete
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use the output of the define_stock_structure node to populate the
+          stock structure components
+        reason: The define_stock_structure node provides the necessary components
+          for drafting the stock offering document
+        text: Retrieve the stock structure components from the define_stock_structure
+          node output
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Research industry standards and regulatory requirements to identify
+          necessary terms
+        reason: Industry standards and regulatory requirements dictate specific terms
+          that must be included in the offering document
+        text: Determine the key terms to be included in the offering document based
+          on industry standards and regulatory requirements
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use risk assessment frameworks and industry research to identify potential
+          risk factors
+        reason: Risk factors must be disclosed to potential investors to ensure transparency
+          and compliance
+        text: Identify and list the risk factors associated with the stock offering
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use industry research and investment analysis to identify key considerations
+        reason: Investment considerations must be clearly outlined to potential investors
+        text: Outline the investment considerations for the stock offering
+      - complexity: HIGH
+        impact: HIGH
+        method: Use document drafting templates and industry expertise to create a
+          comprehensive document
+        reason: The draft document must accurately reflect the stock offering and
+          comply with regulatory requirements
+        text: Draft the stock offering document using the retrieved stock structure
+          components, key terms, risk factors, and investment considerations
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use document review and revision protocols to ensure accuracy and
+          compliance
+        reason: The draft document must be thoroughly reviewed and revised to ensure
+          accuracy and compliance
+        text: Review and revise the draft stock offering document for accuracy, completeness,
+          and regulatory compliance
+    prompt: Create a draft of the stock offering document, including key terms, risks,
+      and investment considerations.
+    shims: []
+  finalize_stock_workflow:
+    agent: false
+    code_node_type: stub
+    description: Finalize the stock workflow
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ReviewStockOfferingOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ review_stock_offering node outputs.\"\"\"\n    review_complete: bool = Field(...,\
+      \ description=\"Whether the review has been completed\")\n    revisions_made:\
+      \ bool = Field(..., description=\"Whether any revisions were made to the document\"\
+      )\n    review_comments: List[str] = Field(..., description=\"List of comments\
+      \ or feedback on the stock offering document\")\n    revised_document: str =\
+      \ Field(..., description=\"The revised stock offering document\")\n    compliance_status:\
+      \ bool = Field(..., description=\"Whether the revised document is compliant\
+      \ with regulations\")\n\n\nclass FinalizeStockWorkflowOutput(BaseModel):\n \
+      \   \"\"\"Pydantic model for finalize_stock_workflow node outputs.\"\"\"\n \
+      \   workflow_finalized: bool = Field(..., description=\"Whether the stock workflow\
+      \ has been successfully finalized\")\n    finalization_comments: List[str] =\
+      \ Field(..., description=\"List of comments or notes regarding the finalization\
+      \ process\")\n    is_ready_for_issuance: bool = Field(..., description=\"Whether\
+      \ the stock is ready for issuance\")\n\n\ndef finalize_stock_workflow(review_stock_offering_input:\
+      \ ReviewStockOfferingOutput, **kwargs) -> FinalizeStockWorkflowOutput:\n   \
+      \ \"\"\"Finalize the stock workflow\n\n    Args:\n        review_stock_offering_input:\
+      \ Input from the 'review_stock_offering' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        FinalizeStockWorkflowOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return FinalizeStockWorkflowOutput(\n\
+      \        workflow_finalized=False,\n        finalization_comments=[],\n    \
+      \    is_ready_for_issuance=False,\n    )"
+    name: finalize_stock_workflow
+    nodes_depended_on:
+    - review_stock_offering
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the stock workflow has been successfully finalized
+      key: workflow_finalized
+      type: bool
+    - description: List of comments or notes regarding the finalization process
+      key: finalization_comments
+      type: List[str]
+    - description: Whether the stock is ready for issuance
+      key: is_ready_for_issuance
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Check the review_complete and compliance_status outputs of the review_stock_offering
+          node
+        reason: This ensures that all necessary revisions have been made and the document
+          is accurate and complete.
+        text: Verify that the review_stock_offering node has completed successfully
+          and produced a compliant document.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Check the outputs of the calculate_stock_valuation, define_stock_structure,
+          draft_stock_offering, and review_stock_offering nodes
+        reason: This ensures that all necessary steps have been taken and the stock
+          is ready for issuance.
+        text: Confirm that all steps in the stock workflow have been completed by
+          checking the outputs of all predecessor nodes.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a template to generate a list of comments based on the outputs
+          of predecessor nodes
+        reason: This provides a record of any issues or concerns that arose during
+          the finalization process.
+        text: Generate a list of comments or notes regarding the finalization process.
+      - complexity: LOW
+        impact: HIGH
+        method: Use a conditional statement to set the output based on the outputs
+          of predecessor nodes
+        reason: This indicates that the stock workflow has been successfully finalized.
+        text: Set the workflow_finalized output to true if all steps have been completed
+          and the stock is ready for issuance.
+      - complexity: LOW
+        impact: HIGH
+        method: Use a conditional statement to set the output based on the outputs
+          of predecessor nodes
+        reason: This indicates that the stock is ready for issuance.
+        text: Set the is_ready_for_issuance output to true if all steps have been
+          completed and the stock is ready for issuance.
+    prompt: Confirm that all steps in the stock workflow have been completed, and
+      the stock is ready for issuance.
+    shims: []
+  research_stock_market:
+    agent: false
+    code_node_type: stub
+    description: Research the stock market and industry trends
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ResearchStockMarketOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ research_stock_market node outputs.\"\"\"\n    market_conditions_summary:\
+      \ str = Field(..., description=\"Summary of current stock market conditions\"\
+      )\n    industry_trends: List[str] = Field(..., description=\"List of industry\
+      \ trends\")\n    competitor_analysis: str = Field(..., description=\"Summary\
+      \ of competitor analysis\")\n    market_outlook: str = Field(..., description=\"\
+      Outlook for the stock market\")\n\n\ndef research_stock_market(general_input:\
+      \ str, **kwargs) -> ResearchStockMarketOutput:\n    \"\"\"Research the stock\
+      \ market and industry trends\n\n    Args:\n        general_input: General input\
+      \ string for the root node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        ResearchStockMarketOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return ResearchStockMarketOutput(\n\
+      \        market_conditions_summary=\"\",\n        industry_trends=[],\n    \
+      \    competitor_analysis=\"\",\n        market_outlook=\"\",\n    )"
+    name: research_stock_market
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: Summary of current stock market conditions
+      key: market_conditions_summary
+      type: str
+    - description: List of industry trends
+      key: industry_trends
+      type: List[str]
+    - description: Summary of competitor analysis
+      key: competitor_analysis
+      type: str
+    - description: Outlook for the stock market
+      key: market_outlook
+      type: str
+    prd:
+      bullets: []
+    prompt: Gather information on current stock market conditions, industry trends,
+      and competitor analysis.
+    shims: []
+  review_stock_offering:
+    agent: false
+    code_node_type: stub
+    description: Review and revise the stock offering document
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DraftStockOfferingOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ draft_stock_offering node outputs.\"\"\"\n    offering_document_title: str\
+      \ = Field(..., description=\"Title of the stock offering document\")\n    key_terms:\
+      \ List[str] = Field(..., description=\"List of key terms included in the offering\
+      \ document\")\n    risk_factors: List[str] = Field(..., description=\"List of\
+      \ risk factors associated with the stock offering\")\n    investment_considerations:\
+      \ List[str] = Field(..., description=\"List of investment considerations for\
+      \ the stock offering\")\n    par_value: float = Field(..., description=\"Par\
+      \ value of the stock\")\n    dividend_rate: float = Field(..., description=\"\
+      Dividend rate of the stock\")\n    voting_rights: str = Field(..., description=\"\
+      Description of voting rights associated with the stock\")\n    is_draft_complete:\
+      \ bool = Field(..., description=\"Whether the draft stock offering document\
+      \ is complete\")\n\n\nclass ReviewStockOfferingOutput(BaseModel):\n    \"\"\"\
+      Pydantic model for review_stock_offering node outputs.\"\"\"\n    review_complete:\
+      \ bool = Field(..., description=\"Whether the review has been completed\")\n\
+      \    revisions_made: bool = Field(..., description=\"Whether any revisions were\
+      \ made to the document\")\n    review_comments: List[str] = Field(..., description=\"\
+      List of comments or feedback on the stock offering document\")\n    revised_document:\
+      \ str = Field(..., description=\"The revised stock offering document\")\n  \
+      \  compliance_status: bool = Field(..., description=\"Whether the revised document\
+      \ is compliant with regulations\")\n\n\ndef review_stock_offering(draft_stock_offering_input:\
+      \ DraftStockOfferingOutput, **kwargs) -> ReviewStockOfferingOutput:\n    \"\"\
+      \"Review and revise the stock offering document\n\n    Args:\n        draft_stock_offering_input:\
+      \ Input from the 'draft_stock_offering' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        ReviewStockOfferingOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return ReviewStockOfferingOutput(\n\
+      \        review_complete=False,\n        revisions_made=False,\n        review_comments=[],\n\
+      \        revised_document=\"\",\n        compliance_status=False,\n    )"
+    name: review_stock_offering
+    nodes_depended_on:
+    - draft_stock_offering
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the review has been completed
+      key: review_complete
+      type: bool
+    - description: Whether any revisions were made to the document
+      key: revisions_made
+      type: bool
+    - description: List of comments or feedback on the stock offering document
+      key: review_comments
+      type: List[str]
+    - description: The revised stock offering document
+      key: revised_document
+      type: str
+    - description: Whether the revised document is compliant with regulations
+      key: compliance_status
+      type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use a checklist to verify the presence and accuracy of required sections,
+          including key terms, risk factors, and investment considerations.
+        reason: Ensures that the document is accurate and complete
+        text: Review the stock offering document for accuracy and completeness by
+          verifying that all required sections are present and contain accurate information.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a regulatory compliance checklist to verify that the document
+          meets all relevant regulatory requirements, such as those related to securities
+          laws and regulations.
+        reason: Ensures that the document is compliant with regulations
+        text: Check the stock offering document for regulatory compliance by verifying
+          that it meets all relevant regulatory requirements.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a collaborative review process to ensure that all stakeholders
+          have input on revisions, and use version control to track changes.
+        reason: Ensures that the document is accurate, complete, and compliant with
+          regulations
+        text: Make any necessary revisions to the stock offering document based on
+          the review.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a comment and feedback tracking system to document all review
+          comments and feedback.
+        reason: Provides a clear record of the review process
+        text: Document all review comments and feedback on the stock offering document.
+      - complexity: LOW
+        impact: HIGH
+        method: Use a document management system to finalize and store the revised
+          document, and perform a final review to verify completeness and compliance.
+        reason: Ensures that the document is finalized and ready for use
+        text: Finalize the revised stock offering document and verify that it is complete
+          and compliant with regulations.
+    prompt: Review the stock offering document for accuracy, completeness, and regulatory
+      compliance, and make any necessary revisions.
+    shims: []

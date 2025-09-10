@@ -1,0 +1,55 @@
+{
+  "check_budget": {
+    "output": {
+      "is_budget_depleted": false,
+      "current_budget": 10.0
+    },
+    "description": "Check if the budget is depleted"
+  },
+  "define_gambling_game": {
+    "output": {
+      "game_name": "blackjack"
+    },
+    "description": "Specify the type of gambling game to play"
+  },
+  "determine_bet_amount": {
+    "output": {
+      "bet_amount": 10.0,
+      "is_within_budget": true
+    },
+    "description": "Determine the bet amount for the current game"
+  },
+  "end_game": {
+    "output": {
+      "game_ended": false,
+      "reason": "Budget is not depleted"
+    },
+    "description": "End the game if the budget is depleted"
+  },
+  "repeat_game": {
+    "output": {
+      "should_repeat": false
+    },
+    "description": "Repeat the game if the budget is not depleted."
+  },
+  "set_gambling_budget": {
+    "output": {
+      "initial_budget": 100.0
+    },
+    "description": "Set the initial budget for the gambling session"
+  },
+  "simulate_game": {
+    "output": {
+      "game_outcome": "win",
+      "amount_won_or_lost": 10.0
+    },
+    "description": "Simulate the gambling game"
+  },
+  "update_budget": {
+    "output": {
+      "new_budget": 10.0,
+      "update_success": true
+    },
+    "description": "Update the budget based on the game outcome"
+  }
+}

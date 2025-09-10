@@ -1,0 +1,310 @@
+dag_type: stub
+description: Create a comprehensive workflow for quantum physics research and analysis
+name: quantum_physics_workflow
+nodes:
+  analyze_simulation_results:
+    agent: false
+    code_node_type: stub
+    description: Analyze the simulation results to extract insights
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass SimulateQuantumCircuitOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for simulate_quantum_circuit node outputs.\"\"\"\n    simulation_results:\
+      \ List[float] = Field(..., description=\"Numerical results of the simulation\"\
+      )\n\n\nclass AnalyzeSimulationResultsOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for analyze_simulation_results node outputs.\"\"\"\n    insights: List[str]\
+      \ = Field(..., description=\"Insights extracted from the simulation results\"\
+      )\n\n\ndef analyze_simulation_results(simulate_quantum_circuit_input: SimulateQuantumCircuitOutput,\
+      \ **kwargs) -> AnalyzeSimulationResultsOutput:\n    \"\"\"Analyze the simulation\
+      \ results to extract insights\n\n    Args:\n        simulate_quantum_circuit_input:\
+      \ Input from the 'simulate_quantum_circuit' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        AnalyzeSimulationResultsOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ AnalyzeSimulationResultsOutput(\n        insights=[],\n    )"
+    name: analyze_simulation_results
+    nodes_depended_on:
+    - simulate_quantum_circuit
+    nodes_dependent_on: []
+    output_structure:
+    - description: Insights extracted from the simulation results
+      key: insights
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use a message passing mechanism to receive the simulation results
+        reason: The simulation results are necessary for analysis
+        text: Receive simulation results from the simulate_quantum_circuit node
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use data preprocessing techniques such as data normalization and outlier
+          removal
+        reason: The simulation results may require cleaning and normalization
+        text: Preprocess the simulation results to prepare for analysis
+      - complexity: HIGH
+        impact: HIGH
+        method: Use statistical analysis libraries such as NumPy and SciPy to perform
+          tasks such as hypothesis testing and regression analysis
+        reason: Statistical analysis is necessary to extract meaningful insights
+        text: Apply statistical analysis techniques to extract insights from the simulation
+          results
+      - complexity: HIGH
+        impact: HIGH
+        method: Use domain expertise and knowledge of quantum physics to interpret
+          the results
+        reason: Interpretation of the results is necessary to generate actionable
+          insights
+        text: Interpret the results of the statistical analysis to generate insights
+      - complexity: LOW
+        impact: LOW
+        method: Use string formatting techniques to convert the insights into a list
+          of strings
+        reason: The output format requires a list of strings
+        text: Format the insights into a list of strings for output
+    prompt: Analyze the simulation results to extract insights. Focus on result interpretation.
+    shims: []
+  define_quantum_system:
+    agent: false
+    code_node_type: stub
+    description: Define the quantum system to be studied, including its Hamiltonian
+      and initial conditions
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DefineQuantumSystemOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for define_quantum_system node outputs.\"\"\"\n  \
+      \  hamiltonian: str = Field(..., description=\"Mathematical expression for the\
+      \ Hamiltonian\")\n    initial_conditions: str = Field(..., description=\"Mathematical\
+      \ expression for the initial conditions\")\n\n\ndef define_quantum_system(general_input:\
+      \ str, **kwargs) -> DefineQuantumSystemOutput:\n    \"\"\"Define the quantum\
+      \ system to be studied, including its Hamiltonian and initial conditions\n\n\
+      \    Args:\n        general_input: General input string for the root node.\n\
+      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        DefineQuantumSystemOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ DefineQuantumSystemOutput(\n        hamiltonian=\"\",\n        initial_conditions=\"\
+      \",\n    )"
+    name: define_quantum_system
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: Mathematical expression for the Hamiltonian
+      key: hamiltonian
+      type: str
+    - description: Mathematical expression for the initial conditions
+      key: initial_conditions
+      type: str
+    prd:
+      bullets:
+      - complexity: Medium
+        impact: Enables node functionality in the DAG
+        method: Implement function that processes inputs and produces expected outputs
+        reason: Required to process Define the quantum system to be studied, including
+          its Hamiltonian and initial conditions
+        text: Implement define_quantum_system functionality
+    prompt: Specify the quantum system, its Hamiltonian, and initial conditions. Focus
+      on mathematical definitions.
+    shims: []
+  generate_quantum_circuit:
+    agent: false
+    code_node_type: stub
+    description: Generate a quantum circuit implementing the chosen quantum algorithm
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass SelectQuantumAlgorithmOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for select_quantum_algorithm node outputs.\"\"\"\n\
+      \    algorithm_name: str = Field(..., description=\"Name of the chosen quantum\
+      \ algorithm\")\n\n\nclass GenerateQuantumCircuitOutput(BaseModel):\n    \"\"\
+      \"Pydantic model for generate_quantum_circuit node outputs.\"\"\"\n    circuit_diagram:\
+      \ str = Field(..., description=\"Quantum circuit diagram\")\n\n\ndef generate_quantum_circuit(select_quantum_algorithm_input:\
+      \ SelectQuantumAlgorithmOutput, **kwargs) -> GenerateQuantumCircuitOutput:\n\
+      \    \"\"\"Generate a quantum circuit implementing the chosen quantum algorithm\n\
+      \n    Args:\n        select_quantum_algorithm_input: Input from the 'select_quantum_algorithm'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       GenerateQuantumCircuitOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return GenerateQuantumCircuitOutput(\n      \
+      \  circuit_diagram=\"\",\n    )"
+    name: generate_quantum_circuit
+    nodes_depended_on:
+    - select_quantum_algorithm
+    nodes_dependent_on: []
+    output_structure:
+    - description: Quantum circuit diagram
+      key: circuit_diagram
+      type: str
+    prd:
+      bullets:
+      - complexity: Medium
+        impact: Enables node functionality in the DAG
+        method: Implement function that processes inputs and produces expected outputs
+        reason: Required to process Generate a quantum circuit implementing the chosen
+          quantum algorithm
+        text: Implement generate_quantum_circuit functionality
+    prompt: Generate a quantum circuit for the chosen algorithm. Focus on circuit
+      diagram.
+    shims: []
+  select_quantum_algorithm:
+    agent: false
+    code_node_type: stub
+    description: Choose a suitable quantum algorithm for the defined quantum system
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DefineQuantumSystemOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for define_quantum_system node outputs.\"\"\"\n  \
+      \  hamiltonian: str = Field(..., description=\"Mathematical expression for the\
+      \ Hamiltonian\")\n    initial_conditions: str = Field(..., description=\"Mathematical\
+      \ expression for the initial conditions\")\n\n\nclass SelectQuantumAlgorithmOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for select_quantum_algorithm node outputs.\"\"\"\n\
+      \    algorithm_name: str = Field(..., description=\"Name of the chosen quantum\
+      \ algorithm\")\n\n\ndef select_quantum_algorithm(define_quantum_system_input:\
+      \ DefineQuantumSystemOutput, **kwargs) -> SelectQuantumAlgorithmOutput:\n  \
+      \  \"\"\"Choose a suitable quantum algorithm for the defined quantum system\n\
+      \n    Args:\n        define_quantum_system_input: Input from the 'define_quantum_system'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       SelectQuantumAlgorithmOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return SelectQuantumAlgorithmOutput(\n      \
+      \  algorithm_name=\"\",\n    )"
+    name: select_quantum_algorithm
+    nodes_depended_on:
+    - define_quantum_system
+    nodes_dependent_on: []
+    output_structure:
+    - description: Name of the chosen quantum algorithm
+      key: algorithm_name
+      type: str
+    prd:
+      bullets:
+      - complexity: Medium
+        impact: Enables node functionality in the DAG
+        method: Implement function that processes inputs and produces expected outputs
+        reason: Required to process Choose a suitable quantum algorithm for the defined
+          quantum system
+        text: Implement select_quantum_algorithm functionality
+    prompt: Based on the defined quantum system, select a suitable quantum algorithm.
+      Focus on algorithm choice.
+    shims: []
+  simulate_quantum_circuit:
+    agent: false
+    code_node_type: stub
+    description: Simulate the generated quantum circuit to obtain results
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass GenerateQuantumCircuitOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for generate_quantum_circuit node outputs.\"\"\"\n    circuit_diagram: str\
+      \ = Field(..., description=\"Quantum circuit diagram\")\n\n\nclass SimulateQuantumCircuitOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for simulate_quantum_circuit node outputs.\"\"\"\n\
+      \    simulation_results: List[float] = Field(..., description=\"Numerical results\
+      \ of the simulation\")\n\n\ndef simulate_quantum_circuit(generate_quantum_circuit_input:\
+      \ GenerateQuantumCircuitOutput, **kwargs) -> SimulateQuantumCircuitOutput:\n\
+      \    \"\"\"Simulate the generated quantum circuit to obtain results\n\n    Args:\n\
+      \        generate_quantum_circuit_input: Input from the 'generate_quantum_circuit'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       SimulateQuantumCircuitOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return SimulateQuantumCircuitOutput(\n      \
+      \  simulation_results=[],\n    )"
+    name: simulate_quantum_circuit
+    nodes_depended_on:
+    - generate_quantum_circuit
+    nodes_dependent_on: []
+    output_structure:
+    - description: Numerical results of the simulation
+      key: simulation_results
+      type: List[float]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use API call to retrieve circuit diagram from parent node
+        reason: The quantum circuit diagram is necessary to simulate the circuit
+        text: Retrieve the quantum circuit diagram from the parent node 'generate_quantum_circuit'
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a library such as Qiskit or Cirq to parse the circuit diagram
+        reason: The simulation software requires a specific format for the circuit
+          diagram
+        text: Parse the quantum circuit diagram into a compatible format for simulation
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a simulator library to run the simulation, specifying the parsed
+          circuit diagram and desired output
+        reason: The simulator will generate numerical results for the circuit
+        text: Run the simulation using a quantum circuit simulator such as Qiskit
+          Aer or Cirq Simulator
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use data processing techniques to extract and format the results
+        reason: The results need to be in a usable format for downstream nodes
+        text: Extract and process the numerical results from the simulator output
+      - complexity: LOW
+        impact: LOW
+        method: Use data formatting techniques to convert results to list of floats
+        reason: The output structure requires a list of floats
+        text: Return the simulation results as a list of floats
+    prompt: Simulate the quantum circuit to obtain results. Focus on numerical results.
+    shims: []
+  visualize_results:
+    agent: false
+    code_node_type: stub
+    description: Visualize the simulation results and insights
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass AnalyzeSimulationResultsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for analyze_simulation_results node outputs.\"\"\"\n    insights: List[str]\
+      \ = Field(..., description=\"Insights extracted from the simulation results\"\
+      )\n\n\nclass VisualizeResultsOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ visualize_results node outputs.\"\"\"\n    visualizations: List[str] = Field(...,\
+      \ description=\"Visualizations of the simulation results and insights\")\n\n\
+      \ndef visualize_results(analyze_simulation_results_input: AnalyzeSimulationResultsOutput,\
+      \ **kwargs) -> VisualizeResultsOutput:\n    \"\"\"Visualize the simulation results\
+      \ and insights\n\n    Args:\n        analyze_simulation_results_input: Input\
+      \ from the 'analyze_simulation_results' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        VisualizeResultsOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return VisualizeResultsOutput(\n\
+      \        visualizations=[],\n    )"
+    name: visualize_results
+    nodes_depended_on:
+    - analyze_simulation_results
+    nodes_dependent_on: []
+    output_structure:
+    - description: Visualizations of the simulation results and insights
+      key: visualizations
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use pip to install required libraries, Import libraries in Python
+          code
+        reason: These libraries provide a wide range of visualization tools and are
+          widely used in the industry
+        text: Import necessary libraries for data visualization, including Matplotlib
+          and Seaborn
+      - complexity: LOW
+        impact: HIGH
+        method: Access output from analyze_simulation_results node, Store in local
+          variables
+        reason: The insights and simulation results are necessary for creating meaningful
+          visualizations
+        text: Receive insights and simulation results from the analyze_simulation_results
+          node
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use Matplotlib's plot function, Customize plot with labels, title,
+          and legend
+        reason: Line plots are useful for showing trends over time or across different
+          values
+        text: Create a line plot of the simulation results using Matplotlib
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use Seaborn's barplot function, Customize plot with labels, title,
+          and legend
+        reason: Bar charts are useful for comparing categorical data
+        text: Create a bar chart of the insights using Seaborn
+      - complexity: LOW
+        impact: LOW
+        method: Use Matplotlib's savefig function, Convert plot to string using BytesIO
+        reason: The output of this node is a list of visualizations as strings
+        text: Save visualizations as strings in a list
+      - complexity: LOW
+        impact: HIGH
+        method: Return list of visualizations as output
+        reason: The output of this node is a list of visualizations
+        text: Return the list of visualizations
+    prompt: Visualize the simulation results and insights. Focus on creating plots.
+    shims: []

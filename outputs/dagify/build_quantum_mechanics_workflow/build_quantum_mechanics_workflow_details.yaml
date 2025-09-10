@@ -1,0 +1,73 @@
+dag_type: plain_text
+description: This workflow constructs a directed acyclic graph (DAG) to build a specialized
+  workflow dedicated to quantum mechanics.
+name: build_quantum_mechanics_workflow
+nodes:
+  clarify_model_objective:
+    agent: false
+    description: Elucidate the objective of building a workflow dedicated to quantum
+      mechanics.
+    name: clarify_model_objective
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Describe the objective for constructing a workflow focused on quantum
+      mechanics, including the key topics, applications, or phenomena to explore.
+  define_workflow_dag_steps:
+    agent: false
+    description: Define the essential steps required to create the quantum mechanics
+      workflow DAG.
+    name: define_workflow_dag_steps
+    nodes_depended_on:
+    - generate_workflow_dag_schema
+    nodes_dependent_on: []
+    prompt: List the fundamental steps for constructing the quantum mechanics workflow
+      DAG, ensuring each step is clear and focused on quantum mechanics.
+  generate_workflow_dag_schema:
+    agent: false
+    description: Generate the JSON schema for the quantum mechanics workflow DAG.
+    name: generate_workflow_dag_schema
+    nodes_depended_on:
+    - identify_required_fields
+    nodes_dependent_on: []
+    prompt: Define the JSON schema structure for a workflow DAG that will be used
+      to build a quantum mechanics workflow.
+  identify_required_fields:
+    agent: false
+    description: Identify the specific fields required for a quantum mechanics workflow
+      DAG.
+    name: identify_required_fields
+    nodes_depended_on:
+    - clarify_model_objective
+    nodes_dependent_on: []
+    prompt: List and explain the fields necessary for constructing a workflow DAG
+      that targets key aspects of quantum mechanics.
+  populate_workflow_dag_steps:
+    agent: false
+    description: Populate the workflow DAG with detailed steps centered on quantum
+      mechanics.
+    name: populate_workflow_dag_steps
+    nodes_depended_on:
+    - define_workflow_dag_steps
+    nodes_dependent_on: []
+    prompt: Detail each step by explicitly incorporating quantum mechanics concepts
+      and requirements to ensure the DAG is complete and coherent.
+  refine_workflow_dag_model:
+    agent: false
+    description: Refine the quantum mechanics workflow DAG with detailed and executable
+      steps.
+    name: refine_workflow_dag_model
+    nodes_depended_on:
+    - validate_workflow_dag
+    nodes_dependent_on: []
+    prompt: Review and enhance the workflow DAG, ensuring each internal step is precisely
+      tailored to build a robust workflow focused on quantum mechanics.
+  validate_workflow_dag:
+    agent: false
+    description: Validate that the quantum mechanics workflow DAG meets acyclic and
+      connectivity criteria.
+    name: validate_workflow_dag
+    nodes_depended_on:
+    - populate_workflow_dag_steps
+    nodes_dependent_on: []
+    prompt: Verify that the quantum mechanics workflow DAG is properly structured
+      as an acyclic graph with all steps appropriately connected.

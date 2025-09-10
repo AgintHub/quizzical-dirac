@@ -1,0 +1,209 @@
+dag_type: typed
+description: Generated workflow from UI.
+name: sql_query_analysis_and_optimization
+nodes:
+  analyze_query_semantics:
+    agent: false
+    description: Analyze the semantics of each query and identify any potential performance
+      issues
+    name: analyze_query_semantics
+    nodes_depended_on:
+    - parse_sql_queries
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of semantic issues found in the queries
+      key: semantic_issues
+      type: List[str]
+    - description: List of performance issues identified
+      key: performance_issues
+      type: List[str]
+    - description: Whether the query semantics are valid
+      key: is_semantics_valid
+      type: bool
+    prompt: Analyze the semantics of each query and identify any potential performance
+      issues
+  analyze_query_syntax:
+    agent: false
+    description: Analyze the syntax of each query
+    name: analyze_query_syntax
+    nodes_depended_on:
+    - parse_sql_queries
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of syntax errors found in the query
+      key: syntax_errors
+      type: List[str]
+    - description: Whether the query syntax is valid
+      key: query_syntax_valid
+      type: bool
+    - description: Parsed query structure, e.g., SELECT, FROM, WHERE, GROUP BY, HAVING
+        clauses
+      key: parsed_query_structure
+      type: str
+    prompt: Analyze the syntax of each query and identify any syntax errors
+  compare_original_and_optimized_queries:
+    agent: false
+    description: Compare the original and optimized queries
+    name: compare_original_and_optimized_queries
+    nodes_depended_on:
+    - generate_optimized_queries
+    nodes_dependent_on: []
+    output_structure:
+    - description: The original SQL query
+      key: original_query
+      type: str
+    - description: The optimized SQL query
+      key: optimized_query
+      type: str
+    - description: Whether the optimizations change the query outcome
+      key: comparison_result
+      type: bool
+    - description: List of differences between the original and optimized queries
+      key: differences
+      type: List[str]
+    - description: Expected performance improvement
+      key: performance_improvement
+      type: str
+    prompt: Compare the original and optimized queries and verify that the optimizations
+      do not change the outcome
+  generate_optimized_queries:
+    agent: false
+    description: Generate optimized queries based on the suggested optimizations
+    name: generate_optimized_queries
+    nodes_depended_on:
+    - suggest_indexing_optimizations
+    - suggest_query_rewrite_optimizations
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of optimized queries
+      key: optimized_queries
+      type: List[str]
+    - description: List of explanations for the applied optimizations
+      key: optimization_explanations
+      type: List[str]
+    - description: List of expected performance improvements for each optimized query
+      key: performance_improvements
+      type: List[float]
+    prompt: Generate optimized queries based on the suggested indexing and query rewrite
+      optimizations
+  identify_performance_bottlenecks:
+    agent: false
+    description: Identify performance bottlenecks in each query and suggest optimizations.
+    name: identify_performance_bottlenecks
+    nodes_depended_on:
+    - analyze_query_syntax
+    - analyze_query_semantics
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of identified performance bottlenecks
+      key: bottleneck_identifications
+      type: List[str]
+    - description: List of suggested optimizations
+      key: optimization_suggestions
+      type: List[str]
+    - description: List of severity levels corresponding to each bottleneck
+      key: severity_levels
+      type: List[int]
+    - description: Whether the query can be optimized
+      key: is_optimized
+      type: bool
+    prompt: Identify performance bottlenecks in each query and suggest optimizations
+  parse_sql_queries:
+    agent: false
+    description: Parse the SQL queries into their constituent parts
+    name: parse_sql_queries
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of columns or expressions in the SELECT clause
+      key: select_clause
+      type: List[str]
+    - description: Table or tables from which to retrieve data
+      key: from_clause
+      type: str
+    - description: Conditions that must be met for a row to be included
+      key: where_clause
+      type: List[str]
+    - description: Columns by which to group the result set
+      key: group_by_clause
+      type: List[str]
+    - description: Conditions that must be met for a group to be included
+      key: having_clause
+      type: List[str]
+    prompt: Parse the SQL queries and extract the SELECT, FROM, WHERE, GROUP BY, and
+      HAVING clauses
+  report_optimizations:
+    agent: false
+    description: Report the optimizations for each query
+    name: report_optimizations
+    nodes_depended_on:
+    - compare_original_and_optimized_queries
+    nodes_dependent_on: []
+    output_structure:
+    - description: Unique identifier for the query
+      key: query_id
+      type: int
+    - description: Original query text
+      key: original_query
+      type: str
+    - description: Optimized query text
+      key: optimized_query
+      type: str
+    - description: Expected performance improvement (in percentage)
+      key: expected_performance_improvement
+      type: float
+    - description: Summary of the optimizations applied
+      key: optimization_summary
+      type: str
+    prompt: Report the optimizations for each query, including the original query,
+      the optimized query, and the expected performance improvement
+  suggest_indexing_optimizations:
+    agent: false
+    description: Suggest indexing optimizations for each query
+    name: suggest_indexing_optimizations
+    nodes_depended_on:
+    - identify_performance_bottlenecks
+    nodes_dependent_on: []
+    output_structure:
+    - description: Unique identifier for the query
+      key: query_id
+      type: int
+    - description: List of suggested indexing optimizations for the query
+      key: indexing_optimizations
+      type: List[str]
+    - description: Expected performance improvement for the query with the suggested
+        indexing optimizations
+      key: expected_performance_improvement
+      type: float
+    - description: Whether the suggested indexing optimizations are recommended for
+        implementation
+      key: is_recommended
+      type: bool
+    prompt: Suggest indexing optimizations for each query to improve performance
+  suggest_query_rewrite_optimizations:
+    agent: false
+    description: Suggest query rewrite optimizations for each query
+    name: suggest_query_rewrite_optimizations
+    nodes_depended_on:
+    - identify_performance_bottlenecks
+    nodes_dependent_on: []
+    output_structure:
+    - description: Unique identifier for the query
+      key: query_id
+      type: str
+    - description: Original query text
+      key: original_query
+      type: str
+    - description: Optimized query text
+      key: optimized_query
+      type: str
+    - description: List of optimization techniques applied
+      key: optimization_techniques
+      type: List[str]
+    - description: Expected performance improvement (in percentage)
+      key: expected_performance_improvement
+      type: float
+    - description: Whether the optimization is applicable to the query
+      key: is_optimization_applicable
+      type: bool
+    prompt: Suggest query rewrite optimizations for each query to improve performance

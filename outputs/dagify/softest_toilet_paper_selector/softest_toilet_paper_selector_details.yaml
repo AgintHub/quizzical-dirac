@@ -1,0 +1,444 @@
+dag_type: stub
+description: Generated workflow from UI.
+name: softest_toilet_paper_selector
+nodes:
+  analyze_softness_levels:
+    agent: false
+    code_node_type: stub
+    description: Analyze the softness levels of different toilet paper brands.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass GatherToiletPaperDataOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for gather_toilet_paper_data node outputs.\"\"\"\n    brand_names: List[str]\
+      \ = Field(..., description=\"List of top toilet paper brand names\")\n    brand_data:\
+      \ List[str] = Field(..., description=\"List of detailed data for each brand,\
+      \ including softness level, ply count, and customer reviews\")\n    softness_levels:\
+      \ List[float] = Field(..., description=\"List of softness levels for each brand\"\
+      )\n    ply_counts: List[int] = Field(..., description=\"List of ply counts for\
+      \ each brand\")\n    customer_reviews: List[str] = Field(..., description=\"\
+      List of customer reviews for each brand\")\n\n\nclass AnalyzeSoftnessLevelsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for analyze_softness_levels node outputs.\"\"\"\n\
+      \    softness_ranking: List[str] = Field(..., description=\"Ranked list of toilet\
+      \ paper brands by softness level\")\n    brand_softness_levels: List[float]\
+      \ = Field(..., description=\"Softness levels of each toilet paper brand\")\n\
+      \    analysis_summary: str = Field(..., description=\"Summary of the analysis,\
+      \ including key findings\")\n\n\ndef analyze_softness_levels(gather_toilet_paper_data_input:\
+      \ GatherToiletPaperDataOutput, **kwargs) -> AnalyzeSoftnessLevelsOutput:\n \
+      \   \"\"\"Analyze the softness levels of different toilet paper brands.\n\n\
+      \    Args:\n        gather_toilet_paper_data_input: Input from the 'gather_toilet_paper_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       AnalyzeSoftnessLevelsOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return AnalyzeSoftnessLevelsOutput(\n       \
+      \ softness_ranking=[],\n        brand_softness_levels=[],\n        analysis_summary=\"\
+      \",\n    )"
+    name: analyze_softness_levels
+    nodes_depended_on:
+    - gather_toilet_paper_data
+    nodes_dependent_on: []
+    output_structure:
+    - description: Ranked list of toilet paper brands by softness level
+      key: softness_ranking
+      type: List[str]
+    - description: Softness levels of each toilet paper brand
+      key: brand_softness_levels
+      type: List[float]
+    - description: Summary of the analysis, including key findings
+      key: analysis_summary
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use the output of the 'gather_toilet_paper_data' node, specifically
+          the 'brand_names' and 'softness_levels' fields.
+        reason: This step is necessary to obtain the required data for analysis.
+        text: Retrieve the list of top toilet paper brand names and their corresponding
+          softness levels from the output of the 'gather_toilet_paper_data' node.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a sorting algorithm, such as quicksort or mergesort, to sort the
+          brands by their softness levels.
+        reason: This step is necessary to rank the brands from softest to least soft.
+        text: Sort the toilet paper brands by their softness levels in descending
+          order.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use the sorted list of brands to create a new list with the brand
+          names and their corresponding softness levels.
+        reason: This step is necessary to provide a clear ranking of the brands.
+        text: Create a ranked list of toilet paper brands by softness level, with
+          the softest brand first.
+      - complexity: LOW
+        impact: LOW
+        method: Use the list of softness levels to calculate the average value.
+        reason: This step is necessary to provide a summary of the analysis.
+        text: Calculate the average softness level of all toilet paper brands.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use the ranked list of brands and the average softness level to create
+          a summary of the analysis.
+        reason: This step is necessary to provide a clear summary of the analysis.
+        text: Create a summary of the analysis, including key findings, such as the
+          softest and least soft brands.
+    prompt: Compare the softness levels of different toilet paper brands and rank
+      them from softest to least soft.
+    shims: []
+  gather_toilet_paper_data:
+    agent: false
+    code_node_type: stub
+    description: Gather detailed data on the top toilet paper brands.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ResearchToiletPaperBrandsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for research_toilet_paper_brands node outputs.\"\"\"\n    top_brands: List[str]\
+      \ = Field(..., description=\"List of top10 toilet paper brands\")\n    brand_features:\
+      \ List[str] = Field(..., description=\"List of product features for each brand\"\
+      )\n    brand_prices: List[float] = Field(..., description=\"List of prices for\
+      \ each brand\")\n\n\nclass GatherToiletPaperDataOutput(BaseModel):\n    \"\"\
+      \"Pydantic model for gather_toilet_paper_data node outputs.\"\"\"\n    brand_names:\
+      \ List[str] = Field(..., description=\"List of top toilet paper brand names\"\
+      )\n    brand_data: List[str] = Field(..., description=\"List of detailed data\
+      \ for each brand, including softness level, ply count, and customer reviews\"\
+      )\n    softness_levels: List[float] = Field(..., description=\"List of softness\
+      \ levels for each brand\")\n    ply_counts: List[int] = Field(..., description=\"\
+      List of ply counts for each brand\")\n    customer_reviews: List[str] = Field(...,\
+      \ description=\"List of customer reviews for each brand\")\n\n\ndef gather_toilet_paper_data(research_toilet_paper_brands_input:\
+      \ ResearchToiletPaperBrandsOutput, **kwargs) -> GatherToiletPaperDataOutput:\n\
+      \    \"\"\"Gather detailed data on the top toilet paper brands.\n\n    Args:\n\
+      \        research_toilet_paper_brands_input: Input from the 'research_toilet_paper_brands'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       GatherToiletPaperDataOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return GatherToiletPaperDataOutput(\n       \
+      \ brand_names=[],\n        brand_data=[],\n        softness_levels=[],\n   \
+      \     ply_counts=[],\n        customer_reviews=[],\n    )"
+    name: gather_toilet_paper_data
+    nodes_depended_on:
+    - research_toilet_paper_brands
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of top toilet paper brand names
+      key: brand_names
+      type: List[str]
+    - description: List of detailed data for each brand, including softness level,
+        ply count, and customer reviews
+      key: brand_data
+      type: List[str]
+    - description: List of softness levels for each brand
+      key: softness_levels
+      type: List[float]
+    - description: List of ply counts for each brand
+      key: ply_counts
+      type: List[int]
+    - description: List of customer reviews for each brand
+      key: customer_reviews
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Use the 'top_brands' field from the 'research_toilet_paper_brands'
+          node output.
+        reason: This is the starting point for gathering detailed data on each brand.
+        text: Retrieve the list of top10 toilet paper brands from the output of the
+          'research_toilet_paper_brands' node.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a web scraping tool or API to gather data from brand websites,
+          review websites, or online marketplaces.
+        reason: This will provide the necessary data to populate the output structure.
+        text: For each brand, search online for detailed product information, including
+          softness level, ply count, and customer reviews.
+      - complexity: LOW
+        impact: LOW
+        method: Use a data storage solution like JSON or a relational database.
+        reason: This will facilitate easy access and manipulation of the data for
+          downstream nodes.
+        text: Store the gathered data in a structured format, such as a JSON object
+          or a database table.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use data transformation techniques, such as mapping and filtering,
+          to convert the data into the required format.
+        reason: This will ensure that the output is in the correct format for the
+          downstream nodes.
+        text: Transform the gathered data into the required output format, including
+          brand names, brand data, softness levels, ply counts, and customer reviews.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use data validation techniques, such as data profiling and data quality
+          checks, to ensure the accuracy and completeness of the data.
+        reason: This will ensure that the data is reliable and trustworthy.
+        text: Validate the accuracy and completeness of the gathered data.
+    prompt: For each of the top10 toilet paper brands, gather detailed data on their
+      products, including softness level, ply count, and customer reviews.
+    shims: []
+  purchase_selected_toilet_paper:
+    agent: false
+    code_node_type: stub
+    description: Purchase the selected softest toilet paper.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass SelectSoftestToiletPaperOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for select_softest_toilet_paper node outputs.\"\"\"\
+      \n    softest_toilet_paper_brand: str = Field(..., description=\"The name of\
+      \ the softest toilet paper brand.\")\n    softness_level: float = Field(...,\
+      \ description=\"The softness level of the selected toilet paper brand.\")\n\
+      \    ply_count: int = Field(..., description=\"The ply count of the selected\
+      \ toilet paper brand.\")\n    product_details: str = Field(..., description=\"\
+      Additional product details of the selected toilet paper brand.\")\n\n\nclass\
+      \ PurchaseSelectedToiletPaperOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ purchase_selected_toilet_paper node outputs.\"\"\"\n    purchase_confirmation:\
+      \ bool = Field(..., description=\"Whether the purchase was successfully completed\"\
+      )\n    purchase_method: str = Field(..., description=\"Method used for purchase\
+      \ (online or in-store)\")\n    receipt_number: str = Field(..., description=\"\
+      Receipt or reference number for the purchase\")\n\n\ndef purchase_selected_toilet_paper(select_softest_toilet_paper_input:\
+      \ SelectSoftestToiletPaperOutput, **kwargs) -> PurchaseSelectedToiletPaperOutput:\n\
+      \    \"\"\"Purchase the selected softest toilet paper.\n\n    Args:\n      \
+      \  select_softest_toilet_paper_input: Input from the 'select_softest_toilet_paper'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       PurchaseSelectedToiletPaperOutput: Object containing outputs for this\
+      \ node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub\
+      \ output with placeholder values\n    return PurchaseSelectedToiletPaperOutput(\n\
+      \        purchase_confirmation=False,\n        purchase_method=\"\",\n     \
+      \   receipt_number=\"\",\n    )"
+    name: purchase_selected_toilet_paper
+    nodes_depended_on:
+    - select_softest_toilet_paper
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the purchase was successfully completed
+      key: purchase_confirmation
+      type: bool
+    - description: Method used for purchase (online or in-store)
+      key: purchase_method
+      type: str
+    - description: Receipt or reference number for the purchase
+      key: receipt_number
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: LOW
+        method: Access the output of the select_softest_toilet_paper node and extract
+          the softest_toilet_paper_brand, softness_level, ply_count, and product_details
+          fields
+        reason: To determine the specific product to purchase
+        text: Retrieve the softest toilet paper brand details from the output of the
+          select_softest_toilet_paper node
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a product availability API or check the website of the toilet
+          paper brand to determine online and in-store availability
+        reason: To determine the most convenient purchase method
+        text: Check the availability of the softest toilet paper brand in online and
+          in-store channels
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a decision-making algorithm to select the most convenient purchase
+          method based on availability and user preference
+        reason: To ensure a smooth purchase experience
+        text: Select the most convenient purchase method (online or in-store) based
+          on availability and user preference
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a payment gateway API to simulate a purchase transaction and obtain
+          a receipt or reference number
+        reason: To complete the purchase
+        text: Simulate a purchase transaction using the selected purchase method
+      - complexity: LOW
+        impact: LOW
+        method: Update the output fields with the result of the purchase transaction
+        reason: To provide a record of the purchase
+        text: Update the purchase_confirmation, purchase_method, and receipt_number
+          fields based on the outcome of the purchase transaction
+    prompt: Buy the selected softest toilet paper brand online or in-store, depending
+      on availability and convenience.
+    shims: []
+  research_toilet_paper_brands:
+    agent: false
+    code_node_type: stub
+    description: Research available toilet paper brands in the market.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ResearchToiletPaperBrandsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for research_toilet_paper_brands node outputs.\"\"\"\n    top_brands: List[str]\
+      \ = Field(..., description=\"List of top10 toilet paper brands\")\n    brand_features:\
+      \ List[str] = Field(..., description=\"List of product features for each brand\"\
+      )\n    brand_prices: List[float] = Field(..., description=\"List of prices for\
+      \ each brand\")\n\n\ndef research_toilet_paper_brands(general_input: str, **kwargs)\
+      \ -> ResearchToiletPaperBrandsOutput:\n    \"\"\"Research available toilet paper\
+      \ brands in the market.\n\n    Args:\n        general_input: General input string\
+      \ for the root node.\n        **kwargs: Additional keyword arguments.\n\n  \
+      \  Returns:\n        ResearchToiletPaperBrandsOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return ResearchToiletPaperBrandsOutput(\n\
+      \        top_brands=[],\n        brand_features=[],\n        brand_prices=[],\n\
+      \    )"
+    name: research_toilet_paper_brands
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of top10 toilet paper brands
+      key: top_brands
+      type: List[str]
+    - description: List of product features for each brand
+      key: brand_features
+      type: List[str]
+    - description: List of prices for each brand
+      key: brand_prices
+      type: List[float]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use online search engines, industry reports, and market research studies
+          to identify top brands
+        reason: This step is necessary to gather a comprehensive list of leading toilet
+          paper brands in the market
+        text: Conduct market research to identify top10 toilet paper brands
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Visit company websites, review product listings, and extract relevant
+          information on product features and prices
+        reason: This step is necessary to collect detailed product information for
+          each brand
+        text: Gather product information for each brand, including features and prices
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use market research reports, customer review websites, and product
+          comparison tools to compile and rank the top brands
+        reason: This step is necessary to provide a comprehensive and comparable list
+          of top brands
+        text: Compile and rank the top10 toilet paper brands based on market share,
+          customer reviews, and product features
+      - complexity: LOW
+        impact: LOW
+        method: Use data transformation tools or programming languages to format the
+          output into the required structure
+        reason: This step is necessary to provide the output in the required format
+        text: Format the output into the required structure, including top_brands,
+          brand_features, and brand_prices
+    prompt: List the top10 toilet paper brands available in the market, including
+      their product features and prices.
+    shims: []
+  select_softest_toilet_paper:
+    agent: false
+    code_node_type: stub
+    description: Select the softest toilet paper brand.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass AnalyzeSoftnessLevelsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for analyze_softness_levels node outputs.\"\"\"\n    softness_ranking: List[str]\
+      \ = Field(..., description=\"Ranked list of toilet paper brands by softness\
+      \ level\")\n    brand_softness_levels: List[float] = Field(..., description=\"\
+      Softness levels of each toilet paper brand\")\n    analysis_summary: str = Field(...,\
+      \ description=\"Summary of the analysis, including key findings\")\n\n\nclass\
+      \ SelectSoftestToiletPaperOutput(BaseModel):\n    \"\"\"Pydantic model for select_softest_toilet_paper\
+      \ node outputs.\"\"\"\n    softest_toilet_paper_brand: str = Field(..., description=\"\
+      The name of the softest toilet paper brand.\")\n    softness_level: float =\
+      \ Field(..., description=\"The softness level of the selected toilet paper brand.\"\
+      )\n    ply_count: int = Field(..., description=\"The ply count of the selected\
+      \ toilet paper brand.\")\n    product_details: str = Field(..., description=\"\
+      Additional product details of the selected toilet paper brand.\")\n\n\ndef select_softest_toilet_paper(analyze_softness_levels_input:\
+      \ AnalyzeSoftnessLevelsOutput, **kwargs) -> SelectSoftestToiletPaperOutput:\n\
+      \    \"\"\"Select the softest toilet paper brand.\n\n    Args:\n        analyze_softness_levels_input:\
+      \ Input from the 'analyze_softness_levels' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        SelectSoftestToiletPaperOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ SelectSoftestToiletPaperOutput(\n        softest_toilet_paper_brand=\"\",\n\
+      \        softness_level=0.0,\n        ply_count=0,\n        product_details=\"\
+      \",\n    )"
+    name: select_softest_toilet_paper
+    nodes_depended_on:
+    - analyze_softness_levels
+    nodes_dependent_on: []
+    output_structure:
+    - description: The name of the softest toilet paper brand.
+      key: softest_toilet_paper_brand
+      type: str
+    - description: The softness level of the selected toilet paper brand.
+      key: softness_level
+      type: float
+    - description: The ply count of the selected toilet paper brand.
+      key: ply_count
+      type: int
+    - description: Additional product details of the selected toilet paper brand.
+      key: product_details
+      type: str
+    prd:
+      bullets: []
+    prompt: Based on the analysis, select the softest toilet paper brand and provide
+      its product details.
+    shims: []
+  verify_purchase:
+    agent: false
+    code_node_type: stub
+    description: Verify the purchase of the softest toilet paper.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass PurchaseSelectedToiletPaperOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for purchase_selected_toilet_paper node outputs.\"\
+      \"\"\n    purchase_confirmation: bool = Field(..., description=\"Whether the\
+      \ purchase was successfully completed\")\n    purchase_method: str = Field(...,\
+      \ description=\"Method used for purchase (online or in-store)\")\n    receipt_number:\
+      \ str = Field(..., description=\"Receipt or reference number for the purchase\"\
+      )\n\n\nclass VerifyPurchaseOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ verify_purchase node outputs.\"\"\"\n    purchase_confirmation_status: bool\
+      \ = Field(..., description=\"Whether the purchase has been successfully completed\"\
+      )\n    receipt_number: str = Field(..., description=\"Receipt or confirmation\
+      \ number for the purchase\")\n    purchase_date: str = Field(..., description=\"\
+      Date the purchase was made\")\n    product_details: str = Field(..., description=\"\
+      Details of the purchased product, including brand and softness level\")\n\n\n\
+      def verify_purchase(purchase_selected_toilet_paper_input: PurchaseSelectedToiletPaperOutput,\
+      \ **kwargs) -> VerifyPurchaseOutput:\n    \"\"\"Verify the purchase of the softest\
+      \ toilet paper.\n\n    Args:\n        purchase_selected_toilet_paper_input:\
+      \ Input from the 'purchase_selected_toilet_paper' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        VerifyPurchaseOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return VerifyPurchaseOutput(\n\
+      \        purchase_confirmation_status=False,\n        receipt_number=\"\",\n\
+      \        purchase_date=\"\",\n        product_details=\"\",\n    )"
+    name: verify_purchase
+    nodes_depended_on:
+    - purchase_selected_toilet_paper
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the purchase has been successfully completed
+      key: purchase_confirmation_status
+      type: bool
+    - description: Receipt or confirmation number for the purchase
+      key: receipt_number
+      type: str
+    - description: Date the purchase was made
+      key: purchase_date
+      type: str
+    - description: Details of the purchased product, including brand and softness
+        level
+      key: product_details
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use the purchase_confirmation output from the purchase_selected_toilet_paper
+          node
+        reason: To ensure the purchase was successful
+        text: Check the purchase confirmation status from the purchase_selected_toilet_paper
+          node
+      - complexity: LOW
+        impact: HIGH
+        method: Use the receipt_number output from the purchase_selected_toilet_paper
+          node
+        reason: To provide a receipt or confirmation number for the purchase
+        text: Retrieve the receipt number from the purchase_selected_toilet_paper
+          node
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use the current system date
+        reason: To record the date of the purchase
+        text: Get the current date for the purchase date
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use the softest_toilet_paper_brand and softness_level outputs from
+          the select_softest_toilet_paper node
+        reason: To provide detailed information about the purchased product
+        text: Construct the product details string using the softest toilet paper
+          brand and softness level
+    prompt: Confirm that the purchase of the softest toilet paper has been successfully
+      completed and provide a receipt or confirmation number.
+    shims: []

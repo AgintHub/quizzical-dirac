@@ -1,0 +1,381 @@
+{
+  "apply_for_visas": {
+    "output": {
+      "visa_application_status": true,
+      "visa_types_applied_for": [
+        "Tourist"
+      ],
+      "required_documentation": [
+        "Passport",
+        "Proof of travel",
+        "Financial statements"
+      ],
+      "visa_application_reference_numbers": [
+        "MEX001-VA-001",
+        "MEX001-VA-002"
+      ],
+      "expected_processing_time": 15
+    },
+    "description": "Apply for necessary visas for the trip"
+  },
+  "book_cars": {
+    "output": {
+      "car_rental_booking_reference": "MEX001-CR001",
+      "car_rental_details": [
+        "Economy Sedan - Hertz, Pickup: Cancun Airport, Drop-off: Cancun Airport",
+        "Compact SUV - Avis, Pickup: Tulum Town, Drop-off: Tulum Town"
+      ],
+      "insurance_options": [
+        "Collision Damage Waiver",
+        "Liability Insurance"
+      ],
+      "equipment_upgrades": [
+        "GPS Navigation",
+        "Child Seat"
+      ],
+      "total_cost": 543.21,
+      "booking_status": true
+    },
+    "description": "Book car rentals for the trip"
+  },
+  "book_flights": {
+    "output": {
+      "flight_booking_status": true,
+      "flight_itinerary": "AA101: Departing 08:00 AM, Arriving 11:00 AM, American Airlines; UA202: Departing 12:00 PM, Arriving 03:00 PM, United Airlines",
+      "flight_numbers": [
+        "AA101",
+        "UA202"
+      ],
+      "departure_times": [
+        "08:00 AM",
+        "12:00 PM"
+      ],
+      "arrival_times": [
+        "11:00 AM",
+        "03:00 PM"
+      ],
+      "airlines": [
+        "American Airlines",
+        "United Airlines"
+      ],
+      "travel_insurance": true,
+      "seat_upgrades": true
+    },
+    "description": "Book flights for the trip"
+  },
+  "book_hotels": {
+    "output": {
+      "hotel_names": [
+        "Hotel Xcaret",
+        "The Grand Velas Riviera Maya"
+      ],
+      "room_types": [
+        "Deluxe Room",
+        "Suite"
+      ],
+      "check_in_dates": [
+        "2024-09-15",
+        "2024-09-18"
+      ],
+      "check_out_dates": [
+        "2024-09-18",
+        "2024-09-22"
+      ],
+      "total_cost": 2500.0,
+      "booking_status": true
+    },
+    "description": "Book hotels for the trip"
+  },
+  "check_immigration_requirements": {
+    "output": {
+      "destination_countries": [
+        "Mexico",
+        "Mexico",
+        "Mexico",
+        "Mexico",
+        "Mexico"
+      ],
+      "visa_requirements": [
+        "Tourist visa required for stays over 180 days",
+        "Tourist visa required for stays over 180 days",
+        "Tourist visa required for stays over 180 days",
+        "Tourist visa required for stays over 180 days",
+        "Tourist visa required for stays over 180 days"
+      ],
+      "travel_restrictions": [
+        "No travel restrictions for US citizens",
+        "No travel restrictions for US citizens",
+        "No travel restrictions for US citizens",
+        "No travel restrictions for US citizens",
+        "No travel restrictions for US citizens"
+      ],
+      "health_certificates_required": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "description": "Check immigration requirements for each destination"
+  },
+  "create_itinerary": {
+    "output": {
+      "itinerary_id": "MEX001",
+      "flight_details": [
+        "AA101: Departing 08:00 AM, Arriving 11:00 AM, American Airlines",
+        "UA202: Departing 12:00 PM, Arriving 03:00 PM, United Airlines"
+      ],
+      "hotel_reservations": [
+        "Hotel Xcaret, Cancun, Reservation #1234",
+        "The Grand Velas Riviera Maya, Cancun, Reservation #5678"
+      ],
+      "car_rental_details": [
+        "Economy Sedan - Hertz, Pickup: Cancun Airport, Drop-off: Cancun Airport",
+        "Compact SUV - Avis, Pickup: Tulum Town, Drop-off: Tulum Town"
+      ],
+      "activity_schedules": [
+        "2024-09-16 10:00 AM: Visit Chichen Itza",
+        "2024-09-17 02:00 PM: Snorkeling in Tulum"
+      ],
+      "immigration_requirements": [
+        "Tourist visa required for stays over 180 days, No travel restrictions for US citizens",
+        "Tourist visa required for stays over 180 days, No travel restrictions for US citizens"
+      ],
+      "travel_dates": [
+        "2024-09-15",
+        "2024-09-22"
+      ]
+    },
+    "description": "Create a detailed itinerary for the trip"
+  },
+  "define_travel_objectives": {
+    "output": {
+      "primary_purpose": "Leisure",
+      "number_of_travelers": 1,
+      "trip_objectives": "To explore Mexico's culture, history, and natural beauty"
+    },
+    "description": "Define the purpose and scope of the trip"
+  },
+  "finalize_travel_arrangements": {
+    "output": {
+      "travel_arrangement_status": true,
+      "flight_confirmation_numbers": [
+        "AA101-CF001",
+        "UA202-CF002"
+      ],
+      "hotel_confirmation_numbers": [
+        "Hotel Xcaret-CN001",
+        "The Grand Velas Riviera Maya-CN002"
+      ],
+      "car_rental_confirmation_numbers": [
+        "MEX001-CR001"
+      ],
+      "visa_application_status": [
+        "Approved: MEX001-VA-001",
+        "Pending: MEX001-VA-002"
+      ],
+      "total_travel_cost": 3043.21
+    },
+    "description": "Finalize all travel arrangements for the trip"
+  },
+  "research_destination_options": {
+    "output": {
+      "potential_destinations": [
+        "Cancun",
+        "Tulum",
+        "Puerto Vallarta",
+        "Guadalajara",
+        "Mexico City"
+      ],
+      "destination_details": [
+        "Cancun: Known for its beautiful beaches and vibrant nightlife, with average temperatures ranging from 77\u00b0F to 90\u00b0F throughout the year. Safety concerns exist, but most areas are considered safe for tourists. Attractions include the ancient Mayan ruins and Xcaret Park.",
+        "Tulum: Famous for its well-preserved Mayan ruins and stunning beaches, with average temperatures ranging from 75\u00b0F to 85\u00b0F. Considered a safe destination, with attractions like the Sian Ka'an Biosphere Reserve and cenote swimming.",
+        "Puerto Vallarta: A coastal city with a rich history, vibrant nightlife, and exciting outdoor activities like snorkeling and horseback riding. Average temperatures range from 70\u00b0F to 85\u00b0F, with some safety concerns in certain areas. Attractions include the Malecon waterfront and Yelapa beach town.",
+        "Guadalajara: A city rich in history and culture, with a mix of modern and colonial architecture. Average temperatures range from 60\u00b0F to 85\u00b0F, with low safety concerns. Attractions include the Hospicio Cabanas and Teatro Degollado.",
+        "Mexico City: The capital city, known for its ancient Aztec temple, vibrant markets, and rich cultural heritage. Average temperatures range from 55\u00b0F to 75\u00b0F, with some safety concerns in certain areas. Attractions include the Palacio de Bellas Artes and Chapultepec Park."
+      ]
+    },
+    "description": "Research and identify potential destinations"
+  },
+  "search_cars": {
+    "output": {
+      "destination_names": [
+        "Cancun",
+        "Tulum",
+        "Puerto Vallarta",
+        "Guadalajara",
+        "Mexico City"
+      ],
+      "car_rental_options": [
+        "Economy Sedan - Hertz",
+        "Compact SUV - Avis",
+        "Standard Sedan - Europcar",
+        "Full-size SUV - National",
+        "Luxury Sedan - Enterprise"
+      ],
+      "car_rental_prices": [
+        40.0,
+        60.0,
+        50.0,
+        80.0,
+        100.0
+      ],
+      "rental_agencies": [
+        "Hertz",
+        "Avis",
+        "Europcar",
+        "National",
+        "Enterprise"
+      ]
+    },
+    "description": "Search for car rental options at each destination"
+  },
+  "search_flights": {
+    "output": {
+      "flight_options": [
+        "AA101: Departing 08:00 AM, Arriving 11:00 AM, American Airlines, $250",
+        "UA202: Departing 12:00 PM, Arriving 03:00 PM, United Airlines, $300",
+        "DL303: Departing 04:00 PM, Arriving 07:00 PM, Delta Air Lines, $280",
+        "AA404: Departing 08:00 AM, Arriving 11:00 AM, American Airlines, $220",
+        "UA505: Departing 12:00 PM, Arriving 03:00 PM, United Airlines, $320",
+        "DL606: Departing 04:00 PM, Arriving 07:00 PM, Delta Air Lines, $260",
+        "AA707: Departing 08:00 AM, Arriving 11:00 AM, American Airlines, $200",
+        "UA808: Departing 12:00 PM, Arriving 03:00 PM, United Airlines, $380",
+        "DL909: Departing 04:00 PM, Arriving 07:00 PM, Delta Air Lines, $240",
+        "AA1010: Departing 08:00 AM, Arriving 11:00 AM, American Airlines, $230",
+        "UA1111: Departing 12:00 PM, Arriving 03:00 PM, United Airlines, $350",
+        "DL1212: Departing 04:00 PM, Arriving 07:00 PM, Delta Air Lines, $270",
+        "AA1313: Departing 08:00 AM, Arriving 11:00 AM, American Airlines, $210",
+        "UA1414: Departing 12:00 PM, Arriving 03:00 PM, United Airlines, $330",
+        "DL1515: Departing 04:00 PM, Arriving 07:00 PM, Delta Air Lines, $290"
+      ],
+      "airline_names": [
+        "American Airlines",
+        "United Airlines",
+        "Delta Air Lines"
+      ],
+      "departure_times": [
+        "08:00 AM",
+        "12:00 PM",
+        "04:00 PM"
+      ],
+      "arrival_times": [
+        "11:00 AM",
+        "03:00 PM",
+        "07:00 PM"
+      ],
+      "prices": [
+        250.0,
+        300.0,
+        280.0,
+        220.0,
+        320.0,
+        260.0,
+        200.0,
+        380.0,
+        240.0,
+        230.0,
+        350.0,
+        270.0,
+        210.0,
+        330.0,
+        290.0
+      ]
+    },
+    "description": "Search for flights to each destination"
+  },
+  "search_hotels": {
+    "output": {
+      "hotel_names": [
+        "Hotel Xcaret",
+        "The Grand Velas Riviera Maya",
+        "Hyatt Zilara Cancun",
+        "CasaMaya Hotel",
+        "Ahau Cancun",
+        "Tulum Tree House",
+        "Hartwood Tulum",
+        "Riu Tulum",
+        "Puerto Vallarta Marriott Resort & Spa",
+        "Casa Velas",
+        "Hotel Rosita",
+        "Grand Velas Riviera Nayarit",
+        "Hotel Fiesta Americana",
+        "Andador Guadalajara Centro Hist\u00f3rico",
+        "Hotel de Mendoza",
+        "Posada de la Corte",
+        "Casa Azul Boutique Hotel",
+        "Hotel NH Collection Mexico City",
+        "The St. Regis Mexico City",
+        "W Mexico City"
+      ],
+      "hotel_locations": [
+        "Cancun",
+        "Cancun",
+        "Cancun",
+        "Tulum",
+        "Tulum",
+        "Tulum",
+        "Tulum",
+        "Tulum",
+        "Puerto Vallarta",
+        "Puerto Vallarta",
+        "Puerto Vallarta",
+        "Puerto Vallarta",
+        "Guadalajara",
+        "Guadalajara",
+        "Guadalajara",
+        "Guadalajara",
+        "Mexico City",
+        "Mexico City",
+        "Mexico City",
+        "Mexico City"
+      ],
+      "hotel_prices": [
+        250.0,
+        350.0,
+        200.0,
+        150.0,
+        120.0,
+        100.0,
+        180.0,
+        220.0,
+        280.0,
+        300.0,
+        80.0,
+        250.0,
+        120.0,
+        90.0,
+        100.0,
+        80.0,
+        200.0,
+        250.0,
+        350.0,
+        320.0
+      ],
+      "hotel_amenities": [
+        "Pool, Restaurant, Spa",
+        "Pool, Restaurant, Spa, Golf",
+        "Pool, Restaurant, Spa, All-Inclusive",
+        "Pool, Restaurant, Spa, Beach Access",
+        "Pool, Restaurant, Spa",
+        "Pool, Restaurant, Eco-Friendly",
+        "Pool, Restaurant, Spa, Beach Access",
+        "Pool, Restaurant, Spa, All-Inclusive",
+        "Pool, Restaurant, Spa, Beach Access",
+        "Pool, Restaurant, Spa, Golf",
+        "Pool, Restaurant, Spa",
+        "Pool, Restaurant, Spa, Golf",
+        "Pool, Restaurant, Spa",
+        "Pool, Restaurant",
+        "Pool, Restaurant, Spa",
+        "Pool, Restaurant",
+        "Pool, Restaurant, Spa",
+        "Pool, Restaurant, Spa, Gym",
+        "Pool, Restaurant, Spa, Golf",
+        "Pool, Restaurant, Spa, Gym"
+      ]
+    },
+    "description": "Search for hotels at each destination"
+  }
+}

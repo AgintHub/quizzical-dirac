@@ -1,0 +1,107 @@
+dag_type: plain_text
+description: A highly concurrent, async, and parallel workflow DAG to build a trading
+  workflow. This workflow aims to establish a solid trading infrastructure with a
+  clear plan for strategy execution, risk management, and continuous improvement.
+name: build_a_trading_workflow
+nodes:
+  choose_risk_management_approach:
+    agent: false
+    description: Select a risk management approach, including options like stop-loss,
+      trailing stops, and position sizing.
+    name: choose_risk_management_approach
+    nodes_depended_on:
+    - set_exit_rules
+    nodes_dependent_on: []
+    prompt: Based on your trading strategy and risk tolerance, select a risk management
+      approach (e.g., stop-loss, trailing stops, position sizing). How will you limit
+      potential losses and ensure you stick to your strategy?
+  decide_on_entry_rules:
+    agent: false
+    description: Establish entry rules for buying or selling assets based on technical
+      and/or fundamental analysis.
+    name: decide_on_entry_rules
+    nodes_depended_on:
+    - select_trading_strategy
+    - set_order_size_parameters
+    nodes_dependent_on: []
+    prompt: Using your chosen trading strategy, set specific entry rules for buying
+      or selling assets (e.g., moving averages, RSI levels, chart patterns). What
+      signal will trigger your entry into a trade?
+  design_order_management_system:
+    agent: false
+    description: Create an order management system to manage trades, monitor market
+      conditions, and adjust positions accordingly.
+    name: design_order_management_system
+    nodes_depended_on:
+    - choose_risk_management_approach
+    nodes_dependent_on: []
+    prompt: Design an order management system to execute trades, monitor market conditions,
+      and adjust positions. What tools will you use (e.g., trading platforms, APIs,
+      custom software)?
+  evaluate_trading_performance:
+    agent: false
+    description: Regularly evaluate trading performance to adjust strategies and tactics,
+      and refine decision-making.
+    name: evaluate_trading_performance
+    nodes_depended_on:
+    - monitor_market_conditions
+    nodes_dependent_on: []
+    prompt: Regularly evaluate trading performance by tracking your results, analyzing
+      metrics (e.g., win/loss ratio, profit/loss ratio), and adjusting your strategy
+      accordingly. What factors will you use to refine your decision-making?
+  identify_trading_goals:
+    agent: false
+    description: Determine the trading goals, including profit targets, risk tolerance,
+      and market exposure.
+    name: identify_trading_goals
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Based on your understanding of the market and your risk appetite, define
+      specific trading goals for profit targets, risk tolerance, and market exposure
+      (e.g., max leverage, stop-loss levels). What are your primary investment objectives?
+  monitor_market_conditions:
+    agent: false
+    description: Continuously monitor market conditions to adjust trading strategies
+      and take advantage of new opportunities.
+    name: monitor_market_conditions
+    nodes_depended_on:
+    - design_order_management_system
+    nodes_dependent_on: []
+    prompt: Set up continuous monitoring of market conditions using technical indicators,
+      news feeds, and economic calendar. What adjustments will you make to your trading
+      strategy based on changes in market conditions?
+  select_trading_strategy:
+    agent: false
+    description: Choose a suitable trading strategy based on the market conditions,
+      risk goals, and profit targets.
+    name: select_trading_strategy
+    nodes_depended_on:
+    - identify_trading_goals
+    nodes_dependent_on: []
+    prompt: Based on the identified trading goals, select a suitable trading strategy
+      (e.g., day trading, scalping, swing trading, position trading). What trading
+      time frame do you want to focus on, and what technical or fundamental analysis
+      will you use?
+  set_exit_rules:
+    agent: false
+    description: Decide on exit rules based on stop-loss, profit targets, and risk
+      management.
+    name: set_exit_rules
+    nodes_depended_on:
+    - decide_on_entry_rules
+    nodes_dependent_on: []
+    prompt: Establish specific exit rules (stop-loss and profit targets) based on
+      your risk management approach. What conditions will trigger your exit from a
+      trade, and what level of profit will you lock in?
+  set_order_size_parameters:
+    agent: false
+    description: Determine order size parameters, including maximum and minimum position
+      sizes.
+    name: set_order_size_parameters
+    nodes_depended_on:
+    - select_trading_strategy
+    nodes_dependent_on: []
+    prompt: Based on your trading strategy and risk tolerance, set the maximum and
+      minimum position sizes (e.g., in USD or units of a specific asset). How many
+      contracts will you buy/sell at a time, and will you use micro-lots or regular
+      lots?

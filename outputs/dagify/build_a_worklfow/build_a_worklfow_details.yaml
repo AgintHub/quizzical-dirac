@@ -1,0 +1,81 @@
+dag_type: plain_text
+description: A workflow to create and build a workflow from scratch.
+name: build_a_worklfow
+nodes:
+  create_workspace:
+    agent: false
+    description: Create a new directory for the workflow project and initialize a
+      new Git repository.
+    name: create_workspace
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Create a new directory for the workflow project.
+  define_workflow_graph:
+    agent: false
+    description: Define the workflow graph, including nodes for each task or operation
+      and edges to connect them.
+    name: define_workflow_graph
+    nodes_depended_on:
+    - install_dependencies
+    nodes_dependent_on:
+    - create_workspace
+    prompt: Define the workflow graph, including nodes and edges.
+  deploy_workflow:
+    agent: false
+    description: Deploy the final workflow to production, including any necessary
+      configuration or setup for the workflow engine.
+    name: deploy_workflow
+    nodes_depended_on:
+    - refine_workflow
+    nodes_dependent_on:
+    - test_workflow
+    prompt: Deploy the final workflow to production.
+  generate_workflow_definition:
+    agent: false
+    description: Generate the workflow definition from the graph, including any necessary
+      configuration or metadata.
+    name: generate_workflow_definition
+    nodes_depended_on:
+    - define_workflow_graph
+    nodes_dependent_on:
+    - install_dependencies
+    prompt: Generate the workflow definition from the graph.
+  install_dependencies:
+    agent: false
+    description: Install the required dependencies for the workflow, including the
+      workflow engine and any additional libraries or tools required.
+    name: install_dependencies
+    nodes_depended_on:
+    - create_workspace
+    nodes_dependent_on: []
+    prompt: Install the required dependencies for the workflow.
+  refine_workflow:
+    agent: false
+    description: Refine the workflow based on test results, including any necessary
+      changes to the graph, definition, or code.
+    name: refine_workflow
+    nodes_depended_on:
+    - test_workflow
+    nodes_dependent_on:
+    - write_workflow_code
+    prompt: Refine the workflow based on test results.
+  test_workflow:
+    agent: false
+    description: Test the workflow to ensure it runs correctly, including any necessary
+      edge cases or error handling.
+    name: test_workflow
+    nodes_depended_on:
+    - write_workflow_code
+    nodes_dependent_on:
+    - generate_workflow_definition
+    prompt: Test the workflow to ensure it runs correctly.
+  write_workflow_code:
+    agent: false
+    description: Write the code for the workflow based on the definition, including
+      any necessary logic or interfaces.
+    name: write_workflow_code
+    nodes_depended_on:
+    - generate_workflow_definition
+    nodes_dependent_on:
+    - define_workflow_graph
+    prompt: Write the code for the workflow based on the definition.

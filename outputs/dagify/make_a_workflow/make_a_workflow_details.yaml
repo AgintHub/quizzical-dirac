@@ -1,0 +1,333 @@
+dag_type: typed
+description: Generated workflow from UI.
+name: make_a_workflow
+nodes:
+  assign_workflow_tasks:
+    agent: false
+    description: Assign workflow tasks and responsibilities
+    name: assign_workflow_tasks
+    nodes_depended_on:
+    - schedule_workflow_execution
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of tasks assigned to personnel or teams
+      key: assigned_tasks
+      type: List[str]
+    - description: List of personnel or teams responsible for each task
+      key: responsible_personnel
+      type: List[str]
+    - description: List of task dependencies for each assigned task
+      key: task_dependencies
+      type: List[str]
+    - description: List of completion status for each assigned task
+      key: is_task_completed
+      type: List[bool]
+    - description: Workload distribution metric (e.g., 0-1) indicating evenness of
+        task allocation
+      key: workload_distribution
+      type: float
+    prompt: Allocate tasks to relevant personnel or teams based on skills, availability,
+      and workload. Ensure clear communication and accountability.
+  brainstorm_workflow_activities:
+    agent: false
+    description: Brainstorm activities and tasks for the workflow
+    name: brainstorm_workflow_activities
+    nodes_depended_on:
+    - define_workflow_objective
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of identified task names for the workflow
+      key: activity_task_list
+      type: List[str]
+    - description: List of categorized tasks based on dependencies, resources, or
+        other criteria
+      key: activity_category_list
+      type: List[str]
+    - description: Summary of the workflow objective, including key goals and KPIs
+      key: workflow_objective_summary
+      type: str
+    prompt: List all possible activities related to the workflow objective. Focus
+      on distinct, non-overlapping tasks, no matter how small.
+  categorize_activities:
+    agent: false
+    description: Categorize activities for the workflow
+    name: categorize_activities
+    nodes_depended_on:
+    - brainstorm_workflow_activities
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of categorized activities for the workflow, with each category
+        separated by newline characters
+      key: categorized_activities
+      type: str
+    - description: Count of activities in each category
+      key: activity_counts
+      type: List[int]
+    - description: Main categories used for activity grouping, such as 'start', 'ongoing',
+        and 'end'
+      key: major_categories
+      type: List[str]
+    prompt: Group the activities into categories (e.g., start, ongoing, end) or based
+      on dependencies, frequency, or resources required.
+  create_workflow_diagram:
+    agent: false
+    description: Create a workflow diagram
+    name: create_workflow_diagram
+    nodes_depended_on:
+    - prioritize_activities
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of nodes or steps in the workflow diagram
+      key: diagram_nodes
+      type: List[str]
+    - description: List of priority levels corresponding to each node
+      key: node_priorities
+      type: List[int]
+    - description: List of connections or edges between nodes (e.g., 'A->B', 'B->C')
+      key: connections
+      type: List[str]
+    - description: Whether the workflow diagram has been successfully created
+      key: diagram_created
+      type: bool
+    prompt: Design a visual representation of the workflow using a flowchart, diagram,
+      or table. Focus on readability, concision, and accuracy.
+  define_workflow_objective:
+    agent: false
+    description: Define the workflow's objective, scope, and KPIs
+    name: define_workflow_objective
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: The purpose of the workflow
+      key: workflow_purpose
+      type: str
+    - description: The scope of the workflow
+      key: workflow_scope
+      type: str
+    - description: The key performance indicators (KPIs) for the workflow
+      key: key_performance_indicators
+      type: str
+    prompt: Clearly define the workflow's purpose, scope, and key performance indicators
+      (KPIs). Focus on specific, unambiguous goals.
+  document_workflow_experience:
+    agent: false
+    description: Document workflow experience and outcomes
+    name: document_workflow_experience
+    nodes_depended_on:
+    - evaluate_workflow_outcomes
+    nodes_dependent_on: []
+    output_structure:
+    - description: Summary of workflow outcomes and experience
+      key: workflow_outcomes_summary
+      type: str
+    - description: List of challenges confronted during the workflow
+      key: challenges_confronted
+      type: List[str]
+    - description: Key insights and knowledge gained from the workflow
+      key: lessons_learned
+      type: str
+    - description: Recommendations for future workflows based on experience
+      key: recommendations
+      type: str
+    prompt: ' Compile a case study or knowledge transfer document detailing the workflow''s
+      achievements, challenges, and lessons learned. Share this information with relevant
+      teams or individuals.'
+  document_workflow_steps:
+    agent: false
+    description: Document workflow steps and tasks
+    name: document_workflow_steps
+    nodes_depended_on:
+    - create_workflow_diagram
+    nodes_dependent_on: []
+    output_structure:
+    - description: Detailed descriptions of each workflow step
+      key: workflow_step_descriptions
+      type: List[str]
+    - description: List of inputs required for each workflow step
+      key: workflow_step_inputs
+      type: List[str]
+    - description: List of outputs generated by each workflow step
+      key: workflow_step_outputs
+      type: List[str]
+    - description: List of instructions for each workflow step
+      key: workflow_step_instructions
+      type: List[str]
+    prompt: Describe each workflow step in detail, including inputs, outputs, and
+      instructions. Use clear, concise language and bullet points for clarity.
+  estimate_resources_and_time:
+    agent: false
+    description: Estimate resources and time required for the workflow
+    name: estimate_resources_and_time
+    nodes_depended_on:
+    - specify_tools_and_technologies
+    nodes_dependent_on: []
+    output_structure:
+    - description: Estimated time required for each workflow step in hours
+      key: estimated_time_requirements
+      type: List[float]
+    - description: Total budget estimated for the workflow
+      key: budget_estimates
+      type: float
+    - description: List of personnel roles required for the workflow
+      key: personnel_requirements
+      type: List[str]
+    - description: List of equipment required for the workflow
+      key: equipment_requirements
+      type: List[str]
+    - description: List of materials required for the workflow
+      key: material_requirements
+      type: List[str]
+    prompt: Estimate the time, budget, and resources required for each workflow step.
+      Consider personnel, equipment, and material needs.
+  evaluate_workflow_outcomes:
+    agent: false
+    description: Evaluate workflow outcomes and performance
+    name: evaluate_workflow_outcomes
+    nodes_depended_on:
+    - track_workflow_progress
+    nodes_dependent_on: []
+    output_structure:
+    - description: Score representing the workflow's effectiveness, ranging from 0
+        to 1
+      key: effectiveness_score
+      type: float
+    - description: Score representing the workflow's efficiency, ranging from 0 to
+        1
+      key: efficiency_score
+      type: float
+    - description: Score representing the workflow's adaptability, ranging from 0
+        to 1
+      key: adaptability_score
+      type: float
+    - description: List of feedback comments from stakeholders
+      key: stakeholder_feedback
+      type: List[str]
+    - description: List of recommended adjustments to the workflow
+      key: recommended_adjustments
+      type: List[str]
+    - description: Whether the workflow performance is meeting its KPIs
+      key: is_performance_meeting_kpis
+      type: bool
+    prompt: Assess the workflow's effectiveness, efficiency, and adaptability. Gather
+      feedback from stakeholders and perform necessary adjustments.
+  prioritize_activities:
+    agent: false
+    description: Prioritize activities for the workflow
+    name: prioritize_activities
+    nodes_depended_on:
+    - categorize_activities
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of activities with their priority levels (e.g., 'A', 'B',
+        'C' or '1', '2', '3')
+      key: prioritized_activities
+      type: List[str]
+    - description: List of priority levels corresponding to the activities (e.g.,
+        'High', 'Medium', 'Low')
+      key: priority_levels
+      type: List[str]
+    - description: Brief description of the prioritization rationale
+      key: rationale
+      type: str
+    prompt: Assign priority levels to the activities based on urgency, importance,
+      or dependencies. Use letters (A, B, C) or numbers (1,2,3) for simplicity.
+  review_and_approve_workflow:
+    agent: false
+    description: Review and approve the workflow
+    name: review_and_approve_workflow
+    nodes_depended_on:
+    - estimate_resources_and_time
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the workflow has been approved
+      key: review_status
+      type: bool
+    - description: Comments or feedback from the review process
+      key: approval_comments
+      type: str
+    - description: List of requested changes or modifications
+      key: requested_changes
+      type: List[str]
+    - description: Date of approval
+      key: approval_date
+      type: str
+    prompt: Conduct a thorough review of the workflow for accuracy, completeness,
+      and feasibility. Obtain approval from relevant stakeholders before proceeding.
+  schedule_workflow_execution:
+    agent: false
+    description: Schedule workflow execution
+    name: schedule_workflow_execution
+    nodes_depended_on:
+    - review_and_approve_workflow
+    nodes_dependent_on: []
+    output_structure:
+    - description: Detailed timeline for workflow execution, including start and end
+        dates
+      key: workflow_timeline
+      type: str
+    - description: List of milestone deadlines in the format 'YYYY-MM-DD'
+      key: milestone_deadlines
+      type: List[str]
+    - description: List of task dependencies, where each dependency is represented
+        as a string
+      key: task_dependencies
+      type: List[str]
+    - description: Whether the workflow has been successfully scheduled
+      key: is_scheduled
+      type: bool
+    prompt: Create a schedule for workflow execution, including timelines, milestones,
+      and deadlines. Focus on realistic, achievable targets.
+  specify_tools_and_technologies:
+    agent: false
+    description: Specify tools and technologies for the workflow
+    name: specify_tools_and_technologies
+    nodes_depended_on:
+    - document_workflow_steps
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of tools required for the workflow
+      key: tools_required
+      type: List[str]
+    - description: List of technologies required for the workflow
+      key: technologies_required
+      type: List[str]
+    - description: List of systems required for the workflow
+      key: systems_required
+      type: List[str]
+    - description: Notes on automation possibilities for the workflow steps
+      key: automation_possibilities
+      type: List[str]
+    - description: Notes on compatibility concerns for the tools, technologies, and
+        systems
+      key: compatibility_concerns
+      type: List[str]
+    prompt: List the specific tools, technologies, or systems required for each workflow
+      step. Focus on automation possibilities and compatibility concerns.
+  track_workflow_progress:
+    agent: false
+    description: Track workflow progress and performance
+    name: track_workflow_progress
+    nodes_depended_on:
+    - assign_workflow_tasks
+    nodes_dependent_on: []
+    output_structure:
+    - description: Current status of the workflow (e.g., in_progress, completed, delayed)
+      key: workflow_status
+      type: str
+    - description: Number of tasks completed
+      key: completed_task_count
+      type: int
+    - description: Total number of tasks
+      key: total_task_count
+      type: int
+    - description: List of task IDs or names that are delayed
+      key: delayed_tasks
+      type: List[str]
+    - description: List of issues encountered during workflow execution
+      key: issues_encountered
+      type: List[str]
+    - description: Whether the workflow is on track to meet its milestones
+      key: is_on_track
+      type: bool
+    prompt: Monitor workflow progress, including task completion, delays, or issues.
+      Regularly update stakeholders on status and milestones achieved.

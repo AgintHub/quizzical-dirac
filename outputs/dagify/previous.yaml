@@ -1,0 +1,221 @@
+dag_type: typed
+description: Generated workflow from UI.
+name: build_trading_workflow
+nodes:
+  configure_regulatory_reporting_protocol:
+    agent: false
+    description: Develop a systematic approach to generating and submitting regulatory
+      reports.
+    name: configure_regulatory_reporting_protocol
+    nodes_depended_on:
+    - develop_performance_reporting_system
+    nodes_dependent_on: []
+    output_structure:
+    - description: The configured regulatory reporting protocol
+      key: regulatory_reporting_protocol
+      type: str
+    - description: The frequency of regulatory reports (e.g., daily, weekly, monthly)
+      key: reporting_frequency
+      type: str
+    - description: List of recipients for regulatory reports
+      key: report_recipients
+      type: List[str]
+    - description: Whether the regulatory reporting protocol is compliant with regulatory
+        requirements
+      key: compliance_status
+      type: bool
+    - description: The template used for regulatory reports
+      key: reporting_template
+      type: str
+    prompt: Configure a regulatory reporting protocol that integrates with the performance
+      reporting system to ensure compliance with regulatory requirements.
+  create_order_management_model:
+    agent: false
+    description: Create a comprehensive model for managing all types of orders, including
+      limit orders, market orders, and stops.
+    name: create_order_management_model
+    nodes_depended_on:
+    - develop_risk_analysis_framework
+    nodes_dependent_on: []
+    output_structure:
+    - description: A description of the developed order management model.
+      key: order_management_model_description
+      type: str
+    - description: Whether the order management model complies with the trading strategy
+        and risk limits.
+      key: model_compliance_status
+      type: bool
+    - description: List of order types supported by the model, such as limit orders,
+        market orders, and stops.
+      key: supported_order_types
+      type: List[str]
+    - description: Whether the order management model is successfully integrated with
+        the risk analysis framework.
+      key: integration_with_risk_framework
+      type: bool
+    prompt: Develop a detailed order management model that integrates with the risk
+      framework to ensure compliance with the trading strategy and risk limits.
+  design_trade_execution_workflow:
+    agent: false
+    description: Develop a step-by-step process for executing trades, including sending
+      orders to the executing broker, monitoring trade status, and confirming trade
+      completions.
+    name: design_trade_execution_workflow
+    nodes_depended_on:
+    - create_order_management_model
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of steps involved in the trade execution process
+      key: trade_execution_steps
+      type: List[str]
+    - description: Whether the trade execution workflow is successfully integrated
+        with the order management model
+      key: order_management_integration_status
+      type: bool
+    - description: List of risk management procedures implemented in the trade execution
+        workflow
+      key: risk_management_procedures
+      type: List[str]
+    - description: Average time taken to execute a trade
+      key: trade_execution_time
+      type: float
+    - description: Percentage of trades that are successfully completed
+      key: trade_completion_rate
+      type: float
+    prompt: Design a trade execution workflow that integrates with the order management
+      model to ensure seamless trade execution and risk management.
+  design_trade_monitoring_and_alerting_system:
+    agent: false
+    description: Create a system that tracks trade status, generates alerts for trade-related
+      events, and provides real-time risk exposure data.
+    name: design_trade_monitoring_and_alerting_system
+    nodes_depended_on:
+    - design_trade_execution_workflow
+    nodes_dependent_on: []
+    output_structure:
+    - description: Current status of the trade (e.g., pending, executed, cancelled)
+      key: trade_status
+      type: str
+    - description: List of events that trigger alerts (e.g., trade execution, trade
+        cancellation, risk limit breach)
+      key: alert_triggers
+      type: List[str]
+    - description: Current risk exposure of the trade
+      key: risk_exposure
+      type: float
+    - description: List of boolean values indicating whether an alert has been sent
+        for each trade-related event
+      key: alert_notifications
+      type: List[bool]
+    - description: Frequency at which the trade monitoring system checks for updates
+        (in minutes)
+      key: monitoring_frequency
+      type: int
+    prompt: Design a trade monitoring and alerting system that integrates with the
+      trade execution workflow to ensure timely notification of trade-related events
+      and risk alerts.
+  develop_performance_reporting_system:
+    agent: false
+    description: Create a system that generates detailed reports on trading performance,
+      risk exposure, and profit/loss.
+    name: develop_performance_reporting_system
+    nodes_depended_on:
+    - design_trade_monitoring_and_alerting_system
+    nodes_dependent_on: []
+    output_structure:
+    - description: Whether the performance reporting system has been successfully
+        developed
+      key: reporting_system_status
+      type: bool
+    - description: List of numerical metrics representing trading performance (e.g.,
+        profit/loss, return on investment)
+      key: trading_performance_metrics
+      type: List[float]
+    - description: List of numerical risk exposure levels for different trading positions
+      key: risk_exposure_levels
+      type: List[float]
+    - description: Frequency at which the performance reports are generated (e.g.,
+        daily, weekly, monthly)
+      key: report_generation_frequency
+      type: str
+    - description: Method by which the performance reports are delivered to stakeholders
+        (e.g., email, dashboard, CSV file)
+      key: report_delivery_method
+      type: str
+    prompt: Develop a performance reporting system that integrates with the trade
+      monitoring and alerting system to provide comprehensive reporting and analytics
+      on trading performance and risk exposure.
+  develop_risk_analysis_framework:
+    agent: false
+    description: Develop a systematic approach to assessing market and operational
+      risks associated with the trading strategy.
+    name: develop_risk_analysis_framework
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of risk categories identified for the trading strategy
+      key: risk_categories
+      type: List[str]
+    - description: List of risk scores associated with each risk category
+      key: risk_scores
+      type: List[float]
+    - description: List of mitigation strategies for each risk category
+      key: mitigation_strategies
+      type: List[str]
+    - description: Frequency at which risk will be monitored
+      key: risk_monitoring_frequency
+      type: str
+    - description: List of risk thresholds for each risk category
+      key: risk_thresholds
+      type: List[float]
+    prompt: Design a risk framework that identifies potential risks and opportunities
+      for the trading strategy.
+  implement_position_sizing_strategy:
+    agent: false
+    description: Develop a systematic approach to determining position sizes that
+      balances risk and reward.
+    name: implement_position_sizing_strategy
+    nodes_depended_on:
+    - develop_risk_analysis_framework
+    nodes_dependent_on: []
+    output_structure:
+    - description: The name of the implemented position sizing strategy.
+      key: position_sizing_strategy_name
+      type: str
+    - description: List of parameters used in the position sizing strategy.
+      key: position_sizing_parameters
+      type: List[str]
+    - description: List of rules defined for the position sizing strategy.
+      key: position_sizing_rules
+      type: List[str]
+    - description: Example list of position sizes determined by the strategy.
+      key: position_sizing_example_positions
+      type: List[int]
+    - description: Whether the position sizing strategy was successfully integrated
+        with the risk framework.
+      key: strategy_integration_success
+      type: bool
+    prompt: Implement a position sizing strategy that integrates with the risk framework
+      to ensure that positions are sized in accordance with the trading strategy and
+      risk limits.
+  integrate_with_market_data_feeds:
+    agent: false
+    description: Configure the trading workflow to receive and process real-time market
+      data feeds.
+    name: integrate_with_market_data_feeds
+    nodes_depended_on:
+    - design_trade_execution_workflow
+    nodes_dependent_on: []
+    output_structure:
+    - description: Status of the market data feed integration (e.g., 'success', 'failure')
+      key: market_data_feed_status
+      type: str
+    - description: Details of the integration process, such as API endpoints, authentication
+        methods, and error messages
+      key: integration_details
+      type: List[str]
+    - description: Whether the integration with market data feeds was successful
+      key: is_integration_successful
+      type: bool
+    prompt: Integrate the trading workflow with market data feeds to provide real-time
+      market data and support accurate trade execution and risk management.
