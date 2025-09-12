@@ -1,4 +1,4 @@
-dag_type: typed
+dag_type: spec
 description: Generated workflow from UI.
 name: build_trading_workflow
 nodes:
@@ -27,6 +27,36 @@ nodes:
     - description: The template used for regulatory reports
       key: reporting_template
       type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use regulatory guidelines and industry standards to inform protocol
+          development
+        reason: Ensure compliance with regulatory requirements
+        text: Review regulatory requirements and identify necessary reporting protocols
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use APIs or data exchange protocols to integrate systems
+        reason: Ensure seamless reporting and minimize manual intervention
+        text: Integrate regulatory reporting protocol with performance reporting system
+      - complexity: LOW
+        impact: LOW
+        method: Use stakeholder input and regulatory guidelines to inform reporting
+          frequency and recipient list
+        reason: Ensure timely and targeted reporting
+        text: Define reporting frequency and recipient list
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use regulatory guidelines and industry standards to inform template
+          development and compliance assessment
+        reason: Ensure accurate and compliant reporting
+        text: Develop reporting template and compliance status assessment
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use testing and validation procedures to ensure protocol effectiveness
+        reason: Ensure protocol effectiveness and accuracy
+        text: Test and validate regulatory reporting protocol
     prompt: Configure a regulatory reporting protocol that integrates with the performance
       reporting system to ensure compliance with regulatory requirements.
   create_order_management_model:
@@ -48,11 +78,57 @@ nodes:
     - description: List of order types supported by the model, such as limit orders,
         market orders, and stops.
       key: supported_order_types
-      type: List[str]
+      type: str
     - description: Whether the order management model is successfully integrated with
         the risk analysis framework.
       key: integration_with_risk_framework
       type: bool
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a structured approach to gather requirements, such as stakeholder
+          interviews and review of existing systems.
+        reason: This step is necessary to ensure that the order management model meets
+          the needs of the trading strategy and complies with risk limits.
+        text: Define the scope and requirements of the order management model, including
+          the types of orders to be supported and the risk management constraints.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a modular, service-oriented architecture to facilitate integration
+          with other systems and components.
+        reason: A well-designed architecture is essential to ensure that the order
+          management model is scalable, reliable, and maintainable.
+        text: Design the architecture of the order management model, including the
+          components and interfaces required to support order creation, routing, and
+          execution.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a probabilistic approach to risk assessment, such as Monte Carlo
+          simulations, to estimate potential losses and identify areas of high risk.
+        reason: Risk management is a critical aspect of the order management model,
+          and a well-designed risk management component is essential to ensuring compliance
+          with risk limits.
+        text: Develop the order management model's risk management component, including
+          the logic and rules for evaluating and managing risk exposure.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use standardized APIs and data formats, such as JSON or XML, to facilitate
+          integration and data exchange.
+        reason: Integration with the risk analysis framework is necessary to ensure
+          that the order management model is aware of and complies with risk limits
+          and constraints.
+        text: Integrate the order management model with the risk analysis framework,
+          including the development of interfaces and APIs for data exchange and synchronization.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a combination of unit testing, integration testing, and scenario-based
+          testing to evaluate the order management model's performance and compliance.
+        reason: Thorough testing and validation are essential to ensuring that the
+          order management model is reliable, stable, and compliant with risk limits.
+        text: Test and validate the order management model, including the development
+          of test cases and scenarios to evaluate its performance and compliance with
+          risk limits.
     prompt: Develop a detailed order management model that integrates with the risk
       framework to ensure compliance with the trading strategy and risk limits.
   design_trade_execution_workflow:
@@ -82,6 +158,48 @@ nodes:
     - description: Percentage of trades that are successfully completed
       key: trade_completion_rate
       type: float
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a finite state machine library to define the states and transitions
+          of a trade, and implement a state machine to manage the trade execution
+          process
+        reason: This approach provides a clear and structured way to manage the complexity
+          of trade execution
+        text: Implement a trade execution workflow using a finite state machine approach
+          to manage the different states of a trade (e.g., pending, executed, cancelled)
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use RESTful APIs or message queues (e.g., RabbitMQ, Apache Kafka)
+          to integrate the trade execution workflow with the order management model,
+          and implement error handling and retries to ensure reliability
+        reason: This approach enables real-time communication between the trade execution
+          workflow and the order management model, ensuring that trades are executed
+          efficiently and accurately
+        text: Integrate the trade execution workflow with the order management model
+          using APIs or message queues to ensure seamless communication between the
+          two systems
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a business rules management system (e.g., Drools, Pega) to define
+          and execute risk management rules, and integrate the rules engine with the
+          trade execution workflow to enable real-time risk assessment and mitigation
+        reason: This approach enables the trade execution workflow to identify and
+          mitigate potential risks in real-time, reducing the risk of financial losses
+        text: Implement risk management procedures using a rules-based approach to
+          identify and mitigate potential risks associated with trade execution
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a monitoring and analytics platform (e.g., Prometheus, Grafana)
+          to collect and visualize trade execution metrics, and implement alerts and
+          notifications to notify trading teams of performance issues
+        reason: This approach enables the trade execution workflow to be optimized
+          in real-time, reducing the risk of financial losses and improving overall
+          trading performance
+        text: Monitor trade execution performance using metrics such as trade execution
+          time and trade completion rate, and adjust the trade execution workflow
+          as needed to optimize performance
     prompt: Design a trade execution workflow that integrates with the order management
       model to ensure seamless trade execution and risk management.
   design_trade_monitoring_and_alerting_system:
@@ -99,18 +217,56 @@ nodes:
     - description: List of events that trigger alerts (e.g., trade execution, trade
         cancellation, risk limit breach)
       key: alert_triggers
-      type: List[str]
+      type: str
     - description: Current risk exposure of the trade
       key: risk_exposure
       type: float
     - description: List of boolean values indicating whether an alert has been sent
         for each trade-related event
       key: alert_notifications
-      type: List[bool]
+      type: bool
     - description: Frequency at which the trade monitoring system checks for updates
         (in minutes)
       key: monitoring_frequency
       type: int
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use REST API for querying trade status, Apply algorithm for parsing
+          trade status updates, Implement error handling using approach of retrying
+          failed queries
+        reason: This approach provides real-time trade status updates and ensures
+          timely notification of trade-related events
+        text: Implement a trade monitoring system that queries the trade execution
+          workflow API for trade status updates every 5 minutes
+      - complexity: HIGH
+        impact: HIGH
+        method: Use machine learning model for risk exposure calculation, Apply algorithm
+          for data preprocessing, Implement error handling using approach of input
+          validation
+        reason: This approach provides accurate risk exposure calculations and enables
+          effective risk management
+        text: Develop a risk exposure calculation model that takes into account trade
+          size, trade type, and market volatility
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use simple if-else statements for alert triggering, Apply algorithm
+          for notification sending, Implement error handling using approach of logging
+          errors
+        reason: This approach ensures timely notification of trade-related events
+          and enables effective risk management
+        text: Design an alert triggering system that sends notifications for trade-related
+          events such as trade execution, trade cancellation, and risk limit breach
+      - complexity: MEDIUM
+        impact: LOW
+        method: Use feedback control loop for monitoring frequency adjustment, Apply
+          algorithm for trade volume and market condition analysis, Implement error
+          handling using approach of fallback to default monitoring frequency
+        reason: This approach enables dynamic monitoring frequency adjustment and
+          ensures effective resource utilization
+        text: Implement a monitoring frequency adjustment mechanism that allows for
+          adjusting the monitoring frequency based on trade volume and market conditions
     prompt: Design a trade monitoring and alerting system that integrates with the
       trade execution workflow to ensure timely notification of trade-related events
       and risk alerts.
@@ -142,6 +298,51 @@ nodes:
         (e.g., email, dashboard, CSV file)
       key: report_delivery_method
       type: str
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use APIs or message queues to integrate with the trade monitoring
+          and alerting system, and apply data validation and cleansing techniques
+          to ensure data quality
+        reason: To ensure comprehensive reporting and analytics, the system needs
+          to collect relevant data from the trade monitoring and alerting system
+        text: Design the performance reporting system's data ingestion pipeline to
+          collect trading data from the trade monitoring and alerting system
+      - complexity: HIGH
+        impact: HIGH
+        method: Utilize programming languages like Python or R, and libraries like
+          Pandas or NumPy, to develop the analytics engine, and apply statistical
+          models and machine learning algorithms to calculate metrics and levels
+        reason: To provide actionable insights, the system needs to process and analyze
+          the collected data
+        text: Develop a data processing and analytics engine to calculate trading
+          performance metrics and risk exposure levels
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use reporting libraries like ReportLab or PyPDF2 to generate reports,
+          and apply templates and formatting to ensure readability and consistency
+        reason: To provide stakeholders with timely and relevant information, the
+          system needs to generate reports at regular intervals
+        text: Implement a report generation module to produce performance reports
+          based on the calculated metrics and levels
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use email libraries like SmtpClient or email APIs, and integrate with
+          dashboard platforms or file sharing services, to provide stakeholders with
+          flexible delivery options
+        reason: To ensure that stakeholders receive the reports in a timely and convenient
+          manner, the system needs to provide multiple delivery options
+        text: Design a report delivery mechanism to distribute performance reports
+          to stakeholders
+      - complexity: LOW
+        impact: LOW
+        method: Use system monitoring tools like Nagios or Prometheus, and apply logging
+          and error handling techniques, to ensure the system's reliability and performance
+        reason: To minimize downtime and ensure data accuracy, the system needs to
+          be monitored and maintained regularly
+        text: Develop a system monitoring and maintenance module to ensure the performance
+          reporting system's reliability and performance
     prompt: Develop a performance reporting system that integrates with the trade
       monitoring and alerting system to provide comprehensive reporting and analytics
       on trading performance and risk exposure.
@@ -168,6 +369,62 @@ nodes:
     - description: List of risk thresholds for each risk category
       key: risk_thresholds
       type: List[float]
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a combination of qualitative and quantitative methods, such as
+          scenario analysis and sensitivity analysis, to identify potential market
+          risks.
+        reason: Market risks can have a significant impact on the trading strategy's
+          performance and need to be carefully assessed.
+        text: Identify potential market risks associated with the trading strategy,
+          such as market volatility, liquidity risks, and credit risks.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a combination of qualitative and quantitative methods, such as
+          risk assessments and control self-assessments, to identify potential operational
+          risks.
+        reason: Operational risks can have a significant impact on the trading strategy's
+          performance and need to be carefully assessed.
+        text: Identify potential operational risks associated with the trading strategy,
+          such as system failures, human errors, and compliance risks.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a risk scoring methodology, such as a heat map or a risk matrix,
+          to assign risk scores to each identified risk category.
+        reason: Risk scores provide a quantitative measure of the risk and help prioritize
+          mitigation strategies.
+        text: Assign risk scores to each identified risk category based on the likelihood
+          and potential impact of the risk.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use a combination of qualitative and quantitative methods, such as
+          decision trees and scenario analysis, to develop mitigation strategies for
+          each identified risk category.
+        reason: Mitigation strategies help reduce the likelihood or potential impact
+          of the risk and need to be carefully developed.
+        text: Develop mitigation strategies for each identified risk category, such
+          as diversification, hedging, or risk transfer.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a combination of qualitative and quantitative methods, such as
+          risk assessments and control self-assessments, to determine the frequency
+          at which risk will be monitored.
+        reason: Regular risk monitoring helps identify potential risks and opportunities
+          and needs to be performed at a frequency that is adequate for the trading
+          strategy.
+        text: Determine the frequency at which risk will be monitored, such as daily,
+          weekly, or monthly.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a combination of qualitative and quantitative methods, such as
+          decision trees and scenario analysis, to establish risk thresholds for each
+          identified risk category.
+        reason: Risk thresholds provide a clear measure of the risk tolerance and
+          help prioritize mitigation strategies.
+        text: Establish risk thresholds for each identified risk category, such as
+          a maximum allowable loss or a minimum required return.
     prompt: Design a risk framework that identifies potential risks and opportunities
       for the trading strategy.
   implement_position_sizing_strategy:
@@ -195,6 +452,59 @@ nodes:
         with the risk framework.
       key: strategy_integration_success
       type: bool
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Analyze the risk categories and risk scores to determine the key risk
+          factors that need to be addressed in the position sizing strategy.
+        reason: This step ensures that the position sizing strategy is informed by
+          the risk framework and aligns with the trading strategy's risk tolerance.
+        text: Review the risk analysis framework output to understand the identified
+          risk categories, risk scores, mitigation strategies, risk monitoring frequency,
+          and risk thresholds.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Evaluate the pros and cons of each approach and select the one that
+          best suits the trading strategy and risk tolerance.
+        reason: This approach provides a systematic method for determining position
+          sizes that align with the trading strategy and risk limits.
+        text: Select a position sizing strategy approach (e.g., fixed fractional,
+          volatility-based, or Kelly criterion) that balances risk and reward.
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use the risk analysis framework output to inform the parameter selection
+          and ensure that they align with the risk tolerance and trading strategy.
+        reason: This step ensures that the position sizing strategy is properly calibrated
+          to the trading strategy and risk limits.
+        text: Define the parameters for the selected position sizing strategy approach
+          (e.g., risk percentage, volatility measure, or Kelly criterion parameters).
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use a combination of quantitative and qualitative methods to develop
+          the rules, including analysis of historical data and expert judgment.
+        reason: This step ensures that the position sizing strategy is practical and
+          effective in managing risk and reward.
+        text: Develop a set of rules for the position sizing strategy (e.g., maximum
+          position size, minimum position size, or position sizing based on risk ratings).
+      - complexity: HIGH
+        impact: HIGH
+        method: Use backtesting and walk-forward optimization to evaluate the strategy's
+          performance and make adjustments as needed.
+        reason: This step ensures that the position sizing strategy is effective and
+          aligns with the trading strategy's objectives.
+        text: Test the position sizing strategy using historical data and evaluate
+          its performance using metrics such as profit/loss, risk exposure, and Sharpe
+          ratio.
+      - complexity: HIGH
+        impact: HIGH
+        method: Use APIs or other integration methods to connect the position sizing
+          strategy with the risk framework and trading strategy.
+        reason: This step ensures that the position sizing strategy is properly integrated
+          with the risk framework and trading strategy.
+        text: Integrate the position sizing strategy with the risk framework to ensure
+          that positions are sized in accordance with the trading strategy and risk
+          limits.
     prompt: Implement a position sizing strategy that integrates with the risk framework
       to ensure that positions are sized in accordance with the trading strategy and
       risk limits.
@@ -217,5 +527,43 @@ nodes:
     - description: Whether the integration with market data feeds was successful
       key: is_integration_successful
       type: bool
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Research and selection of market data feed providers, analysis of
+          data requirements and API documentation
+        reason: To determine the necessary API endpoints, authentication methods,
+          and data formats for integration
+        text: Identify the market data feed provider and the type of data required
+          for the trading workflow
+      - complexity: HIGH
+        impact: HIGH
+        method: Use of API design principles, implementation of authentication and
+          authorization protocols, and error handling mechanisms
+        reason: To establish a secure and reliable connection for receiving real-time
+          market data
+        text: Design and implement the API connections to the market data feed provider
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use of data processing frameworks, implementation of data validation
+          and filtering algorithms, and integration with data storage solutions
+        reason: To parse, filter, and store the received market data for use in the
+          trading workflow
+        text: Develop a data processing pipeline to handle incoming market data
+      - complexity: HIGH
+        impact: HIGH
+        method: Use of integration patterns, implementation of data mapping and transformation
+          algorithms, and testing of the integrated system
+        reason: To enable the use of real-time market data for trade execution and
+          risk management decisions
+        text: Integrate the market data feed into the trading workflow
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use of monitoring and logging tools, implementation of maintenance
+          schedules and update procedures, and performance of regular security audits
+        reason: To ensure continued reliability, accuracy, and security of the market
+          data feed
+        text: Monitor and maintain the market data feed integration
     prompt: Integrate the trading workflow with market data feeds to provide real-time
       market data and support accurate trade execution and risk management.
