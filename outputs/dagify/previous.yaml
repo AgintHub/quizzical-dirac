@@ -1,569 +1,343 @@
-dag_type: spec
-description: Generated workflow from UI.
-name: build_trading_workflow
+dag_type: stub
+description: A trading workflow that generates trades, captures order book data, and
+  analyzes trading performance.
+name: trading_workflow_dag
 nodes:
-  configure_regulatory_reporting_protocol:
+  analyze_trading_performance:
     agent: false
-    description: Develop a systematic approach to generating and submitting regulatory
-      reports.
-    name: configure_regulatory_reporting_protocol
+    code_node_type: stub
+    description: Analyze trading performance using recorded data to determine profitable
+      strategies.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass RecordTradePerformanceOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for record_trade_performance node outputs.\"\"\"\n    instrument_symbols:\
+      \ List[str] = Field(..., description=\"List of instrument symbols\")\n    buy_order_ids:\
+      \ List[str] = Field(..., description=\"List of corresponding buy order IDs (from\
+      \ Send Buy Orders)\")\n    sell_order_ids: List[str] = Field(..., description=\"\
+      List of corresponding sell order IDs (from Send Sell Orders)\")\n    profit_loss:\
+      \ List[float] = Field(..., description=\"Profit/loss amounts for each trade\
+      \ (same order as instrument_symbols)\")\n    is_performance_recording_successful:\
+      \ bool = Field(..., description=\"Whether performance recording was successful\"\
+      )\n\n\nclass AnalyzeTradingPerformanceOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for analyze_trading_performance node outputs.\"\"\"\n    profitable_strategies:\
+      \ List[str] = Field(..., description=\"List of profitable strategy descriptions\"\
+      )\n    unprofitable_strategies: List[str] = Field(..., description=\"List of\
+      \ unprofitable strategy descriptions\")\n    statistics: str = Field(..., description=\"\
+      Summary statistics for trading performance\")\n\n\ndef analyze_trading_performance(record_trade_performance_input:\
+      \ RecordTradePerformanceOutput, **kwargs) -> AnalyzeTradingPerformanceOutput:\n\
+      \    \"\"\"Analyze trading performance using recorded data to determine profitable\
+      \ strategies.\n\n    Args:\n        record_trade_performance_input: Input from\
+      \ the 'record_trade_performance' node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        AnalyzeTradingPerformanceOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return AnalyzeTradingPerformanceOutput(\n\
+      \        profitable_strategies=[],\n        unprofitable_strategies=[],\n  \
+      \      statistics=\"\",\n    )"
+    name: analyze_trading_performance
     nodes_depended_on:
-    - develop_performance_reporting_system
+    - record_trade_performance
     nodes_dependent_on: []
     output_structure:
-    - description: The configured regulatory reporting protocol
-      key: regulatory_reporting_protocol
-      type: str
-    - description: The frequency of regulatory reports (e.g., daily, weekly, monthly)
-      key: reporting_frequency
-      type: str
-    - description: List of recipients for regulatory reports
-      key: report_recipients
+    - description: List of profitable strategy descriptions
+      key: profitable_strategies
       type: List[str]
-    - description: Whether the regulatory reporting protocol is compliant with regulatory
-        requirements
-      key: compliance_status
-      type: bool
-    - description: The template used for regulatory reports
-      key: reporting_template
-      type: str
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: HIGH
-        method: Use regulatory guidelines and industry standards to inform protocol
-          development
-        reason: Ensure compliance with regulatory requirements
-        text: Review regulatory requirements and identify necessary reporting protocols
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Use APIs or data exchange protocols to integrate systems
-        reason: Ensure seamless reporting and minimize manual intervention
-        text: Integrate regulatory reporting protocol with performance reporting system
-      - complexity: LOW
-        impact: LOW
-        method: Use stakeholder input and regulatory guidelines to inform reporting
-          frequency and recipient list
-        reason: Ensure timely and targeted reporting
-        text: Define reporting frequency and recipient list
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use regulatory guidelines and industry standards to inform template
-          development and compliance assessment
-        reason: Ensure accurate and compliant reporting
-        text: Develop reporting template and compliance status assessment
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use testing and validation procedures to ensure protocol effectiveness
-        reason: Ensure protocol effectiveness and accuracy
-        text: Test and validate regulatory reporting protocol
-    prompt: Configure a regulatory reporting protocol that integrates with the performance
-      reporting system to ensure compliance with regulatory requirements.
-  create_order_management_model:
-    agent: false
-    description: Create a comprehensive model for managing all types of orders, including
-      limit orders, market orders, and stops.
-    name: create_order_management_model
-    nodes_depended_on:
-    - develop_risk_analysis_framework
-    nodes_dependent_on: []
-    output_structure:
-    - description: A description of the developed order management model.
-      key: order_management_model_description
-      type: str
-    - description: Whether the order management model complies with the trading strategy
-        and risk limits.
-      key: model_compliance_status
-      type: bool
-    - description: List of order types supported by the model, such as limit orders,
-        market orders, and stops.
-      key: supported_order_types
-      type: str
-    - description: Whether the order management model is successfully integrated with
-        the risk analysis framework.
-      key: integration_with_risk_framework
-      type: bool
-    prd:
-      bullets:
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a structured approach to gather requirements, such as stakeholder
-          interviews and review of existing systems.
-        reason: This step is necessary to ensure that the order management model meets
-          the needs of the trading strategy and complies with risk limits.
-        text: Define the scope and requirements of the order management model, including
-          the types of orders to be supported and the risk management constraints.
-      - complexity: HIGH
-        impact: HIGH
-        method: Use a modular, service-oriented architecture to facilitate integration
-          with other systems and components.
-        reason: A well-designed architecture is essential to ensure that the order
-          management model is scalable, reliable, and maintainable.
-        text: Design the architecture of the order management model, including the
-          components and interfaces required to support order creation, routing, and
-          execution.
-      - complexity: HIGH
-        impact: HIGH
-        method: Use a probabilistic approach to risk assessment, such as Monte Carlo
-          simulations, to estimate potential losses and identify areas of high risk.
-        reason: Risk management is a critical aspect of the order management model,
-          and a well-designed risk management component is essential to ensuring compliance
-          with risk limits.
-        text: Develop the order management model's risk management component, including
-          the logic and rules for evaluating and managing risk exposure.
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Use standardized APIs and data formats, such as JSON or XML, to facilitate
-          integration and data exchange.
-        reason: Integration with the risk analysis framework is necessary to ensure
-          that the order management model is aware of and complies with risk limits
-          and constraints.
-        text: Integrate the order management model with the risk analysis framework,
-          including the development of interfaces and APIs for data exchange and synchronization.
-      - complexity: HIGH
-        impact: HIGH
-        method: Use a combination of unit testing, integration testing, and scenario-based
-          testing to evaluate the order management model's performance and compliance.
-        reason: Thorough testing and validation are essential to ensuring that the
-          order management model is reliable, stable, and compliant with risk limits.
-        text: Test and validate the order management model, including the development
-          of test cases and scenarios to evaluate its performance and compliance with
-          risk limits.
-    prompt: Develop a detailed order management model that integrates with the risk
-      framework to ensure compliance with the trading strategy and risk limits.
-  design_trade_execution_workflow:
-    agent: false
-    description: Develop a step-by-step process for executing trades, including sending
-      orders to the executing broker, monitoring trade status, and confirming trade
-      completions.
-    name: design_trade_execution_workflow
-    nodes_depended_on:
-    - create_order_management_model
-    nodes_dependent_on: []
-    output_structure:
-    - description: List of steps involved in the trade execution process
-      key: trade_execution_steps
+    - description: List of unprofitable strategy descriptions
+      key: unprofitable_strategies
       type: List[str]
-    - description: Whether the trade execution workflow is successfully integrated
-        with the order management model
-      key: order_management_integration_status
-      type: bool
-    - description: List of risk management procedures implemented in the trade execution
-        workflow
-      key: risk_management_procedures
-      type: List[str]
-    - description: Average time taken to execute a trade
-      key: trade_execution_time
-      type: float
-    - description: Percentage of trades that are successfully completed
-      key: trade_completion_rate
-      type: float
-    prd:
-      bullets:
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a finite state machine library to define the states and transitions
-          of a trade, and implement a state machine to manage the trade execution
-          process
-        reason: This approach provides a clear and structured way to manage the complexity
-          of trade execution
-        text: Implement a trade execution workflow using a finite state machine approach
-          to manage the different states of a trade (e.g., pending, executed, cancelled)
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use RESTful APIs or message queues (e.g., RabbitMQ, Apache Kafka)
-          to integrate the trade execution workflow with the order management model,
-          and implement error handling and retries to ensure reliability
-        reason: This approach enables real-time communication between the trade execution
-          workflow and the order management model, ensuring that trades are executed
-          efficiently and accurately
-        text: Integrate the trade execution workflow with the order management model
-          using APIs or message queues to ensure seamless communication between the
-          two systems
-      - complexity: HIGH
-        impact: HIGH
-        method: Use a business rules management system (e.g., Drools, Pega) to define
-          and execute risk management rules, and integrate the rules engine with the
-          trade execution workflow to enable real-time risk assessment and mitigation
-        reason: This approach enables the trade execution workflow to identify and
-          mitigate potential risks in real-time, reducing the risk of financial losses
-        text: Implement risk management procedures using a rules-based approach to
-          identify and mitigate potential risks associated with trade execution
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use a monitoring and analytics platform (e.g., Prometheus, Grafana)
-          to collect and visualize trade execution metrics, and implement alerts and
-          notifications to notify trading teams of performance issues
-        reason: This approach enables the trade execution workflow to be optimized
-          in real-time, reducing the risk of financial losses and improving overall
-          trading performance
-        text: Monitor trade execution performance using metrics such as trade execution
-          time and trade completion rate, and adjust the trade execution workflow
-          as needed to optimize performance
-    prompt: Design a trade execution workflow that integrates with the order management
-      model to ensure seamless trade execution and risk management.
-  design_trade_monitoring_and_alerting_system:
-    agent: false
-    description: Create a system that tracks trade status, generates alerts for trade-related
-      events, and provides real-time risk exposure data.
-    name: design_trade_monitoring_and_alerting_system
-    nodes_depended_on:
-    - design_trade_execution_workflow
-    nodes_dependent_on: []
-    output_structure:
-    - description: Current status of the trade (e.g., pending, executed, cancelled)
-      key: trade_status
-      type: str
-    - description: List of events that trigger alerts (e.g., trade execution, trade
-        cancellation, risk limit breach)
-      key: alert_triggers
-      type: str
-    - description: Current risk exposure of the trade
-      key: risk_exposure
-      type: float
-    - description: List of boolean values indicating whether an alert has been sent
-        for each trade-related event
-      key: alert_notifications
-      type: bool
-    - description: Frequency at which the trade monitoring system checks for updates
-        (in minutes)
-      key: monitoring_frequency
-      type: int
-    prd:
-      bullets:
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use REST API for querying trade status, Apply algorithm for parsing
-          trade status updates, Implement error handling using approach of retrying
-          failed queries
-        reason: This approach provides real-time trade status updates and ensures
-          timely notification of trade-related events
-        text: Implement a trade monitoring system that queries the trade execution
-          workflow API for trade status updates every 5 minutes
-      - complexity: HIGH
-        impact: HIGH
-        method: Use machine learning model for risk exposure calculation, Apply algorithm
-          for data preprocessing, Implement error handling using approach of input
-          validation
-        reason: This approach provides accurate risk exposure calculations and enables
-          effective risk management
-        text: Develop a risk exposure calculation model that takes into account trade
-          size, trade type, and market volatility
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use simple if-else statements for alert triggering, Apply algorithm
-          for notification sending, Implement error handling using approach of logging
-          errors
-        reason: This approach ensures timely notification of trade-related events
-          and enables effective risk management
-        text: Design an alert triggering system that sends notifications for trade-related
-          events such as trade execution, trade cancellation, and risk limit breach
-      - complexity: MEDIUM
-        impact: LOW
-        method: Use feedback control loop for monitoring frequency adjustment, Apply
-          algorithm for trade volume and market condition analysis, Implement error
-          handling using approach of fallback to default monitoring frequency
-        reason: This approach enables dynamic monitoring frequency adjustment and
-          ensures effective resource utilization
-        text: Implement a monitoring frequency adjustment mechanism that allows for
-          adjusting the monitoring frequency based on trade volume and market conditions
-    prompt: Design a trade monitoring and alerting system that integrates with the
-      trade execution workflow to ensure timely notification of trade-related events
-      and risk alerts.
-  develop_performance_reporting_system:
-    agent: false
-    description: Create a system that generates detailed reports on trading performance,
-      risk exposure, and profit/loss.
-    name: develop_performance_reporting_system
-    nodes_depended_on:
-    - design_trade_monitoring_and_alerting_system
-    nodes_dependent_on: []
-    output_structure:
-    - description: Whether the performance reporting system has been successfully
-        developed
-      key: reporting_system_status
-      type: bool
-    - description: List of numerical metrics representing trading performance (e.g.,
-        profit/loss, return on investment)
-      key: trading_performance_metrics
-      type: List[float]
-    - description: List of numerical risk exposure levels for different trading positions
-      key: risk_exposure_levels
-      type: List[float]
-    - description: Frequency at which the performance reports are generated (e.g.,
-        daily, weekly, monthly)
-      key: report_generation_frequency
-      type: str
-    - description: Method by which the performance reports are delivered to stakeholders
-        (e.g., email, dashboard, CSV file)
-      key: report_delivery_method
+    - description: Summary statistics for trading performance
+      key: statistics
       type: str
     prd:
       bullets:
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use APIs or message queues to integrate with the trade monitoring
-          and alerting system, and apply data validation and cleansing techniques
-          to ensure data quality
-        reason: To ensure comprehensive reporting and analytics, the system needs
-          to collect relevant data from the trade monitoring and alerting system
-        text: Design the performance reporting system's data ingestion pipeline to
-          collect trading data from the trade monitoring and alerting system
-      - complexity: HIGH
-        impact: HIGH
-        method: Utilize programming languages like Python or R, and libraries like
-          Pandas or NumPy, to develop the analytics engine, and apply statistical
-          models and machine learning algorithms to calculate metrics and levels
-        reason: To provide actionable insights, the system needs to process and analyze
-          the collected data
-        text: Develop a data processing and analytics engine to calculate trading
-          performance metrics and risk exposure levels
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Use reporting libraries like ReportLab or PyPDF2 to generate reports,
-          and apply templates and formatting to ensure readability and consistency
-        reason: To provide stakeholders with timely and relevant information, the
-          system needs to generate reports at regular intervals
-        text: Implement a report generation module to produce performance reports
-          based on the calculated metrics and levels
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use email libraries like SmtpClient or email APIs, and integrate with
-          dashboard platforms or file sharing services, to provide stakeholders with
-          flexible delivery options
-        reason: To ensure that stakeholders receive the reports in a timely and convenient
-          manner, the system needs to provide multiple delivery options
-        text: Design a report delivery mechanism to distribute performance reports
-          to stakeholders
-      - complexity: LOW
-        impact: LOW
-        method: Use system monitoring tools like Nagios or Prometheus, and apply logging
-          and error handling techniques, to ensure the system's reliability and performance
-        reason: To minimize downtime and ensure data accuracy, the system needs to
-          be monitored and maintained regularly
-        text: Develop a system monitoring and maintenance module to ensure the performance
-          reporting system's reliability and performance
-    prompt: Develop a performance reporting system that integrates with the trade
-      monitoring and alerting system to provide comprehensive reporting and analytics
-      on trading performance and risk exposure.
-  develop_risk_analysis_framework:
+      - complexity: Medium
+        impact: Enables node functionality in the DAG
+        method: Implement function that processes inputs and produces expected outputs
+        reason: Required to process Analyze trading performance using recorded data
+          to determine profitable strategies.
+        text: Implement analyze_trading_performance functionality
+    prompt: Analyze recorded trade performance data to identify profitable strategies.
+    shims: []
+  collect_order_book_data:
     agent: false
-    description: Develop a systematic approach to assessing market and operational
-      risks associated with the trading strategy.
-    name: develop_risk_analysis_framework
+    code_node_type: stub
+    description: Gather order book data from a stock exchange or broker.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CollectOrderBookDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ collect_order_book_data node outputs.\"\"\"\n    instrument_symbols: List[str]\
+      \ = Field(..., description=\"List of instrument symbols\")\n    best_bid_prices:\
+      \ List[float] = Field(..., description=\"Bid prices for each instrument (in\
+      \ order)\")\n    best_ask_prices: List[float] = Field(..., description=\"Ask\
+      \ prices for each instrument (in order)\")\n    total_volume: float = Field(...,\
+      \ description=\"Total volume across all instruments\")\n    is_data_collection_successful:\
+      \ bool = Field(..., description=\"Whether data collection was successful\")\n\
+      \n\ndef collect_order_book_data(general_input: str, **kwargs) -> CollectOrderBookDataOutput:\n\
+      \    \"\"\"Gather order book data from a stock exchange or broker.\n\n    Args:\n\
+      \        general_input: General input string for the root node.\n        **kwargs:\
+      \ Additional keyword arguments.\n\n    Returns:\n        CollectOrderBookDataOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ CollectOrderBookDataOutput(\n        instrument_symbols=[],\n        best_bid_prices=[],\n\
+      \        best_ask_prices=[],\n        total_volume=0.0,\n        is_data_collection_successful=False,\n\
+      \    )"
+    name: collect_order_book_data
     nodes_depended_on: []
     nodes_dependent_on: []
     output_structure:
-    - description: List of risk categories identified for the trading strategy
-      key: risk_categories
+    - description: List of instrument symbols
+      key: instrument_symbols
       type: List[str]
-    - description: List of risk scores associated with each risk category
-      key: risk_scores
+    - description: Bid prices for each instrument (in order)
+      key: best_bid_prices
       type: List[float]
-    - description: List of mitigation strategies for each risk category
-      key: mitigation_strategies
-      type: List[str]
-    - description: Frequency at which risk will be monitored
-      key: risk_monitoring_frequency
-      type: str
-    - description: List of risk thresholds for each risk category
-      key: risk_thresholds
+    - description: Ask prices for each instrument (in order)
+      key: best_ask_prices
       type: List[float]
-    prd:
-      bullets:
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a combination of qualitative and quantitative methods, such as
-          scenario analysis and sensitivity analysis, to identify potential market
-          risks.
-        reason: Market risks can have a significant impact on the trading strategy's
-          performance and need to be carefully assessed.
-        text: Identify potential market risks associated with the trading strategy,
-          such as market volatility, liquidity risks, and credit risks.
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use a combination of qualitative and quantitative methods, such as
-          risk assessments and control self-assessments, to identify potential operational
-          risks.
-        reason: Operational risks can have a significant impact on the trading strategy's
-          performance and need to be carefully assessed.
-        text: Identify potential operational risks associated with the trading strategy,
-          such as system failures, human errors, and compliance risks.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a risk scoring methodology, such as a heat map or a risk matrix,
-          to assign risk scores to each identified risk category.
-        reason: Risk scores provide a quantitative measure of the risk and help prioritize
-          mitigation strategies.
-        text: Assign risk scores to each identified risk category based on the likelihood
-          and potential impact of the risk.
-      - complexity: HIGH
-        impact: HIGH
-        method: Use a combination of qualitative and quantitative methods, such as
-          decision trees and scenario analysis, to develop mitigation strategies for
-          each identified risk category.
-        reason: Mitigation strategies help reduce the likelihood or potential impact
-          of the risk and need to be carefully developed.
-        text: Develop mitigation strategies for each identified risk category, such
-          as diversification, hedging, or risk transfer.
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use a combination of qualitative and quantitative methods, such as
-          risk assessments and control self-assessments, to determine the frequency
-          at which risk will be monitored.
-        reason: Regular risk monitoring helps identify potential risks and opportunities
-          and needs to be performed at a frequency that is adequate for the trading
-          strategy.
-        text: Determine the frequency at which risk will be monitored, such as daily,
-          weekly, or monthly.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a combination of qualitative and quantitative methods, such as
-          decision trees and scenario analysis, to establish risk thresholds for each
-          identified risk category.
-        reason: Risk thresholds provide a clear measure of the risk tolerance and
-          help prioritize mitigation strategies.
-        text: Establish risk thresholds for each identified risk category, such as
-          a maximum allowable loss or a minimum required return.
-    prompt: Design a risk framework that identifies potential risks and opportunities
-      for the trading strategy.
-  implement_position_sizing_strategy:
-    agent: false
-    description: Develop a systematic approach to determining position sizes that
-      balances risk and reward.
-    name: implement_position_sizing_strategy
-    nodes_depended_on:
-    - develop_risk_analysis_framework
-    nodes_dependent_on: []
-    output_structure:
-    - description: The name of the implemented position sizing strategy.
-      key: position_sizing_strategy_name
-      type: str
-    - description: List of parameters used in the position sizing strategy.
-      key: position_sizing_parameters
-      type: List[str]
-    - description: List of rules defined for the position sizing strategy.
-      key: position_sizing_rules
-      type: List[str]
-    - description: Example list of position sizes determined by the strategy.
-      key: position_sizing_example_positions
-      type: List[int]
-    - description: Whether the position sizing strategy was successfully integrated
-        with the risk framework.
-      key: strategy_integration_success
+    - description: Total volume across all instruments
+      key: total_volume
+      type: float
+    - description: Whether data collection was successful
+      key: is_data_collection_successful
       type: bool
     prd:
-      bullets:
-      - complexity: LOW
-        impact: HIGH
-        method: Analyze the risk categories and risk scores to determine the key risk
-          factors that need to be addressed in the position sizing strategy.
-        reason: This step ensures that the position sizing strategy is informed by
-          the risk framework and aligns with the trading strategy's risk tolerance.
-        text: Review the risk analysis framework output to understand the identified
-          risk categories, risk scores, mitigation strategies, risk monitoring frequency,
-          and risk thresholds.
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Evaluate the pros and cons of each approach and select the one that
-          best suits the trading strategy and risk tolerance.
-        reason: This approach provides a systematic method for determining position
-          sizes that align with the trading strategy and risk limits.
-        text: Select a position sizing strategy approach (e.g., fixed fractional,
-          volatility-based, or Kelly criterion) that balances risk and reward.
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Use the risk analysis framework output to inform the parameter selection
-          and ensure that they align with the risk tolerance and trading strategy.
-        reason: This step ensures that the position sizing strategy is properly calibrated
-          to the trading strategy and risk limits.
-        text: Define the parameters for the selected position sizing strategy approach
-          (e.g., risk percentage, volatility measure, or Kelly criterion parameters).
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Use a combination of quantitative and qualitative methods to develop
-          the rules, including analysis of historical data and expert judgment.
-        reason: This step ensures that the position sizing strategy is practical and
-          effective in managing risk and reward.
-        text: Develop a set of rules for the position sizing strategy (e.g., maximum
-          position size, minimum position size, or position sizing based on risk ratings).
-      - complexity: HIGH
-        impact: HIGH
-        method: Use backtesting and walk-forward optimization to evaluate the strategy's
-          performance and make adjustments as needed.
-        reason: This step ensures that the position sizing strategy is effective and
-          aligns with the trading strategy's objectives.
-        text: Test the position sizing strategy using historical data and evaluate
-          its performance using metrics such as profit/loss, risk exposure, and Sharpe
-          ratio.
-      - complexity: HIGH
-        impact: HIGH
-        method: Use APIs or other integration methods to connect the position sizing
-          strategy with the risk framework and trading strategy.
-        reason: This step ensures that the position sizing strategy is properly integrated
-          with the risk framework and trading strategy.
-        text: Integrate the position sizing strategy with the risk framework to ensure
-          that positions are sized in accordance with the trading strategy and risk
-          limits.
-    prompt: Implement a position sizing strategy that integrates with the risk framework
-      to ensure that positions are sized in accordance with the trading strategy and
-      risk limits.
-  integrate_with_market_data_feeds:
+      bullets: []
+    prompt: Fetch order book data from a reputable exchange or broker.
+    shims: []
+  generate_trading_signals:
     agent: false
-    description: Configure the trading workflow to receive and process real-time market
-      data feeds.
-    name: integrate_with_market_data_feeds
+    code_node_type: stub
+    description: Use historical data to generate trading signals based on trends,
+      RSI, and other technical indicators.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CollectOrderBookDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ collect_order_book_data node outputs.\"\"\"\n    instrument_symbols: List[str]\
+      \ = Field(..., description=\"List of instrument symbols\")\n    best_bid_prices:\
+      \ List[float] = Field(..., description=\"Bid prices for each instrument (in\
+      \ order)\")\n    best_ask_prices: List[float] = Field(..., description=\"Ask\
+      \ prices for each instrument (in order)\")\n    total_volume: float = Field(...,\
+      \ description=\"Total volume across all instruments\")\n    is_data_collection_successful:\
+      \ bool = Field(..., description=\"Whether data collection was successful\")\n\
+      \n\nclass GenerateTradingSignalsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for generate_trading_signals node outputs.\"\"\"\n    instrument_symbols_to_buy:\
+      \ List[str] = Field(..., description=\"List of instrument symbols to buy\")\n\
+      \    instrument_symbols_to_sell: List[str] = Field(..., description=\"List of\
+      \ instrument symbols to sell\")\n    buy_signals: List[float] = Field(..., description=\"\
+      Signal strength for buy trades (same order as instrument_symbols_to_buy)\")\n\
+      \    sell_signals: List[float] = Field(..., description=\"Signal strength for\
+      \ sell trades (same order as instrument_symbols_to_sell)\")\n\n\ndef generate_trading_signals(collect_order_book_data_input:\
+      \ CollectOrderBookDataOutput, **kwargs) -> GenerateTradingSignalsOutput:\n \
+      \   \"\"\"Use historical data to generate trading signals based on trends, RSI,\
+      \ and other technical indicators.\n\n    Args:\n        collect_order_book_data_input:\
+      \ Input from the 'collect_order_book_data' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        GenerateTradingSignalsOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ GenerateTradingSignalsOutput(\n        instrument_symbols_to_buy=[],\n   \
+      \     instrument_symbols_to_sell=[],\n        buy_signals=[],\n        sell_signals=[],\n\
+      \    )"
+    name: generate_trading_signals
     nodes_depended_on:
-    - design_trade_execution_workflow
+    - collect_order_book_data
     nodes_dependent_on: []
     output_structure:
-    - description: Status of the market data feed integration (e.g., 'success', 'failure')
-      key: market_data_feed_status
-      type: str
-    - description: Details of the integration process, such as API endpoints, authentication
-        methods, and error messages
-      key: integration_details
+    - description: List of instrument symbols to buy
+      key: instrument_symbols_to_buy
       type: List[str]
-    - description: Whether the integration with market data feeds was successful
-      key: is_integration_successful
-      type: bool
+    - description: List of instrument symbols to sell
+      key: instrument_symbols_to_sell
+      type: List[str]
+    - description: Signal strength for buy trades (same order as instrument_symbols_to_buy)
+      key: buy_signals
+      type: List[float]
+    - description: Signal strength for sell trades (same order as instrument_symbols_to_sell)
+      key: sell_signals
+      type: List[float]
     prd:
       bullets:
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Research and selection of market data feed providers, analysis of
-          data requirements and API documentation
-        reason: To determine the necessary API endpoints, authentication methods,
-          and data formats for integration
-        text: Identify the market data feed provider and the type of data required
-          for the trading workflow
-      - complexity: HIGH
-        impact: HIGH
-        method: Use of API design principles, implementation of authentication and
-          authorization protocols, and error handling mechanisms
-        reason: To establish a secure and reliable connection for receiving real-time
-          market data
-        text: Design and implement the API connections to the market data feed provider
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Use of data processing frameworks, implementation of data validation
-          and filtering algorithms, and integration with data storage solutions
-        reason: To parse, filter, and store the received market data for use in the
-          trading workflow
-        text: Develop a data processing pipeline to handle incoming market data
-      - complexity: HIGH
-        impact: HIGH
-        method: Use of integration patterns, implementation of data mapping and transformation
-          algorithms, and testing of the integrated system
-        reason: To enable the use of real-time market data for trade execution and
-          risk management decisions
-        text: Integrate the market data feed into the trading workflow
       - complexity: LOW
         impact: MEDIUM
-        method: Use of monitoring and logging tools, implementation of maintenance
-          schedules and update procedures, and performance of regular security audits
-        reason: To ensure continued reliability, accuracy, and security of the market
-          data feed
-        text: Monitor and maintain the market data feed integration
-    prompt: Integrate the trading workflow with market data feeds to provide real-time
-      market data and support accurate trade execution and risk management.
+        method: Use the DAG's API to fetch the output fields from the collect_order_book_data
+          node.
+        reason: This is necessary to get the historical data required for generating
+          trading signals.
+        text: Retrieve the output fields from the collect_order_book_data node.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a data parsing library to extract the required fields from the
+          collect_order_book_data node's output.
+        reason: These fields are required for generating trading signals.
+        text: Parse the instrument_symbols, best_bid_prices, and best_ask_prices from
+          the collect_order_book_data node's output.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a technical indicator library to calculate the RSI for each instrument's
+          best_bid_prices and best_ask_prices.
+        reason: This is a common technical indicator for determining trading signals.
+        text: Calculate the RSI for each instrument's best_bid_prices and best_ask_prices.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a trading signal generation algorithm to compare the RSI values
+          with other technical indicators.
+        reason: This is necessary to determine the strength of the trading signals.
+        text: Compare the RSI values with other technical indicators to generate trading
+          signals.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use the DAG's API to package the generated trading signals into the
+          specified output fields.
+        reason: This is necessary to provide the trading signals in the required format.
+        text: Package the generated trading signals into the specified output fields.
+    prompt: Use historical data and technical indicators to generate trading signals.
+    shims: []
+  record_trade_performance:
+    agent: false
+    code_node_type: stub
+    description: Track trade performance by recording buy and sell orders, along with
+      their profit/loss.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass SendBuyOrdersOutput(BaseModel):\n    \"\"\"Pydantic model for send_buy_orders\
+      \ node outputs.\"\"\"\n    buy_order_ids: List[str] = Field(..., description=\"\
+      List of unique order IDs for buy orders\")\n    buy_order_status: List[str]\
+      \ = Field(..., description=\"Status of each buy order (e.g., PENDING, FILLED,\
+      \ CANCELED)\")\n    is_order_submission_successful: bool = Field(..., description=\"\
+      Whether buy order submission was successful\")\n\n\nclass SendSellOrdersOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for send_sell_orders node outputs.\"\"\"\n    sell_order_ids:\
+      \ str = Field(..., description=\"List of unique order IDs for sell orders\"\
+      )\n    sell_order_status: str = Field(..., description=\"Status of each sell\
+      \ order (e.g., PENDING, FILLED, CANCELED)\")\n    is_order_submission_successful:\
+      \ bool = Field(..., description=\"Whether sell order submission was successful\"\
+      )\n\n\nclass RecordTradePerformanceOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for record_trade_performance node outputs.\"\"\"\n    instrument_symbols:\
+      \ List[str] = Field(..., description=\"List of instrument symbols\")\n    buy_order_ids:\
+      \ List[str] = Field(..., description=\"List of corresponding buy order IDs (from\
+      \ Send Buy Orders)\")\n    sell_order_ids: List[str] = Field(..., description=\"\
+      List of corresponding sell order IDs (from Send Sell Orders)\")\n    profit_loss:\
+      \ List[float] = Field(..., description=\"Profit/loss amounts for each trade\
+      \ (same order as instrument_symbols)\")\n    is_performance_recording_successful:\
+      \ bool = Field(..., description=\"Whether performance recording was successful\"\
+      )\n\n\ndef record_trade_performance(send_buy_orders_input: SendBuyOrdersOutput,\
+      \ send_sell_orders_input: SendSellOrdersOutput, **kwargs) -> RecordTradePerformanceOutput:\n\
+      \    \"\"\"Track trade performance by recording buy and sell orders, along with\
+      \ their profit/loss.\n\n    Args:\n        send_buy_orders_input: Input from\
+      \ the 'send_buy_orders' node.\n        send_sell_orders_input: Input from the\
+      \ 'send_sell_orders' node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        RecordTradePerformanceOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return RecordTradePerformanceOutput(\n\
+      \        instrument_symbols=[],\n        buy_order_ids=[],\n        sell_order_ids=[],\n\
+      \        profit_loss=[],\n        is_performance_recording_successful=False,\n\
+      \    )"
+    name: record_trade_performance
+    nodes_depended_on:
+    - send_buy_orders
+    - send_sell_orders
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of instrument symbols
+      key: instrument_symbols
+      type: List[str]
+    - description: List of corresponding buy order IDs (from Send Buy Orders)
+      key: buy_order_ids
+      type: List[str]
+    - description: List of corresponding sell order IDs (from Send Sell Orders)
+      key: sell_order_ids
+      type: List[str]
+    - description: Profit/loss amounts for each trade (same order as instrument_symbols)
+      key: profit_loss
+      type: List[float]
+    - description: Whether performance recording was successful
+      key: is_performance_recording_successful
+      type: bool
+    prd:
+      bullets: []
+    prompt: Capture trade performance data by linking orders with their outcomes.
+    shims: []
+  send_buy_orders:
+    agent: false
+    code_node_type: stub
+    description: Send buy orders to the exchange or broker based on generated signals.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass GenerateTradingSignalsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for generate_trading_signals node outputs.\"\"\"\n    instrument_symbols_to_buy:\
+      \ List[str] = Field(..., description=\"List of instrument symbols to buy\")\n\
+      \    instrument_symbols_to_sell: List[str] = Field(..., description=\"List of\
+      \ instrument symbols to sell\")\n    buy_signals: List[float] = Field(..., description=\"\
+      Signal strength for buy trades (same order as instrument_symbols_to_buy)\")\n\
+      \    sell_signals: List[float] = Field(..., description=\"Signal strength for\
+      \ sell trades (same order as instrument_symbols_to_sell)\")\n\n\nclass SendBuyOrdersOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for send_buy_orders node outputs.\"\"\"\n    buy_order_ids:\
+      \ List[str] = Field(..., description=\"List of unique order IDs for buy orders\"\
+      )\n    buy_order_status: List[str] = Field(..., description=\"Status of each\
+      \ buy order (e.g., PENDING, FILLED, CANCELED)\")\n    is_order_submission_successful:\
+      \ bool = Field(..., description=\"Whether buy order submission was successful\"\
+      )\n\n\ndef send_buy_orders(generate_trading_signals_input: GenerateTradingSignalsOutput,\
+      \ **kwargs) -> SendBuyOrdersOutput:\n    \"\"\"Send buy orders to the exchange\
+      \ or broker based on generated signals.\n\n    Args:\n        generate_trading_signals_input:\
+      \ Input from the 'generate_trading_signals' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        SendBuyOrdersOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return SendBuyOrdersOutput(\n\
+      \        buy_order_ids=[],\n        buy_order_status=[],\n        is_order_submission_successful=False,\n\
+      \    )"
+    name: send_buy_orders
+    nodes_depended_on:
+    - generate_trading_signals
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of unique order IDs for buy orders
+      key: buy_order_ids
+      type: List[str]
+    - description: Status of each buy order (e.g., PENDING, FILLED, CANCELED)
+      key: buy_order_status
+      type: List[str]
+    - description: Whether buy order submission was successful
+      key: is_order_submission_successful
+      type: bool
+    prd:
+      bullets: []
+    prompt: Send buy orders to the exchange or broker based on generated signals.
+    shims: []
+  send_sell_orders:
+    agent: false
+    code_node_type: stub
+    description: Send sell orders to the exchange or broker based on signals.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass GenerateTradingSignalsOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for generate_trading_signals node outputs.\"\"\"\n    instrument_symbols_to_buy:\
+      \ List[str] = Field(..., description=\"List of instrument symbols to buy\")\n\
+      \    instrument_symbols_to_sell: List[str] = Field(..., description=\"List of\
+      \ instrument symbols to sell\")\n    buy_signals: List[float] = Field(..., description=\"\
+      Signal strength for buy trades (same order as instrument_symbols_to_buy)\")\n\
+      \    sell_signals: List[float] = Field(..., description=\"Signal strength for\
+      \ sell trades (same order as instrument_symbols_to_sell)\")\n\n\nclass SendSellOrdersOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for send_sell_orders node outputs.\"\"\"\n    sell_order_ids:\
+      \ str = Field(..., description=\"List of unique order IDs for sell orders\"\
+      )\n    sell_order_status: str = Field(..., description=\"Status of each sell\
+      \ order (e.g., PENDING, FILLED, CANCELED)\")\n    is_order_submission_successful:\
+      \ bool = Field(..., description=\"Whether sell order submission was successful\"\
+      )\n\n\ndef send_sell_orders(generate_trading_signals_input: GenerateTradingSignalsOutput,\
+      \ **kwargs) -> SendSellOrdersOutput:\n    \"\"\"Send sell orders to the exchange\
+      \ or broker based on signals.\n\n    Args:\n        generate_trading_signals_input:\
+      \ Input from the 'generate_trading_signals' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        SendSellOrdersOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return SendSellOrdersOutput(\n\
+      \        sell_order_ids=\"\",\n        sell_order_status=\"\",\n        is_order_submission_successful=False,\n\
+      \    )"
+    name: send_sell_orders
+    nodes_depended_on:
+    - generate_trading_signals
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of unique order IDs for sell orders
+      key: sell_order_ids
+      type: str
+    - description: Status of each sell order (e.g., PENDING, FILLED, CANCELED)
+      key: sell_order_status
+      type: str
+    - description: Whether sell order submission was successful
+      key: is_order_submission_successful
+      type: bool
+    prd:
+      bullets: []
+    prompt: Send sell orders to the exchange or broker based on generated signals.
+    shims: []

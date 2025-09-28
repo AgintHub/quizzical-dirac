@@ -1,774 +1,88 @@
-dag_type: stub
-description: Generated workflow from UI.
+dag_type: plain_text
+description: A workflow for building a trading system, including data collection,
+  strategy development, execution, and monitoring.
 name: trading_workflow
 nodes:
-  choose_trading_strategy:
+  analyze_trading_results:
     agent: false
-    code_node_type: stub
-    description: Identify the high-level trading strategy category.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass DefineTradingObjectivesOutput(BaseModel):\n    \"\"\"Pydantic model\
-      \ for define_trading_objectives node outputs.\"\"\"\n    trading_objectives:\
-      \ List[str] = Field(..., description=\"A bullet list of the core trading system's\
-      \ objectives, including purpose, risk tolerance, and long-term vision. Max8\
-      \ items.\")\n\n\nclass ChooseTradingStrategyOutput(BaseModel):\n    \"\"\"Pydantic\
-      \ model for choose_trading_strategy node outputs.\"\"\"\n    selected_strategy:\
-      \ str = Field(..., description=\"The name of the selected high-level trading\
-      \ strategy category.\")\n    rationale: str = Field(..., description=\"A one-sentence\
-      \ explanation of why the selected trading strategy was chosen.\")\n\n\ndef choose_trading_strategy(define_trading_objectives_input:\
-      \ DefineTradingObjectivesOutput, **kwargs) -> ChooseTradingStrategyOutput:\n\
-      \    \"\"\"Identify the high-level trading strategy category.\n\n    Args:\n\
-      \        define_trading_objectives_input: Input from the 'define_trading_objectives'\
-      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
-      \       ChooseTradingStrategyOutput: Object containing outputs for this node.\n\
-      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
-      \ with placeholder values\n    return ChooseTradingStrategyOutput(\n       \
-      \ selected_strategy=\"\",\n        rationale=\"\",\n    )"
-    name: choose_trading_strategy
+    description: Analyze the results of trading activities to identify areas for improvement.
+    name: analyze_trading_results
     nodes_depended_on:
-    - define_trading_objectives
+    - monitor_trading_performance
     nodes_dependent_on: []
-    output_structure:
-    - description: The name of the selected high-level trading strategy category.
-      key: selected_strategy
-      type: str
-    - description: A one-sentence explanation of why the selected trading strategy
-        was chosen.
-      key: rationale
-      type: str
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: HIGH
-        method: Analyze the bullet list of trading objectives to identify key themes
-          and priorities.
-        reason: This step ensures that the selected trading strategy aligns with the
-          overall goals of the trading system.
-        text: Review the trading objectives provided by the 'define_trading_objectives'
-          node to understand the purpose, risk tolerance, and long-term vision of
-          the trading system.
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Utilize domain expertise and literature review to compile a list of
-          relevant trading strategies.
-        reason: This step provides a comprehensive set of potential strategies to
-          consider.
-        text: Research and list potential high-level trading strategy categories that
-          could achieve the trading objectives (e.g., trend following, mean reversion,
-          statistical arbitrage).
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Apply a decision-making framework, such as a weighted scoring model,
-          to assess each strategy's suitability.
-        reason: This step enables an informed decision about which strategy best aligns
-          with the trading objectives.
-        text: Evaluate each potential trading strategy category against the trading
-          objectives, considering factors such as risk tolerance, potential returns,
-          and complexity.
-      - complexity: LOW
-        impact: HIGH
-        method: Document the selected strategy and rationale in a clear and concise
-          manner.
-        reason: This step formalizes the chosen strategy and justifies the decision.
-        text: Select the primary trading strategy category that best serves the trading
-          objectives and provide a one-sentence rationale for the selection.
-    prompt: Select one primary trading strategy category that best serves the trading
-      objectives (e.g., trend following, mean reversion). Provide a one-sentence rationale.
-    shims: []
-  compile_trading_dashboard_outline:
+    prompt: Analyze trading results to understand the effectiveness of the strategy
+      and risk management, identifying areas for improvement or optimization.
+  backtest_trading_strategy:
     agent: false
-    code_node_type: stub
-    description: Framework for trading performance monitoring.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass DevelopTradingPlanOutput(BaseModel):\n    \"\"\"Pydantic model for\
-      \ develop_trading_plan node outputs.\"\"\"\n    strategy_description: str =\
-      \ Field(..., description=\"A concise description of the chosen trading strategy.\"\
-      )\n    risk_management_controls: str = Field(..., description=\"A list of key\
-      \ risk management controls, including position limits, stop-loss rules, and\
-      \ liquidity thresholds.\")\n    execution_details: str = Field(..., description=\"\
-      A summary of execution details, outlining how trades will be executed within\
-      \ the trading plan.\")\n    target_assets: str = Field(..., description=\"The\
-      \ list of asset classes and tradable instruments identified for the trading\
-      \ strategy.\")\n    trading_parameters: str = Field(..., description=\"Defined\
-      \ numerical trading parameters such as position size, stop-loss level, and take-profit\
-      \ level.\")\n\n\nclass CompileTradingDashboardOutlineOutput(BaseModel):\n  \
-      \  \"\"\"Pydantic model for compile_trading_dashboard_outline node outputs.\"\
-      \"\"\n    dashboard_slide_titles: List[str] = Field(..., description=\"A list\
-      \ of slide titles outlining the trading performance dashboard, covering strategy,\
-      \ risk, and performance metrics.\")\n\n\ndef compile_trading_dashboard_outline(develop_trading_plan_input:\
-      \ DevelopTradingPlanOutput, **kwargs) -> CompileTradingDashboardOutlineOutput:\n\
-      \    \"\"\"Framework for trading performance monitoring.\n\n    Args:\n    \
-      \    develop_trading_plan_input: Input from the 'develop_trading_plan' node.\n\
-      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        CompileTradingDashboardOutlineOutput:\
-      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
-      \ this function\n\n    # Return stub output with placeholder values\n    return\
-      \ CompileTradingDashboardOutlineOutput(\n        dashboard_slide_titles=[],\n\
-      \    )"
-    name: compile_trading_dashboard_outline
+    description: Test the trading strategy on historical data to evaluate performance.
+    name: backtest_trading_strategy
     nodes_depended_on:
-    - develop_trading_plan
+    - define_trading_strategy
     nodes_dependent_on: []
-    output_structure:
-    - description: A list of slide titles outlining the trading performance dashboard,
-        covering strategy, risk, and performance metrics.
-      key: dashboard_slide_titles
-      type: List[str]
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: LOW
-        method: Analyze the trading plan document and identify key components.
-        reason: This step ensures that the dashboard outline aligns with the overall
-          trading plan.
-        text: Review the trading plan output from the 'develop_trading_plan' node
-          to understand the strategy, risk management controls, and execution details.
-      - complexity: LOW
-        impact: LOW
-        method: Review the performance metrics document and extract relevant metrics.
-        reason: This step ensures that the dashboard includes relevant performance
-          metrics.
-        text: Identify the key performance metrics for the trading system from the
-          'define_trading_performance_metrics' node.
-      - complexity: LOW
-        impact: LOW
-        method: Examine the risk management framework document and identify key controls.
-        reason: This step ensures that the dashboard addresses risk management.
-        text: Determine the essential risk management controls from the 'design_risk_management_framework'
-          node.
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Use a template or brainstorming approach to generate a list of potential
-          slide titles.
-        reason: This step generates a comprehensive list of potential dashboard slides.
-        text: Create a list of potential slide titles for the trading performance
-          dashboard based on the trading plan, performance metrics, and risk management
-          controls.
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Use a systematic approach to categorize and prioritize the slide titles.
-        reason: This step refines the list into a logical and concise dashboard outline.
-        text: Organize and prioritize the list of potential slide titles to create
-          a cohesive 10-slide outline.
-      - complexity: LOW
-        impact: HIGH
-        method: Review and refine the outline to ensure completeness and accuracy.
-        reason: This step produces the final output for the node.
-        text: Finalize the 10-slide outline and ensure that it covers strategy, risk,
-          and performance metrics.
-    prompt: Create a 10-slide outline (slide titles only) for a trading performance
-      dashboard incorporating strategy, risk, and performance metrics.
-    shims: []
-  define_asset_universe:
+    prompt: Backtest the defined strategy on historical data, calculating performance
+      metrics such as return, drawdown, and Sharpe ratio.
+  collect_historical_market_data:
     agent: false
-    code_node_type: stub
-    description: Enumerate tradable assets and instruments.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass ChooseTradingStrategyOutput(BaseModel):\n    \"\"\"Pydantic model\
-      \ for choose_trading_strategy node outputs.\"\"\"\n    selected_strategy: str\
-      \ = Field(..., description=\"The name of the selected high-level trading strategy\
-      \ category.\")\n    rationale: str = Field(..., description=\"A one-sentence\
-      \ explanation of why the selected trading strategy was chosen.\")\n\n\nclass\
-      \ DefineAssetUniverseOutput(BaseModel):\n    \"\"\"Pydantic model for define_asset_universe\
-      \ node outputs.\"\"\"\n    asset_classes: List[str] = Field(..., description=\"\
-      List of asset classes and instruments\")\n    num_assets: int = Field(..., description=\"\
-      Number of assets in the list\")\n    is_valid: bool = Field(..., description=\"\
-      Whether the asset universe is valid\")\n\n\ndef define_asset_universe(choose_trading_strategy_input:\
-      \ ChooseTradingStrategyOutput, **kwargs) -> DefineAssetUniverseOutput:\n   \
-      \ \"\"\"Enumerate tradable assets and instruments.\n\n    Args:\n        choose_trading_strategy_input:\
-      \ Input from the 'choose_trading_strategy' node.\n        **kwargs: Additional\
-      \ keyword arguments.\n\n    Returns:\n        DefineAssetUniverseOutput: Object\
-      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
-      \ function\n\n    # Return stub output with placeholder values\n    return DefineAssetUniverseOutput(\n\
-      \        asset_classes=[],\n        num_assets=0,\n        is_valid=False,\n\
-      \    )"
-    name: define_asset_universe
-    nodes_depended_on:
-    - choose_trading_strategy
-    nodes_dependent_on: []
-    output_structure:
-    - description: List of asset classes and instruments
-      key: asset_classes
-      type: List[str]
-    - description: Number of assets in the list
-      key: num_assets
-      type: int
-    - description: Whether the asset universe is valid
-      key: is_valid
-      type: bool
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: HIGH
-        method: Use the output from 'choose_trading_strategy' node, specifically the
-          'selected_strategy' field.
-        reason: Ensure that the asset universe is consistent with the chosen trading
-          strategy.
-        text: Review the selected trading strategy from the 'choose_trading_strategy'
-          node to understand the asset classes and instruments that align with the
-          strategy.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use market data and research to identify asset classes and instruments,
-          consider factors such as market capitalization, liquidity, and volatility.
-        reason: Create a relevant and tradable asset universe.
-        text: Identify a list of asset classes and instruments that are relevant to
-          the selected trading strategy, keeping in mind market liquidity, trading
-          hours, and other factors.
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use a filtering process to narrow down the list of asset classes and
-          instruments.
-        reason: Prevent over-diversification and ensure manageability.
-        text: Limit the list of asset classes and instruments to 10 or fewer items
-          to ensure a focused asset universe.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use data validation techniques and review the list against the trading
-          strategy and market data.
-        reason: Ensure accuracy and validity of the asset universe.
-        text: Validate the asset universe by checking for duplicates, ensuring that
-          the listed asset classes and instruments are tradable, and verifying that
-          they align with the selected trading strategy.
-      - complexity: LOW
-        impact: HIGH
-        method: Use the output structure defined for this node to format the output.
-        reason: Provide a clear and usable output for downstream nodes.
-        text: Output the list of asset classes and instruments, the number of assets
-          in the list, and a boolean indicating whether the asset universe is valid.
-    prompt: List the specific asset classes and instruments the chosen strategy will
-      trade (e.g., US large-cap equities, S&P futures). Keep list ≤10 items.
-    shims: []
-  define_trading_objectives:
-    agent: false
-    code_node_type: stub
-    description: Produce a bullet list of the trading system's core objectives.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass DefineTradingObjectivesOutput(BaseModel):\n    \"\"\"Pydantic model\
-      \ for define_trading_objectives node outputs.\"\"\"\n    trading_objectives:\
-      \ List[str] = Field(..., description=\"A bullet list of the core trading system's\
-      \ objectives, including purpose, risk tolerance, and long-term vision. Max8\
-      \ items.\")\n\n\ndef define_trading_objectives(general_input: str, **kwargs)\
-      \ -> DefineTradingObjectivesOutput:\n    \"\"\"Produce a bullet list of the\
-      \ trading system's core objectives.\n\n    Args:\n        general_input: General\
-      \ input string for the root node.\n        **kwargs: Additional keyword arguments.\n\
-      \n    Returns:\n        DefineTradingObjectivesOutput: Object containing outputs\
-      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
-      \ stub output with placeholder values\n    return DefineTradingObjectivesOutput(\n\
-      \        trading_objectives=[],\n    )"
-    name: define_trading_objectives
+    description: Gather historical market data for analysis and strategy development.
+    name: collect_historical_market_data
     nodes_depended_on: []
     nodes_dependent_on: []
-    output_structure:
-    - description: A bullet list of the core trading system's objectives, including
-        purpose, risk tolerance, and long-term vision. Max8 items.
-      key: trading_objectives
-      type: List[str]
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: HIGH
-        method: 'Use a template to guide the analysis, including questions such as:
-          What is the primary purpose of the trading system? What is the risk tolerance
-          of the system? What are the long-term goals of the system?'
-        reason: This step ensures that the objectives are well-defined and aligned
-          with the overall goals of the trading system.
-        text: Review and analyze the trading system's purpose, risk tolerance, and
-          long-term vision to identify key objectives.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a prioritization framework, such as MoSCoW or Kano, to categorize
-          and prioritize the objectives.
-        reason: This step ensures that the objectives are clear, actionable, and aligned
-          with the overall goals of the trading system.
-        text: Identify and prioritize the key objectives, ensuring they are specific,
-          measurable, achievable, relevant, and time-bound (SMART).
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use a bullet list template to organize and format the objectives,
-          ensuring they are concise and easy to understand.
-        reason: This step ensures that the objectives are communicated clearly and
-          effectively to stakeholders.
-        text: Formulate a concise bullet list of the top objectives, focusing on purpose,
-          risk tolerance, and long-term vision.
-      - complexity: LOW
-        impact: LOW
-        method: 'Use a quality control checklist to review the output, including criteria
-          such as: Does the list meet the length requirement? Are the objectives clear
-          and concise? Are there any errors in formatting or content?'
-        reason: This step ensures that the output meets the requirements and is of
-          high quality.
-        text: Review and refine the bullet list to ensure it meets the requirements
-          of the prompt and is free of errors.
-    prompt: State the primary business objectives for the trading system. Produce
-      a concise bullet list covering trading purpose, risk tolerance, and long-term
-      vision (max8 bullets). Focus only on objectives, do not include strategy details.
-    shims: []
-  define_trading_performance_metrics:
+    prompt: Collect historical price data for the desired assets and timeframes. Ensure
+      data is clean and properly formatted.
+  configure_trading_infrastructure:
     agent: false
-    code_node_type: stub
-    description: Specify metrics for evaluating trading performance.
-    implementation: "from pydantic import BaseModel, Field\n\n\nclass DevelopTradingPlanOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for develop_trading_plan node outputs.\"\"\"\n   \
-      \ strategy_description: str = Field(..., description=\"A concise description\
-      \ of the chosen trading strategy.\")\n    risk_management_controls: str = Field(...,\
-      \ description=\"A list of key risk management controls, including position limits,\
-      \ stop-loss rules, and liquidity thresholds.\")\n    execution_details: str\
-      \ = Field(..., description=\"A summary of execution details, outlining how trades\
-      \ will be executed within the trading plan.\")\n    target_assets: str = Field(...,\
-      \ description=\"The list of asset classes and tradable instruments identified\
-      \ for the trading strategy.\")\n    trading_parameters: str = Field(..., description=\"\
-      Defined numerical trading parameters such as position size, stop-loss level,\
-      \ and take-profit level.\")\n\n\nclass DefineTradingPerformanceMetricsOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for define_trading_performance_metrics node outputs.\"\
-      \"\"\n    returns_description: str = Field(..., description=\"Description of\
-      \ the metric 'return' and its importance for evaluating trading performance.\"\
-      )\n    volatility_description: str = Field(..., description=\"Description of\
-      \ the metric 'volatility' and its role in understanding risk.\")\n    sharpe_ratio_description:\
-      \ str = Field(..., description=\"Explanation of how the Sharpe ratio is used\
-      \ as a performance metric.\")\n    maximum_drawdown_description: str = Field(...,\
-      \ description=\"Details about the maximum drawdown metric and its significance\
-      \ in performance evaluation.\")\n\n\ndef define_trading_performance_metrics(develop_trading_plan_input:\
-      \ DevelopTradingPlanOutput, **kwargs) -> DefineTradingPerformanceMetricsOutput:\n\
-      \    \"\"\"Specify metrics for evaluating trading performance.\n\n    Args:\n\
-      \        develop_trading_plan_input: Input from the 'develop_trading_plan' node.\n\
-      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        DefineTradingPerformanceMetricsOutput:\
-      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
-      \ this function\n\n    # Return stub output with placeholder values\n    return\
-      \ DefineTradingPerformanceMetricsOutput(\n        returns_description=\"\",\n\
-      \        volatility_description=\"\",\n        sharpe_ratio_description=\"\"\
-      ,\n        maximum_drawdown_description=\"\",\n    )"
-    name: define_trading_performance_metrics
-    nodes_depended_on:
-    - develop_trading_plan
+    description: Set up the necessary infrastructure for executing trades.
+    name: configure_trading_infrastructure
+    nodes_depended_on: []
     nodes_dependent_on: []
-    output_structure:
-    - description: Description of the metric 'return' and its importance for evaluating
-        trading performance.
-      key: returns_description
-      type: str
-    - description: Description of the metric 'volatility' and its role in understanding
-        risk.
-      key: volatility_description
-      type: str
-    - description: Explanation of how the Sharpe ratio is used as a performance metric.
-      key: sharpe_ratio_description
-      type: str
-    - description: Details about the maximum drawdown metric and its significance
-        in performance evaluation.
-      key: maximum_drawdown_description
-      type: str
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: LOW
-        method: Analyze the trading plan and objectives document.
-        reason: This ensures that the performance metrics align with the trading plan
-          and objectives.
-        text: Review the trading plan and objectives to understand the context for
-          performance metrics.
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Conduct a literature review of financial texts, academic papers, and
-          reputable online resources.
-        reason: This provides a comprehensive understanding of each metric and its
-          significance in evaluating trading performance.
-        text: 'Research and gather information on the four key performance metrics:
-          return, volatility, Sharpe ratio, and maximum drawdown.'
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use simple and clear language to describe each metric, ensuring that
-          the explanation is concise and accurate.
-        reason: This provides a concise and clear description of each metric.
-        text: Write a one-sentence explanation for each of the four key performance
-          metrics.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Review and revise the explanations for each metric, using expert judgment
-          and feedback from stakeholders.
-        reason: This ensures that the performance metrics are properly understood
-          and applied in the context of the trading plan.
-        text: Ensure that the explanations for each metric are accurate, concise,
-          and relevant to the trading plan and objectives.
-      - complexity: LOW
-        impact: LOW
-        method: Use a template or format guide to ensure consistency in the output
-          structure.
-        reason: This ensures that the output is organized and easy to understand.
-        text: Format the output according to the specified output structure.
-    prompt: 'List key performance metrics for the trading system: return, volatility,
-      Sharpe ratio, maximum drawdown. Provide a one-sentence explanation for each.'
-    shims: []
-  design_risk_management_framework:
+    prompt: Configure the trading infrastructure, including selecting a brokerage
+      API, setting up a trading platform, and ensuring connectivity.
+  define_trading_strategy:
     agent: false
-    code_node_type: stub
-    description: Outline quantitative and qualitative risk controls.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass SetTradingParametersOutput(BaseModel):\n    \"\"\"Pydantic model for\
-      \ set_trading_parameters node outputs.\"\"\"\n    position_size: float = Field(...,\
-      \ description=\"The proportion or size of each position within the portfolio.\"\
-      )\n    stop_loss_level: float = Field(..., description=\"The price level at\
-      \ which a position will be closed to prevent further losses.\")\n    take_profit_level:\
-      \ float = Field(..., description=\"The price level at which a position will\
-      \ be closed to lock in profits.\")\n\n\nclass DesignRiskManagementFrameworkOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for design_risk_management_framework node outputs.\"\
-      \"\"\n    risk_controls: List[str] = Field(..., description=\"List of core risk\
-      \ controls, such as position limits, VaR limits, stop-loss rules, and liquidity\
-      \ thresholds.\")\n    num_risk_controls: int = Field(..., description=\"The\
-      \ number of risk controls provided in the list.\")\n\n\ndef design_risk_management_framework(set_trading_parameters_input:\
-      \ SetTradingParametersOutput, **kwargs) -> DesignRiskManagementFrameworkOutput:\n\
-      \    \"\"\"Outline quantitative and qualitative risk controls.\n\n    Args:\n\
-      \        set_trading_parameters_input: Input from the 'set_trading_parameters'\
-      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
-      \       DesignRiskManagementFrameworkOutput: Object containing outputs for this\
-      \ node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub\
-      \ output with placeholder values\n    return DesignRiskManagementFrameworkOutput(\n\
-      \        risk_controls=[],\n        num_risk_controls=0,\n    )"
-    name: design_risk_management_framework
+    description: Develop a trading strategy based on analysis of historical data.
+    name: define_trading_strategy
     nodes_depended_on:
-    - set_trading_parameters
+    - collect_historical_market_data
     nodes_dependent_on: []
-    output_structure:
-    - description: List of core risk controls, such as position limits, VaR limits,
-        stop-loss rules, and liquidity thresholds.
-      key: risk_controls
-      type: List[str]
-    - description: The number of risk controls provided in the list.
-      key: num_risk_controls
-      type: int
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: MEDIUM
-        method: Verify that the output from 'set_trading_parameters' includes position
-          size, stop-loss level, and take-profit level.
-        reason: This step ensures that the risk controls are aligned with the trading
-          parameters.
-        text: Review the output from the 'set_trading_parameters' node to understand
-          the quantitative trading parameters such as position size, stop-loss level,
-          and take-profit level.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use the output from 'set_trading_parameters' to determine the target
-          metrics for risk management.
-        reason: This step ensures that the risk controls are aligned with the target
-          metrics.
-        text: Identify the target metrics for risk management, including position
-          limits, VaR limits, stop-loss rules, and liquidity thresholds.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a percentage of the overall portfolio value to determine the position
-          limit.
-        reason: This step helps to mitigate the risk of large losses due to over-exposure
-          to a single asset or asset class.
-        text: Define position limits as a risk control to limit the maximum exposure
-          to a single asset or asset class.
-      - complexity: HIGH
-        impact: HIGH
-        method: Use historical data and statistical models to determine the VaR limit.
-        reason: This step helps to mitigate the risk of large losses due to market
-          volatility.
-        text: Define VaR limits as a risk control to limit the potential loss in value
-          of the portfolio over a specific time horizon with a given probability.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a percentage of the position value to determine the stop-loss
-          level.
-        reason: This step helps to mitigate the risk of large losses due to adverse
-          market movements.
-        text: Define stop-loss rules as a risk control to limit the loss on a single
-          trade or asset.
-      - complexity: MEDIUM
-        impact: MEDIUM
-        method: Use historical data and market analysis to determine the liquidity
-          thresholds.
-        reason: This step helps to mitigate the risk of large losses due to illiquidity.
-        text: Define liquidity thresholds as a risk control to ensure that the portfolio
-          can be liquidated quickly and at a fair price.
-    prompt: 'List core risk controls aligned with the target metrics: position limits,
-      VaR limits, stop-loss rules, liquidity thresholds. Provide 4–6 bullet points.'
-    shims: []
-  develop_trading_plan:
+    prompt: Using the historical data, define a trading strategy including entry and
+      exit rules, risk management, and position sizing.
+  execute_trades:
     agent: false
-    code_node_type: stub
-    description: Create a detailed trading plan including strategy, risk management,
-      and execution details.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass DefineAssetUniverseOutput(BaseModel):\n    \"\"\"Pydantic model for\
-      \ define_asset_universe node outputs.\"\"\"\n    asset_classes: List[str] =\
-      \ Field(..., description=\"List of asset classes and instruments\")\n    num_assets:\
-      \ int = Field(..., description=\"Number of assets in the list\")\n    is_valid:\
-      \ bool = Field(..., description=\"Whether the asset universe is valid\")\n\n\
-      \nclass SetTradingParametersOutput(BaseModel):\n    \"\"\"Pydantic model for\
-      \ set_trading_parameters node outputs.\"\"\"\n    position_size: float = Field(...,\
-      \ description=\"The proportion or size of each position within the portfolio.\"\
-      )\n    stop_loss_level: float = Field(..., description=\"The price level at\
-      \ which a position will be closed to prevent further losses.\")\n    take_profit_level:\
-      \ float = Field(..., description=\"The price level at which a position will\
-      \ be closed to lock in profits.\")\n\n\nclass DesignRiskManagementFrameworkOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for design_risk_management_framework node outputs.\"\
-      \"\"\n    risk_controls: List[str] = Field(..., description=\"List of core risk\
-      \ controls, such as position limits, VaR limits, stop-loss rules, and liquidity\
-      \ thresholds.\")\n    num_risk_controls: int = Field(..., description=\"The\
-      \ number of risk controls provided in the list.\")\n\n\nclass DevelopTradingPlanOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for develop_trading_plan node outputs.\"\"\"\n   \
-      \ strategy_description: str = Field(..., description=\"A concise description\
-      \ of the chosen trading strategy.\")\n    risk_management_controls: str = Field(...,\
-      \ description=\"A list of key risk management controls, including position limits,\
-      \ stop-loss rules, and liquidity thresholds.\")\n    execution_details: str\
-      \ = Field(..., description=\"A summary of execution details, outlining how trades\
-      \ will be executed within the trading plan.\")\n    target_assets: str = Field(...,\
-      \ description=\"The list of asset classes and tradable instruments identified\
-      \ for the trading strategy.\")\n    trading_parameters: str = Field(..., description=\"\
-      Defined numerical trading parameters such as position size, stop-loss level,\
-      \ and take-profit level.\")\n\n\ndef develop_trading_plan(define_asset_universe_input:\
-      \ DefineAssetUniverseOutput, set_trading_parameters_input: SetTradingParametersOutput,\
-      \ design_risk_management_framework_input: DesignRiskManagementFrameworkOutput,\
-      \ **kwargs) -> DevelopTradingPlanOutput:\n    \"\"\"Create a detailed trading\
-      \ plan including strategy, risk management, and execution details.\n\n    Args:\n\
-      \        define_asset_universe_input: Input from the 'define_asset_universe'\
-      \ node.\n        set_trading_parameters_input: Input from the 'set_trading_parameters'\
-      \ node.\n        design_risk_management_framework_input: Input from the 'design_risk_management_framework'\
-      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
-      \       DevelopTradingPlanOutput: Object containing outputs for this node.\n\
-      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
-      \ with placeholder values\n    return DevelopTradingPlanOutput(\n        strategy_description=\"\
-      \",\n        risk_management_controls=\"\",\n        execution_details=\"\"\
-      ,\n        target_assets=\"\",\n        trading_parameters=\"\",\n    )"
-    name: develop_trading_plan
+    description: Execute trades based on the defined strategy and risk management
+      rules.
+    name: execute_trades
     nodes_depended_on:
-    - define_asset_universe
-    - set_trading_parameters
-    - design_risk_management_framework
+    - backtest_trading_strategy
+    - configure_trading_infrastructure
+    - implement_risk_management
     nodes_dependent_on: []
-    output_structure:
-    - description: A concise description of the chosen trading strategy.
-      key: strategy_description
-      type: str
-    - description: A list of key risk management controls, including position limits,
-        stop-loss rules, and liquidity thresholds.
-      key: risk_management_controls
-      type: str
-    - description: A summary of execution details, outlining how trades will be executed
-        within the trading plan.
-      key: execution_details
-      type: str
-    - description: The list of asset classes and tradable instruments identified for
-        the trading strategy.
-      key: target_assets
-      type: str
-    - description: Defined numerical trading parameters such as position size, stop-loss
-        level, and take-profit level.
-      key: trading_parameters
-      type: str
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: HIGH
-        method: Use a checklist to ensure all required information is present and
-          correct.
-        reason: This step ensures that all necessary information is gathered and considered
-          before creating the trading plan.
-        text: Review and synthesize the outputs from the parent nodes, including the
-          chosen trading strategy, asset universe, trading parameters, and risk management
-          framework.
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use a template to ensure the description covers all necessary points.
-        reason: This step provides a clear and concise overview of the trading strategy.
-        text: Create a concise description of the chosen trading strategy, including
-          its key components and objectives.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a risk management framework template to ensure all necessary controls
-          are included.
-        reason: This step ensures that the trading plan includes effective risk management
-          measures.
-        text: Outline the key risk management controls, including position limits,
-          stop-loss rules, and liquidity thresholds.
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use a standard template for execution details.
-        reason: This step provides clarity on how the trading plan will be implemented.
-        text: Summarize the execution details, outlining how trades will be executed
-          within the trading plan.
-      - complexity: LOW
-        impact: MEDIUM
-        method: Use a standard template for listing asset classes and instruments.
-        reason: This step ensures that the trading plan is specific to the chosen
-          asset universe.
-        text: List the target asset classes and tradable instruments identified for
-          the trading strategy.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a standard template for defining trading parameters.
-        reason: This step ensures that the trading plan includes specific and measurable
-          trading parameters.
-        text: Define the numerical trading parameters, including position size, stop-loss
-          level, and take-profit level.
-    prompt: Synthesize prior outputs into a concise trading plan (≤400 words) covering
-      strategy, risk management, and execution details. Bullet or short paragraphs
-      allowed.
-    shims: []
-  produce_final_trading_report:
+    prompt: Execute trades according to the strategy, using the configured infrastructure
+      and adhering to risk management rules.
+  implement_risk_management:
     agent: false
-    code_node_type: stub
-    description: Generate an all-in summary of the trading system.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass DevelopTradingPlanOutput(BaseModel):\n    \"\"\"Pydantic model for\
-      \ develop_trading_plan node outputs.\"\"\"\n    strategy_description: str =\
-      \ Field(..., description=\"A concise description of the chosen trading strategy.\"\
-      )\n    risk_management_controls: str = Field(..., description=\"A list of key\
-      \ risk management controls, including position limits, stop-loss rules, and\
-      \ liquidity thresholds.\")\n    execution_details: str = Field(..., description=\"\
-      A summary of execution details, outlining how trades will be executed within\
-      \ the trading plan.\")\n    target_assets: str = Field(..., description=\"The\
-      \ list of asset classes and tradable instruments identified for the trading\
-      \ strategy.\")\n    trading_parameters: str = Field(..., description=\"Defined\
-      \ numerical trading parameters such as position size, stop-loss level, and take-profit\
-      \ level.\")\n\n\nclass CompileTradingDashboardOutlineOutput(BaseModel):\n  \
-      \  \"\"\"Pydantic model for compile_trading_dashboard_outline node outputs.\"\
-      \"\"\n    dashboard_slide_titles: List[str] = Field(..., description=\"A list\
-      \ of slide titles outlining the trading performance dashboard, covering strategy,\
-      \ risk, and performance metrics.\")\n\n\nclass DefineTradingPerformanceMetricsOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for define_trading_performance_metrics node outputs.\"\
-      \"\"\n    returns_description: str = Field(..., description=\"Description of\
-      \ the metric 'return' and its importance for evaluating trading performance.\"\
-      )\n    volatility_description: str = Field(..., description=\"Description of\
-      \ the metric 'volatility' and its role in understanding risk.\")\n    sharpe_ratio_description:\
-      \ str = Field(..., description=\"Explanation of how the Sharpe ratio is used\
-      \ as a performance metric.\")\n    maximum_drawdown_description: str = Field(...,\
-      \ description=\"Details about the maximum drawdown metric and its significance\
-      \ in performance evaluation.\")\n\n\nclass ProduceFinalTradingReportOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for produce_final_trading_report node outputs.\"\"\
-      \"\n    trading_strategy_summary: str = Field(..., description=\"A concise summary\
-      \ of the trading strategy.\")\n    risk_management_summary: str = Field(...,\
-      \ description=\"A concise summary of the risk management framework.\")\n   \
-      \ performance_metrics_summary: str = Field(..., description=\"A concise summary\
-      \ of the trading performance metrics.\")\n    key_insights: List[str] = Field(...,\
-      \ description=\"A list of key takeaways or insights from the trading system\
-      \ summary.\")\n\n\ndef produce_final_trading_report(develop_trading_plan_input:\
-      \ DevelopTradingPlanOutput, compile_trading_dashboard_outline_input: CompileTradingDashboardOutlineOutput,\
-      \ define_trading_performance_metrics_input: DefineTradingPerformanceMetricsOutput,\
-      \ **kwargs) -> ProduceFinalTradingReportOutput:\n    \"\"\"Generate an all-in\
-      \ summary of the trading system.\n\n    Args:\n        develop_trading_plan_input:\
-      \ Input from the 'develop_trading_plan' node.\n        compile_trading_dashboard_outline_input:\
-      \ Input from the 'compile_trading_dashboard_outline' node.\n        define_trading_performance_metrics_input:\
-      \ Input from the 'define_trading_performance_metrics' node.\n        **kwargs:\
-      \ Additional keyword arguments.\n\n    Returns:\n        ProduceFinalTradingReportOutput:\
-      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
-      \ this function\n\n    # Return stub output with placeholder values\n    return\
-      \ ProduceFinalTradingReportOutput(\n        trading_strategy_summary=\"\",\n\
-      \        risk_management_summary=\"\",\n        performance_metrics_summary=\"\
-      \",\n        key_insights=[],\n    )"
-    name: produce_final_trading_report
+    description: Develop and implement risk management rules to control exposure.
+    name: implement_risk_management
     nodes_depended_on:
-    - develop_trading_plan
-    - compile_trading_dashboard_outline
-    - define_trading_performance_metrics
+    - define_trading_strategy
     nodes_dependent_on: []
-    output_structure:
-    - description: A concise summary of the trading strategy.
-      key: trading_strategy_summary
-      type: str
-    - description: A concise summary of the risk management framework.
-      key: risk_management_summary
-      type: str
-    - description: A concise summary of the trading performance metrics.
-      key: performance_metrics_summary
-      type: str
-    - description: A list of key takeaways or insights from the trading system summary.
-      key: key_insights
-      type: List[str]
-    prd:
-      bullets: []
-    prompt: Synthesize prior outputs into a concise executive summary (≤400 words)
-      covering trading strategy, risk management, and performance metrics. Bullet
-      or short paragraphs allowed.
-    shims: []
-  set_trading_parameters:
+    prompt: Implement risk management rules based on the strategy, including position
+      sizing, stop-loss levels, and portfolio diversification.
+  monitor_trading_performance:
     agent: false
-    code_node_type: stub
-    description: Quantify trading parameters such as position sizing and stop-loss
-      levels.
-    implementation: "from pydantic import BaseModel, Field\n\n\nclass ChooseTradingStrategyOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for choose_trading_strategy node outputs.\"\"\"\n\
-      \    selected_strategy: str = Field(..., description=\"The name of the selected\
-      \ high-level trading strategy category.\")\n    rationale: str = Field(...,\
-      \ description=\"A one-sentence explanation of why the selected trading strategy\
-      \ was chosen.\")\n\n\nclass SetTradingParametersOutput(BaseModel):\n    \"\"\
-      \"Pydantic model for set_trading_parameters node outputs.\"\"\"\n    position_size:\
-      \ float = Field(..., description=\"The proportion or size of each position within\
-      \ the portfolio.\")\n    stop_loss_level: float = Field(..., description=\"\
-      The price level at which a position will be closed to prevent further losses.\"\
-      )\n    take_profit_level: float = Field(..., description=\"The price level at\
-      \ which a position will be closed to lock in profits.\")\n\n\ndef set_trading_parameters(choose_trading_strategy_input:\
-      \ ChooseTradingStrategyOutput, **kwargs) -> SetTradingParametersOutput:\n  \
-      \  \"\"\"Quantify trading parameters such as position sizing and stop-loss levels.\n\
-      \n    Args:\n        choose_trading_strategy_input: Input from the 'choose_trading_strategy'\
-      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
-      \       SetTradingParametersOutput: Object containing outputs for this node.\n\
-      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
-      \ with placeholder values\n    return SetTradingParametersOutput(\n        position_size=0.0,\n\
-      \        stop_loss_level=0.0,\n        take_profit_level=0.0,\n    )"
-    name: set_trading_parameters
+    description: Continuously monitor trading performance and adjust the strategy
+      as needed.
+    name: monitor_trading_performance
     nodes_depended_on:
-    - choose_trading_strategy
+    - execute_trades
     nodes_dependent_on: []
-    output_structure:
-    - description: The proportion or size of each position within the portfolio.
-      key: position_size
-      type: float
-    - description: The price level at which a position will be closed to prevent further
-        losses.
-      key: stop_loss_level
-      type: float
-    - description: The price level at which a position will be closed to lock in profits.
-      key: take_profit_level
-      type: float
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: HIGH
-        method: Access the 'selected_strategy' field from the output of 'choose_trading_strategy'
-          node.
-        reason: The trading parameters need to be aligned with the chosen strategy.
-        text: Retrieve the selected trading strategy from the output of the 'choose_trading_strategy'
-          node.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a strategy-parameter mapping framework to determine the parameter
-          ranges for the selected strategy.
-        reason: Different strategies require different parameter settings.
-        text: Map the selected trading strategy to a set of predefined trading parameter
-          ranges.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Apply a position sizing algorithm that considers the strategy, risk
-          tolerance, and market conditions.
-        reason: Position sizing is critical for risk management and strategy execution.
-        text: Determine the position size based on the strategy-parameter mapping
-          and risk management considerations.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use a stop-loss calculation algorithm that considers the strategy,
-          risk tolerance, and market volatility.
-        reason: Stop-loss levels are essential for limiting potential losses.
-        text: Calculate the stop-loss level based on the strategy-parameter mapping
-          and risk management considerations.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Apply a take-profit calculation algorithm that considers the strategy,
-          profit targets, and market conditions.
-        reason: Take-profit levels are necessary for locking in profits.
-        text: Calculate the take-profit level based on the strategy-parameter mapping
-          and profit target considerations.
-      - complexity: LOW
-        impact: LOW
-        method: Use a table formatting library to create a 3-row table with columns
-          for parameter names and values.
-        reason: Clear presentation of trading parameters is essential for easy understanding
-          and implementation.
-        text: Format the trading parameters into a 3-row table for presentation.
-    prompt: 'Define numerical trading parameters aligned with the chosen strategy:
-      position size, stop-loss level, take-profit level. Present as a 3-row table.'
-    shims: []
+    prompt: Monitor trading performance in real-time, tracking key metrics and adjusting
+      the strategy or risk management rules as necessary to maintain optimal performance.
+  refine_trading_strategy:
+    agent: false
+    description: Refine the trading strategy based on analysis of trading results.
+    name: refine_trading_strategy
+    nodes_depended_on:
+    - analyze_trading_results
+    nodes_dependent_on: []
+    prompt: Using insights from trading results, refine the trading strategy to improve
+      performance, adjusting parameters or rules as necessary.
