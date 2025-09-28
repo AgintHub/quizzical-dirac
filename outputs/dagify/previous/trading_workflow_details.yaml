@@ -1,10 +1,56 @@
-dag_type: spec
+dag_type: stub
 description: Generated workflow from UI.
 name: trading_workflow
 nodes:
   analyze_trading_results:
     agent: false
+    code_node_type: stub
     description: Analyze the results of trading activities to identify areas for improvement.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass MonitorTradingPerformanceOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for monitor_trading_performance node outputs.\"\"\"\
+      \n    timestamp: str = Field(..., description=\"Current timestamp of the monitoring\
+      \ snapshot\")\n    total_trades: int = Field(..., description=\"Total number\
+      \ of trades executed in the monitoring period\")\n    winning_trades: int =\
+      \ Field(..., description=\"Number of trades that closed with a profit\")\n \
+      \   losing_trades: int = Field(..., description=\"Number of trades that closed\
+      \ with a loss\")\n    win_rate: float = Field(..., description=\"Percentage\
+      \ of winning trades out of total trades (0 to 1)\")\n    average_return_per_trade:\
+      \ float = Field(..., description=\"Average profit or loss per trade expressed\
+      \ as a return fraction\")\n    max_drawdown: float = Field(..., description=\"\
+      Maximum drawdown observed in the monitoring period\")\n    sharpe_ratio: float\
+      \ = Field(..., description=\"Sharpe ratio calculated over the monitoring period\"\
+      )\n    is_performance_stable: bool = Field(..., description=\"Flag indicating\
+      \ whether performance metrics are within acceptable ranges\")\n    recommended_adjustments:\
+      \ str = Field(..., description=\"List of suggested changes to strategy or risk\
+      \ management rules\")\n    alert_flag: bool = Field(..., description=\"Flag\
+      \ indicating if an alert should be triggered due to significant performance\
+      \ deviation\")\n\n\nclass AnalyzeTradingResultsOutput(BaseModel):\n    \"\"\"\
+      Pydantic model for analyze_trading_results node outputs.\"\"\"\n    total_trades:\
+      \ int = Field(..., description=\"Total number of trades executed during the\
+      \ monitored period.\")\n    win_rate: float = Field(..., description=\"Ratio\
+      \ of winning trades to total trades, expressed as a decimal between 0 and 1.\"\
+      )\n    average_return_per_trade: float = Field(..., description=\"Mean return\
+      \ (profit or loss) per trade expressed as a decimal (e.g., 0.02 for 2%).\")\n\
+      \    max_drawdown: float = Field(..., description=\"Maximum percentage drop\
+      \ from a peak to a trough in equity during the period.\")\n    sharpe_ratio:\
+      \ float = Field(..., description=\"Sharpe ratio of the strategy over the monitored\
+      \ period.\")\n    improvement_suggestions: str = Field(..., description=\"List\
+      \ of concise suggestions for strategy or risk management enhancements.\")\n\
+      \    action_items: str = Field(..., description=\"Concrete action items derived\
+      \ from the suggestions, ready for implementation.\")\n    is_significant_change:\
+      \ bool = Field(..., description=\"Flag indicating whether the results show a\
+      \ statistically significant deviation from expected performance.\")\n\n\ndef\
+      \ analyze_trading_results(monitor_trading_performance_input: MonitorTradingPerformanceOutput,\
+      \ **kwargs) -> AnalyzeTradingResultsOutput:\n    \"\"\"Analyze the results of\
+      \ trading activities to identify areas for improvement.\n\n    Args:\n     \
+      \   monitor_trading_performance_input: Input from the 'monitor_trading_performance'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       AnalyzeTradingResultsOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return AnalyzeTradingResultsOutput(\n       \
+      \ total_trades=0,\n        win_rate=0.0,\n        average_return_per_trade=0.0,\n\
+      \        max_drawdown=0.0,\n        sharpe_ratio=0.0,\n        improvement_suggestions=\"\
+      \",\n        action_items=\"\",\n        is_significant_change=False,\n    )"
     name: analyze_trading_results
     nodes_depended_on:
     - monitor_trading_performance
@@ -122,9 +168,49 @@ nodes:
           all fields are present and correctly typed before serializing to JSON.
     prompt: Analyze trading results to understand the effectiveness of the strategy
       and risk management, identifying areas for improvement or optimization.
+    shims: []
   backtest_trading_strategy:
     agent: false
+    code_node_type: stub
     description: Test the trading strategy on historical data to evaluate performance.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DefineTradingStrategyOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for define_trading_strategy node outputs.\"\"\"\n\
+      \    strategy_name: str = Field(..., description=\"Descriptive name of the trading\
+      \ strategy\")\n    entry_rules: str = Field(..., description=\"Textual description\
+      \ of the conditions that trigger a long or short position\")\n    exit_rules:\
+      \ str = Field(..., description=\"Textual description of the conditions that\
+      \ trigger the closure of a position\")\n    position_sizing_rule: str = Field(...,\
+      \ description=\"Rule or formula that determines how much capital or how many\
+      \ shares/contracts to trade\")\n    risk_management_rule: str = Field(..., description=\"\
+      Description of stop\\u2011loss levels, max draw\\u2011down limits, and portfolio\
+      \ diversification constraints\")\n    assets_traded: str = Field(..., description=\"\
+      List of asset symbols or identifiers that the strategy is designed to trade\"\
+      )\n\n\nclass BacktestTradingStrategyOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for backtest_trading_strategy node outputs.\"\"\"\n    total_return: float\
+      \ = Field(..., description=\"Total cumulative return of the strategy over the\
+      \ backtesting period.\")\n    annualized_return: float = Field(..., description=\"\
+      Annualized return of the strategy.\")\n    max_drawdown: float = Field(...,\
+      \ description=\"Maximum drawdown observed during backtesting.\")\n    sharpe_ratio:\
+      \ float = Field(..., description=\"Sharpe ratio of the strategy.\")\n    number_of_trades:\
+      \ int = Field(..., description=\"Total number of trades executed during backtesting.\"\
+      )\n    win_rate: float = Field(..., description=\"Fraction of profitable trades\
+      \ (value between 0 and 1).\")\n    avg_profit_per_trade: float = Field(...,\
+      \ description=\"Average profit per winning trade.\")\n    avg_loss_per_trade:\
+      \ float = Field(..., description=\"Average loss per losing trade.\")\n    win_loss_ratio:\
+      \ float = Field(..., description=\"Ratio of average profit to average loss.\"\
+      )\n    performance_summary: str = Field(..., description=\"Concise textual summary\
+      \ of backtest results.\")\n\n\ndef backtest_trading_strategy(define_trading_strategy_input:\
+      \ DefineTradingStrategyOutput, **kwargs) -> BacktestTradingStrategyOutput:\n\
+      \    \"\"\"Test the trading strategy on historical data to evaluate performance.\n\
+      \n    Args:\n        define_trading_strategy_input: Input from the 'define_trading_strategy'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       BacktestTradingStrategyOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return BacktestTradingStrategyOutput(\n     \
+      \   total_return=0.0,\n        annualized_return=0.0,\n        max_drawdown=0.0,\n\
+      \        sharpe_ratio=0.0,\n        number_of_trades=0,\n        win_rate=0.0,\n\
+      \        avg_profit_per_trade=0.0,\n        avg_loss_per_trade=0.0,\n      \
+      \  win_loss_ratio=0.0,\n        performance_summary=\"\",\n    )"
     name: backtest_trading_strategy
     nodes_depended_on:
     - define_trading_strategy
@@ -243,9 +329,32 @@ nodes:
           formatted for human readability and future reporting.
     prompt: Backtest the defined strategy on historical data, calculating performance
       metrics such as return, drawdown, and Sharpe ratio.
+    shims: []
   collect_historical_market_data:
     agent: false
+    code_node_type: stub
     description: Gather historical market data for analysis and strategy development.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass CollectHistoricalMarketDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for collect_historical_market_data node outputs.\"\
+      \"\"\n    assets: str = Field(..., description=\"List of asset tickers collected\"\
+      )\n    timeframes: str = Field(..., description=\"List of timeframes requested\"\
+      )\n    timestamps: str = Field(..., description=\"ISO 8601 timestamps for each\
+      \ data point\")\n    price_values: float = Field(..., description=\"Price values\
+      \ corresponding to timestamps and assets in order\")\n    record_count: int\
+      \ = Field(..., description=\"Total number of records collected\")\n    is_clean:\
+      \ bool = Field(..., description=\"Whether the data has been cleaned and validated\"\
+      )\n    source_name: str = Field(..., description=\"Name of data source or provider\"\
+      )\n    data_quality_score: float = Field(..., description=\"Quality score between\
+      \ 0 and 1\")\n\n\ndef collect_historical_market_data(general_input: str, **kwargs)\
+      \ -> CollectHistoricalMarketDataOutput:\n    \"\"\"Gather historical market\
+      \ data for analysis and strategy development.\n\n    Args:\n        general_input:\
+      \ General input string for the root node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        CollectHistoricalMarketDataOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return CollectHistoricalMarketDataOutput(\n\
+      \        assets=\"\",\n        timeframes=\"\",\n        timestamps=\"\",\n\
+      \        price_values=0.0,\n        record_count=0,\n        is_clean=False,\n\
+      \        source_name=\"\",\n        data_quality_score=0.0,\n    )"
     name: collect_historical_market_data
     nodes_depended_on: []
     nodes_dependent_on: []
@@ -278,9 +387,31 @@ nodes:
       bullets: []
     prompt: Collect historical price data for the desired assets and timeframes. Ensure
       data is clean and properly formatted.
+    shims: []
   configure_trading_infrastructure:
     agent: false
+    code_node_type: stub
     description: Set up the necessary infrastructure for executing trades.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass ConfigureTradingInfrastructureOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for configure_trading_infrastructure node outputs.\"\
+      \"\"\n    brokerage_api_name: str = Field(..., description=\"The name of the\
+      \ selected brokerage API (e.g., \\\"Interactive Brokers\\\", \\\"TD Ameritrade\\\
+      \")\")\n    api_key_status: bool = Field(..., description=\"Whether the API\
+      \ key was successfully set up\")\n    api_secret_status: bool = Field(..., description=\"\
+      Whether the API secret was successfully set up\")\n    platform_configured:\
+      \ bool = Field(..., description=\"Whether the trading platform was successfully\
+      \ configured and is ready to use\")\n    connectivity_status: bool = Field(...,\
+      \ description=\"Whether the system can establish a live connection to the brokerage\
+      \ API\")\n\n\ndef configure_trading_infrastructure(general_input: str, **kwargs)\
+      \ -> ConfigureTradingInfrastructureOutput:\n    \"\"\"Set up the necessary infrastructure\
+      \ for executing trades.\n\n    Args:\n        general_input: General input string\
+      \ for the root node.\n        **kwargs: Additional keyword arguments.\n\n  \
+      \  Returns:\n        ConfigureTradingInfrastructureOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return ConfigureTradingInfrastructureOutput(\n\
+      \        brokerage_api_name=\"\",\n        api_key_status=False,\n        api_secret_status=False,\n\
+      \        platform_configured=False,\n        connectivity_status=False,\n  \
+      \  )"
     name: configure_trading_infrastructure
     nodes_depended_on: []
     nodes_dependent_on: []
@@ -363,9 +494,44 @@ nodes:
           succeeded; set `connectivity_status` to the result of the lightweight request.'
     prompt: Configure the trading infrastructure, including selecting a brokerage
       API, setting up a trading platform, and ensuring connectivity.
+    shims: []
   define_trading_strategy:
     agent: false
+    code_node_type: stub
     description: Develop a trading strategy based on analysis of historical data.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass CollectHistoricalMarketDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for collect_historical_market_data node outputs.\"\
+      \"\"\n    assets: str = Field(..., description=\"List of asset tickers collected\"\
+      )\n    timeframes: str = Field(..., description=\"List of timeframes requested\"\
+      )\n    timestamps: str = Field(..., description=\"ISO 8601 timestamps for each\
+      \ data point\")\n    price_values: float = Field(..., description=\"Price values\
+      \ corresponding to timestamps and assets in order\")\n    record_count: int\
+      \ = Field(..., description=\"Total number of records collected\")\n    is_clean:\
+      \ bool = Field(..., description=\"Whether the data has been cleaned and validated\"\
+      )\n    source_name: str = Field(..., description=\"Name of data source or provider\"\
+      )\n    data_quality_score: float = Field(..., description=\"Quality score between\
+      \ 0 and 1\")\n\n\nclass DefineTradingStrategyOutput(BaseModel):\n    \"\"\"\
+      Pydantic model for define_trading_strategy node outputs.\"\"\"\n    strategy_name:\
+      \ str = Field(..., description=\"Descriptive name of the trading strategy\"\
+      )\n    entry_rules: str = Field(..., description=\"Textual description of the\
+      \ conditions that trigger a long or short position\")\n    exit_rules: str =\
+      \ Field(..., description=\"Textual description of the conditions that trigger\
+      \ the closure of a position\")\n    position_sizing_rule: str = Field(..., description=\"\
+      Rule or formula that determines how much capital or how many shares/contracts\
+      \ to trade\")\n    risk_management_rule: str = Field(..., description=\"Description\
+      \ of stop\\u2011loss levels, max draw\\u2011down limits, and portfolio diversification\
+      \ constraints\")\n    assets_traded: str = Field(..., description=\"List of\
+      \ asset symbols or identifiers that the strategy is designed to trade\")\n\n\
+      \ndef define_trading_strategy(collect_historical_market_data_input: CollectHistoricalMarketDataOutput,\
+      \ **kwargs) -> DefineTradingStrategyOutput:\n    \"\"\"Develop a trading strategy\
+      \ based on analysis of historical data.\n\n    Args:\n        collect_historical_market_data_input:\
+      \ Input from the 'collect_historical_market_data' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        DefineTradingStrategyOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return DefineTradingStrategyOutput(\n\
+      \        strategy_name=\"\",\n        entry_rules=\"\",\n        exit_rules=\"\
+      \",\n        position_sizing_rule=\"\",\n        risk_management_rule=\"\",\n\
+      \        assets_traded=\"\",\n    )"
     name: define_trading_strategy
     nodes_depended_on:
     - collect_historical_market_data
@@ -489,10 +655,85 @@ nodes:
           for rules, list for assets).
     prompt: Using the historical data, define a trading strategy including entry and
       exit rules, risk management, and position sizing.
+    shims: []
   execute_trades:
     agent: false
+    code_node_type: stub
     description: Execute trades based on the defined strategy and risk management
       rules.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass BacktestTradingStrategyOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for backtest_trading_strategy node outputs.\"\"\"\n    total_return: float\
+      \ = Field(..., description=\"Total cumulative return of the strategy over the\
+      \ backtesting period.\")\n    annualized_return: float = Field(..., description=\"\
+      Annualized return of the strategy.\")\n    max_drawdown: float = Field(...,\
+      \ description=\"Maximum drawdown observed during backtesting.\")\n    sharpe_ratio:\
+      \ float = Field(..., description=\"Sharpe ratio of the strategy.\")\n    number_of_trades:\
+      \ int = Field(..., description=\"Total number of trades executed during backtesting.\"\
+      )\n    win_rate: float = Field(..., description=\"Fraction of profitable trades\
+      \ (value between 0 and 1).\")\n    avg_profit_per_trade: float = Field(...,\
+      \ description=\"Average profit per winning trade.\")\n    avg_loss_per_trade:\
+      \ float = Field(..., description=\"Average loss per losing trade.\")\n    win_loss_ratio:\
+      \ float = Field(..., description=\"Ratio of average profit to average loss.\"\
+      )\n    performance_summary: str = Field(..., description=\"Concise textual summary\
+      \ of backtest results.\")\n\n\nclass ConfigureTradingInfrastructureOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for configure_trading_infrastructure node outputs.\"\
+      \"\"\n    brokerage_api_name: str = Field(..., description=\"The name of the\
+      \ selected brokerage API (e.g., \\\"Interactive Brokers\\\", \\\"TD Ameritrade\\\
+      \")\")\n    api_key_status: bool = Field(..., description=\"Whether the API\
+      \ key was successfully set up\")\n    api_secret_status: bool = Field(..., description=\"\
+      Whether the API secret was successfully set up\")\n    platform_configured:\
+      \ bool = Field(..., description=\"Whether the trading platform was successfully\
+      \ configured and is ready to use\")\n    connectivity_status: bool = Field(...,\
+      \ description=\"Whether the system can establish a live connection to the brokerage\
+      \ API\")\n\n\nclass ImplementRiskManagementOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for implement_risk_management node outputs.\"\"\"\n    risk_per_trade:\
+      \ float = Field(..., description=\"Maximum risk per trade expressed as a percentage\
+      \ of total capital (e.g., 0.01 for 1%)\")\n    stop_loss_percentage: float =\
+      \ Field(..., description=\"Standard stop\\u2011loss level expressed as a percentage\
+      \ of entry price (e.g., 0.02 for 2%)\")\n    position_sizing_strategy: str =\
+      \ Field(..., description=\"Description of the position sizing rule (e.g., \\\
+      \"fixed fractional\\\", \\\"Kelly criterion\\\")\")\n    max_drawdown: float\
+      \ = Field(..., description=\"Maximum allowable cumulative drawdown as a percentage\
+      \ of account equity (e.g., 0.20 for 20%)\")\n    diversification_assets: int\
+      \ = Field(..., description=\"Number of distinct assets or securities to hold\
+      \ in the portfolio for diversification\")\n    diversification_strategy: str\
+      \ = Field(..., description=\"Approach to diversification (e.g., \\\"sector\\\
+      u2011based\\\", \\\"beta\\u2011neutral\\\")\")\n    stop_loss_levels: float\
+      \ = Field(..., description=\"List of specific stop\\u2011loss price levels for\
+      \ individual positions\")\n    is_implemented: bool = Field(..., description=\"\
+      Whether the risk management rules have been successfully applied to the trading\
+      \ system\")\n\n\nclass ExecuteTradesOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for execute_trades node outputs.\"\"\"\n    trade_execution_ids: List[str]\
+      \ = Field(..., description=\"Unique identifiers for each trade that was executed\"\
+      )\n    trade_execution_status: List[bool] = Field(..., description=\"True if\
+      \ the trade was executed successfully, False otherwise\")\n    trade_execution_timestamps:\
+      \ List[str] = Field(..., description=\"ISO\\u20118601 timestamps indicating\
+      \ when each trade was executed\")\n    trade_execution_prices: List[float] =\
+      \ Field(..., description=\"Price at which each trade was executed\")\n    trade_execution_quantities:\
+      \ List[float] = Field(..., description=\"Quantity (in units or shares) executed\
+      \ for each trade\")\n    trade_execution_instruments: List[str] = Field(...,\
+      \ description=\"Symbol or instrument identifier for each trade\")\n    trade_execution_sides:\
+      \ List[str] = Field(..., description=\"Side of the trade: 'buy' or 'sell' for\
+      \ each execution\")\n    overall_execution_success: bool = Field(..., description=\"\
+      True if all trades in this batch were executed without error\")\n    execution_error_messages:\
+      \ List[str] = Field(..., description=\"Error messages for any trades that failed\
+      \ to execute\")\n\n\ndef execute_trades(backtest_trading_strategy_input: BacktestTradingStrategyOutput,\
+      \ configure_trading_infrastructure_input: ConfigureTradingInfrastructureOutput,\
+      \ implement_risk_management_input: ImplementRiskManagementOutput, **kwargs)\
+      \ -> ExecuteTradesOutput:\n    \"\"\"Execute trades based on the defined strategy\
+      \ and risk management rules.\n\n    Args:\n        backtest_trading_strategy_input:\
+      \ Input from the 'backtest_trading_strategy' node.\n        configure_trading_infrastructure_input:\
+      \ Input from the 'configure_trading_infrastructure' node.\n        implement_risk_management_input:\
+      \ Input from the 'implement_risk_management' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        ExecuteTradesOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return ExecuteTradesOutput(\n\
+      \        trade_execution_ids=[],\n        trade_execution_status=[],\n     \
+      \   trade_execution_timestamps=[],\n        trade_execution_prices=[],\n   \
+      \     trade_execution_quantities=[],\n        trade_execution_instruments=[],\n\
+      \        trade_execution_sides=[],\n        overall_execution_success=False,\n\
+      \        execution_error_messages=[],\n    )"
     name: execute_trades
     nodes_depended_on:
     - backtest_trading_strategy
@@ -603,9 +844,51 @@ nodes:
           if no failures, return an empty list.
     prompt: Execute trades according to the strategy, using the configured infrastructure
       and adhering to risk management rules.
+    shims: []
   implement_risk_management:
     agent: false
+    code_node_type: stub
     description: Develop and implement risk management rules to control exposure.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass DefineTradingStrategyOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for define_trading_strategy node outputs.\"\"\"\n\
+      \    strategy_name: str = Field(..., description=\"Descriptive name of the trading\
+      \ strategy\")\n    entry_rules: str = Field(..., description=\"Textual description\
+      \ of the conditions that trigger a long or short position\")\n    exit_rules:\
+      \ str = Field(..., description=\"Textual description of the conditions that\
+      \ trigger the closure of a position\")\n    position_sizing_rule: str = Field(...,\
+      \ description=\"Rule or formula that determines how much capital or how many\
+      \ shares/contracts to trade\")\n    risk_management_rule: str = Field(..., description=\"\
+      Description of stop\\u2011loss levels, max draw\\u2011down limits, and portfolio\
+      \ diversification constraints\")\n    assets_traded: str = Field(..., description=\"\
+      List of asset symbols or identifiers that the strategy is designed to trade\"\
+      )\n\n\nclass ImplementRiskManagementOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for implement_risk_management node outputs.\"\"\"\n    risk_per_trade: float\
+      \ = Field(..., description=\"Maximum risk per trade expressed as a percentage\
+      \ of total capital (e.g., 0.01 for 1%)\")\n    stop_loss_percentage: float =\
+      \ Field(..., description=\"Standard stop\\u2011loss level expressed as a percentage\
+      \ of entry price (e.g., 0.02 for 2%)\")\n    position_sizing_strategy: str =\
+      \ Field(..., description=\"Description of the position sizing rule (e.g., \\\
+      \"fixed fractional\\\", \\\"Kelly criterion\\\")\")\n    max_drawdown: float\
+      \ = Field(..., description=\"Maximum allowable cumulative drawdown as a percentage\
+      \ of account equity (e.g., 0.20 for 20%)\")\n    diversification_assets: int\
+      \ = Field(..., description=\"Number of distinct assets or securities to hold\
+      \ in the portfolio for diversification\")\n    diversification_strategy: str\
+      \ = Field(..., description=\"Approach to diversification (e.g., \\\"sector\\\
+      u2011based\\\", \\\"beta\\u2011neutral\\\")\")\n    stop_loss_levels: float\
+      \ = Field(..., description=\"List of specific stop\\u2011loss price levels for\
+      \ individual positions\")\n    is_implemented: bool = Field(..., description=\"\
+      Whether the risk management rules have been successfully applied to the trading\
+      \ system\")\n\n\ndef implement_risk_management(define_trading_strategy_input:\
+      \ DefineTradingStrategyOutput, **kwargs) -> ImplementRiskManagementOutput:\n\
+      \    \"\"\"Develop and implement risk management rules to control exposure.\n\
+      \n    Args:\n        define_trading_strategy_input: Input from the 'define_trading_strategy'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       ImplementRiskManagementOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return ImplementRiskManagementOutput(\n     \
+      \   risk_per_trade=0.0,\n        stop_loss_percentage=0.0,\n        position_sizing_strategy=\"\
+      \",\n        max_drawdown=0.0,\n        diversification_assets=0,\n        diversification_strategy=\"\
+      \",\n        stop_loss_levels=0.0,\n        is_implemented=False,\n    )"
     name: implement_risk_management
     nodes_depended_on:
     - define_trading_strategy
@@ -719,11 +1002,60 @@ nodes:
           that risk rules are in place before placing orders.
     prompt: Implement risk management rules based on the strategy, including position
       sizing, stop‑loss levels, and portfolio diversification.
+    shims: []
   monitor_trading_performance:
     agent: false
+    code_node_type: stub
     description: Continuously monitors executed trades to calculate performance statistics,
       detect deviations from expected behavior, recommend strategy adjustments, and
       trigger alerts when performance deteriorates.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ExecuteTradesOutput(BaseModel):\n    \"\"\"Pydantic model for execute_trades\
+      \ node outputs.\"\"\"\n    trade_execution_ids: List[str] = Field(..., description=\"\
+      Unique identifiers for each trade that was executed\")\n    trade_execution_status:\
+      \ List[bool] = Field(..., description=\"True if the trade was executed successfully,\
+      \ False otherwise\")\n    trade_execution_timestamps: List[str] = Field(...,\
+      \ description=\"ISO\\u20118601 timestamps indicating when each trade was executed\"\
+      )\n    trade_execution_prices: List[float] = Field(..., description=\"Price\
+      \ at which each trade was executed\")\n    trade_execution_quantities: List[float]\
+      \ = Field(..., description=\"Quantity (in units or shares) executed for each\
+      \ trade\")\n    trade_execution_instruments: List[str] = Field(..., description=\"\
+      Symbol or instrument identifier for each trade\")\n    trade_execution_sides:\
+      \ List[str] = Field(..., description=\"Side of the trade: 'buy' or 'sell' for\
+      \ each execution\")\n    overall_execution_success: bool = Field(..., description=\"\
+      True if all trades in this batch were executed without error\")\n    execution_error_messages:\
+      \ List[str] = Field(..., description=\"Error messages for any trades that failed\
+      \ to execute\")\n\n\nclass MonitorTradingPerformanceOutput(BaseModel):\n   \
+      \ \"\"\"Pydantic model for monitor_trading_performance node outputs.\"\"\"\n\
+      \    timestamp: str = Field(..., description=\"Current timestamp of the monitoring\
+      \ snapshot\")\n    total_trades: int = Field(..., description=\"Total number\
+      \ of trades executed in the monitoring period\")\n    winning_trades: int =\
+      \ Field(..., description=\"Number of trades that closed with a profit\")\n \
+      \   losing_trades: int = Field(..., description=\"Number of trades that closed\
+      \ with a loss\")\n    win_rate: float = Field(..., description=\"Percentage\
+      \ of winning trades out of total trades (0 to 1)\")\n    average_return_per_trade:\
+      \ float = Field(..., description=\"Average profit or loss per trade expressed\
+      \ as a return fraction\")\n    max_drawdown: float = Field(..., description=\"\
+      Maximum drawdown observed in the monitoring period\")\n    sharpe_ratio: float\
+      \ = Field(..., description=\"Sharpe ratio calculated over the monitoring period\"\
+      )\n    is_performance_stable: bool = Field(..., description=\"Flag indicating\
+      \ whether performance metrics are within acceptable ranges\")\n    recommended_adjustments:\
+      \ str = Field(..., description=\"List of suggested changes to strategy or risk\
+      \ management rules\")\n    alert_flag: bool = Field(..., description=\"Flag\
+      \ indicating if an alert should be triggered due to significant performance\
+      \ deviation\")\n\n\ndef monitor_trading_performance(execute_trades_input: ExecuteTradesOutput,\
+      \ **kwargs) -> MonitorTradingPerformanceOutput:\n    \"\"\"Continuously monitors\
+      \ executed trades to calculate performance statistics, detect deviations from\
+      \ expected behavior, recommend strategy adjustments, and trigger alerts when\
+      \ performance deteriorates.\n\n    Args:\n        execute_trades_input: Input\
+      \ from the 'execute_trades' node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        MonitorTradingPerformanceOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return MonitorTradingPerformanceOutput(\n\
+      \        timestamp=\"\",\n        total_trades=0,\n        winning_trades=0,\n\
+      \        losing_trades=0,\n        win_rate=0.0,\n        average_return_per_trade=0.0,\n\
+      \        max_drawdown=0.0,\n        sharpe_ratio=0.0,\n        is_performance_stable=False,\n\
+      \        recommended_adjustments=\"\",\n        alert_flag=False,\n    )"
     name: monitor_trading_performance
     nodes_depended_on:
     - execute_trades
@@ -883,9 +1215,60 @@ nodes:
           declared PrimitiveType.
     prompt: Monitor trading performance in real‑time, tracking key metrics and adjusting
       the strategy or risk management rules as necessary to maintain optimal performance.
+    shims: []
   refine_trading_strategy:
     agent: false
+    code_node_type: stub
     description: Refine the trading strategy based on analysis of trading results.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass AnalyzeTradingResultsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for analyze_trading_results node outputs.\"\"\"\n\
+      \    total_trades: int = Field(..., description=\"Total number of trades executed\
+      \ during the monitored period.\")\n    win_rate: float = Field(..., description=\"\
+      Ratio of winning trades to total trades, expressed as a decimal between 0 and\
+      \ 1.\")\n    average_return_per_trade: float = Field(..., description=\"Mean\
+      \ return (profit or loss) per trade expressed as a decimal (e.g., 0.02 for 2%).\"\
+      )\n    max_drawdown: float = Field(..., description=\"Maximum percentage drop\
+      \ from a peak to a trough in equity during the period.\")\n    sharpe_ratio:\
+      \ float = Field(..., description=\"Sharpe ratio of the strategy over the monitored\
+      \ period.\")\n    improvement_suggestions: str = Field(..., description=\"List\
+      \ of concise suggestions for strategy or risk management enhancements.\")\n\
+      \    action_items: str = Field(..., description=\"Concrete action items derived\
+      \ from the suggestions, ready for implementation.\")\n    is_significant_change:\
+      \ bool = Field(..., description=\"Flag indicating whether the results show a\
+      \ statistically significant deviation from expected performance.\")\n\n\nclass\
+      \ RefineTradingStrategyOutput(BaseModel):\n    \"\"\"Pydantic model for refine_trading_strategy\
+      \ node outputs.\"\"\"\n    strategy_name: str = Field(..., description=\"Identifier\
+      \ of the trading strategy being refined\")\n    entry_rule: str = Field(...,\
+      \ description=\"Textual description of the updated entry rule\")\n    exit_rule:\
+      \ str = Field(..., description=\"Textual description of the updated exit rule\"\
+      )\n    position_size_rule: str = Field(..., description=\"Description of the\
+      \ updated position sizing rule\")\n    stop_loss_level: float = Field(..., description=\"\
+      Stop\\u2011loss level expressed as a percentage of the entry price\")\n    take_profit_level:\
+      \ float = Field(..., description=\"Take\\u2011profit level expressed as a percentage\
+      \ of the entry price\")\n    max_drawdown_limit: float = Field(..., description=\"\
+      Maximum acceptable drawdown for the strategy, as a percentage of equity\")\n\
+      \    risk_per_trade: float = Field(..., description=\"Risk allocated per trade,\
+      \ expressed as a percentage of equity\")\n    expected_return: float = Field(...,\
+      \ description=\"Projected annualized return of the refined strategy, expressed\
+      \ as a percentage\")\n    expected_sharpe_ratio: float = Field(..., description=\"\
+      Projected Sharpe ratio of the refined strategy\")\n    confidence_level: float\
+      \ = Field(..., description=\"Confidence level (0 to 1) that the refinements\
+      \ will improve performance\")\n    adjustments_summary: str = Field(..., description=\"\
+      Concise summary of the key adjustments made to the strategy\")\n    is_strategy_updated:\
+      \ bool = Field(..., description=\"Indicates whether the strategy has been successfully\
+      \ updated\")\n\n\ndef refine_trading_strategy(analyze_trading_results_input:\
+      \ AnalyzeTradingResultsOutput, **kwargs) -> RefineTradingStrategyOutput:\n \
+      \   \"\"\"Refine the trading strategy based on analysis of trading results.\n\
+      \n    Args:\n        analyze_trading_results_input: Input from the 'analyze_trading_results'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       RefineTradingStrategyOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return RefineTradingStrategyOutput(\n       \
+      \ strategy_name=\"\",\n        entry_rule=\"\",\n        exit_rule=\"\",\n \
+      \       position_size_rule=\"\",\n        stop_loss_level=0.0,\n        take_profit_level=0.0,\n\
+      \        max_drawdown_limit=0.0,\n        risk_per_trade=0.0,\n        expected_return=0.0,\n\
+      \        expected_sharpe_ratio=0.0,\n        confidence_level=0.0,\n       \
+      \ adjustments_summary=\"\",\n        is_strategy_updated=False,\n    )"
     name: refine_trading_strategy
     nodes_depended_on:
     - analyze_trading_results
@@ -1053,3 +1436,4 @@ nodes:
           compared to baseline; otherwise, set to False.
     prompt: Using insights from trading results, refine the trading strategy to improve
       performance, adjusting parameters or rules as necessary.
+    shims: []

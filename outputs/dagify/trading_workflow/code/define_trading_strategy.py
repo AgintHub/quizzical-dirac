@@ -1,3 +1,17 @@
+from ._define_trading_strategy.validate_and_structure_data import validate_and_structure_data
+from ._define_trading_strategy.compute_descriptive_statistics import compute_descriptive_statistics
+from ._define_trading_strategy.generate_technical_indicators import generate_technical_indicators
+from ._define_trading_strategy.analyze_indicator_predictive_power import analyze_indicator_predictive_power
+from ._define_trading_strategy.formulate_entry_rules import formulate_entry_rules
+from ._define_trading_strategy.design_exit_rules import design_exit_rules
+from ._define_trading_strategy.create_position_sizing_rule import create_position_sizing_rule
+from ._define_trading_strategy.create_risk_management_rule import create_risk_management_rule
+from ._define_trading_strategy.filter_tradeable_assets import filter_tradeable_assets
+from ._define_trading_strategy.generate_strategy_name import generate_strategy_name
+
+from pydantic import BaseModel, Field
+
+
 # -- PRD --
 # 1. BULLET: Validate and structure the raw historical data from the parent node into a
 #   clean DataFrame, ensuring that each asset's timestamps align with its
@@ -112,7 +126,6 @@
 #           to JSON if needed.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
 
 
 class CollectHistoricalMarketDataOutput(BaseModel):
@@ -147,14 +160,74 @@ def define_trading_strategy(collect_historical_market_data_input: CollectHistori
     Returns:
         DefineTradingStrategyOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Validate and structure raw historical data into clean DataFrame
+    clean_dataframe = validate_and_structure_data(
+        assets=collect_historical_market_data_input.assets,
+        timestamps=collect_historical_market_data_input.timestamps,
+        price_values=collect_historical_market_data_input.price_values,
+        timeframes=collect_historical_market_data_input.timeframes
+    )
+    
+    # Compute descriptive statistics for each asset and timeframe
+    statistical_metadata = compute_descriptive_statistics(dataframe=clean_dataframe)
+    
+    # Generate comprehensive set of technical indicators
+    indicators_dataframe = generate_technical_indicators(
+        dataframe=clean_dataframe,
+        timeframes=collect_historical_market_data_input.timeframes
+    )
+    
+    # Perform correlation and predictive power analysis
+    signal_analysis_results = analyze_indicator_predictive_power(
+        indicators_df=indicators_dataframe,
+        statistical_data=statistical_metadata
+    )
+    
+    # Formulate composite entry rule using top-performing indicators
+    entry_rule_string: str = formulate_entry_rules(
+        signal_results=signal_analysis_results,
+        indicators_df=indicators_dataframe
+    )
+    
+    # Design exit rules with time-based and price-based conditions
+    exit_rule_string: str = design_exit_rules(
+        indicators_df=indicators_dataframe,
+        statistical_data=statistical_metadata
+    )
+    
+    # Specify position sizing rule using fixed-fractional approach
+    position_sizing_rule_string: str = create_position_sizing_rule(
+        risk_tolerance=0.02,  # 2% risk per trade
+        method="fixed_fractional"
+    )
+    
+    # Create comprehensive risk management rule
+    risk_management_rule_string: str = create_risk_management_rule(
+        max_drawdown=0.20,
+        max_assets=5,
+        max_daily_loss=0.05
+    )
+    
+    # Filter assets based on data quality and volume thresholds
+    filtered_assets: str = filter_tradeable_assets(
+        assets=collect_historical_market_data_input.assets,
+        data_quality_score=collect_historical_market_data_input.data_quality_score,
+        dataframe=clean_dataframe,
+        min_quality_threshold=0.8
+    )
+    
+    # Generate strategy name based on characteristics
+    strategy_name: str = generate_strategy_name(
+        entry_rules=entry_rule_string,
+        timeframes=collect_historical_market_data_input.timeframes
+    )
+    
+    # Assemble final strategy dictionary and return
     return DefineTradingStrategyOutput(
-        strategy_name="",
-        entry_rules="",
-        exit_rules="",
-        position_sizing_rule="",
-        risk_management_rule="",
-        assets_traded="",
+        strategy_name=strategy_name,
+        entry_rules=entry_rule_string,
+        exit_rules=exit_rule_string,
+        position_sizing_rule=position_sizing_rule_string,
+        risk_management_rule=risk_management_rule_string,
+        assets_traded=filtered_assets
     )

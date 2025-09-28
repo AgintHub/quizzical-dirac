@@ -1,3 +1,17 @@
+from ._analyze_trading_results.deserialize_monitoring_snapshot import deserialize_monitoring_snapshot
+from ._analyze_trading_results.compute_total_trades import compute_total_trades
+from ._analyze_trading_results.calculate_win_rate import calculate_win_rate
+from ._analyze_trading_results.calculate_average_return_per_trade import calculate_average_return_per_trade
+from ._analyze_trading_results.calculate_max_drawdown import calculate_max_drawdown
+from ._analyze_trading_results.calculate_sharpe_ratio import calculate_sharpe_ratio
+from ._analyze_trading_results.generate_improvement_suggestions import generate_improvement_suggestions
+from ._analyze_trading_results.map_suggestions_to_actions import map_suggestions_to_actions
+from ._analyze_trading_results.assess_statistical_significance import assess_statistical_significance
+from ._analyze_trading_results.validate_output_schema import validate_output_schema
+
+from pydantic import BaseModel, Field
+
+
 # -- PRD --
 # 1. BULLET: Retrieve the monitoring snapshot data from the parent node
 #   "monitor_trading_performance" and deserialize it into a structured
@@ -100,7 +114,6 @@
 #           required fields.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
 
 
 class MonitorTradingPerformanceOutput(BaseModel):
@@ -140,16 +153,79 @@ def analyze_trading_results(monitor_trading_performance_input: MonitorTradingPer
     Returns:
         AnalyzeTradingResultsOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Retrieve and deserialize monitoring snapshot data
+    snapshot_data: dict = deserialize_monitoring_snapshot(input_data=monitor_trading_performance_input)
+    
+    # Compute total trades with fallback calculation
+    total_trades: int = compute_total_trades(
+        snapshot_total=snapshot_data.get('total_trades'),
+        winning_trades=monitor_trading_performance_input.winning_trades,
+        losing_trades=monitor_trading_performance_input.losing_trades
+    )
+    
+    # Calculate win rate with division-by-zero guard
+    win_rate: float = calculate_win_rate(
+        winning_trades=monitor_trading_performance_input.winning_trades,
+        total_trades=total_trades
+    )
+    
+    # Derive average return per trade
+    average_return_per_trade: float = calculate_average_return_per_trade(
+        snapshot_average=monitor_trading_performance_input.average_return_per_trade,
+        snapshot_data=snapshot_data,
+        total_trades=total_trades
+    )
+    
+    # Determine max drawdown
+    max_drawdown: float = calculate_max_drawdown(
+        snapshot_drawdown=monitor_trading_performance_input.max_drawdown,
+        equity_curve=snapshot_data.get('equity_curve')
+    )
+    
+    # Compute Sharpe ratio
+    sharpe_ratio: float = calculate_sharpe_ratio(
+        snapshot_sharpe=monitor_trading_performance_input.sharpe_ratio,
+        returns_data=snapshot_data.get('returns'),
+        risk_free_rate=0.01
+    )
+    
+    # Generate improvement suggestions based on thresholds
+    improvement_suggestions: str = generate_improvement_suggestions(
+        win_rate=win_rate,
+        max_drawdown=max_drawdown,
+        sharpe_ratio=sharpe_ratio
+    )
+    
+    # Translate suggestions into concrete action items
+    action_items: str = map_suggestions_to_actions(suggestions=improvement_suggestions)
+    
+    # Assess statistical significance of performance changes
+    is_significant_change: bool = assess_statistical_significance(
+        observed_win_rate=win_rate,
+        historical_data=snapshot_data.get('historical_performance')
+    )
+    
+    # Validate final output against schema
+    output_data: dict = {
+        'total_trades': total_trades,
+        'win_rate': win_rate,
+        'average_return_per_trade': average_return_per_trade,
+        'max_drawdown': max_drawdown,
+        'sharpe_ratio': sharpe_ratio,
+        'improvement_suggestions': improvement_suggestions,
+        'action_items': action_items,
+        'is_significant_change': is_significant_change
+    }
+    
+    validate_output_schema(output_data=output_data)
+    
     return AnalyzeTradingResultsOutput(
-        total_trades=0,
-        win_rate=0.0,
-        average_return_per_trade=0.0,
-        max_drawdown=0.0,
-        sharpe_ratio=0.0,
-        improvement_suggestions="",
-        action_items="",
-        is_significant_change=False,
+        total_trades=total_trades,
+        win_rate=win_rate,
+        average_return_per_trade=average_return_per_trade,
+        max_drawdown=max_drawdown,
+        sharpe_ratio=sharpe_ratio,
+        improvement_suggestions=improvement_suggestions,
+        action_items=action_items,
+        is_significant_change=is_significant_change
     )

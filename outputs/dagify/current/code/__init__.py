@@ -16,6 +16,11 @@ from .configure_trading_infrastructure import configure_trading_infrastructure
 from .define_trading_performance_metrics import define_trading_performance_metrics
 from .produce_final_trading_report import produce_final_trading_report
 from .define_trading_objectives import define_trading_objectives
+from . import _monitor_trading_performance
+from . import _define_trading_strategy
+from . import _analyze_trading_results
+from . import _collect_historical_market_data
+from . import _backtest_trading_strategy
 
 
 __all__ = [
@@ -36,5 +41,10 @@ __all__ = [
     'configure_trading_infrastructure',
     'define_trading_performance_metrics',
     'produce_final_trading_report',
-    'define_trading_objectives'
+    'define_trading_objectives',
+    '_monitor_trading_performance',
+    '_define_trading_strategy',
+    '_analyze_trading_results',
+    '_collect_historical_market_data',
+    '_backtest_trading_strategy'
 ]

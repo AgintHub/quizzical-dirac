@@ -74,7 +74,7 @@ from pydantic import BaseModel, Field
 
 class ConfigureTradingInfrastructureOutput(BaseModel):
     """Pydantic model for configure_trading_infrastructure node outputs."""
-    brokerage_api_name: str = Field(..., description="The name of the selected brokerage API (e.g., \"Interactive Brokers\", \"TD Ameritrade\")")
+    brokerage_api_name: str = Field(..., description="The name of the selected brokerage API (e.g., "Interactive Brokers", "TD Ameritrade")")
     api_key_status: bool = Field(..., description="Whether the API key was successfully set up")
     api_secret_status: bool = Field(..., description="Whether the API secret was successfully set up")
     platform_configured: bool = Field(..., description="Whether the trading platform was successfully configured and is ready to use")

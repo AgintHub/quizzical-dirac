@@ -1,3 +1,15 @@
+from ._backtest_trading_strategy.validate_strategy_definition import validate_strategy_definition
+from ._backtest_trading_strategy.retrieve_historical_price_data import retrieve_historical_price_data
+from ._backtest_trading_strategy.simulate_trade_execution import simulate_trade_execution
+from ._backtest_trading_strategy.calculate_performance_metrics import calculate_performance_metrics
+from ._backtest_trading_strategy.calculate_max_drawdown import calculate_max_drawdown
+from ._backtest_trading_strategy.calculate_annualized_return import calculate_annualized_return
+from ._backtest_trading_strategy.calculate_sharpe_ratio import calculate_sharpe_ratio
+from ._backtest_trading_strategy.generate_performance_summary import generate_performance_summary
+
+from pydantic import BaseModel, Field
+
+
 # -- PRD --
 # 1. BULLET: Extract strategy definition from the parent node's output, ensuring all
 #   fields (strategy_name, entry_rules, exit_rules, position_sizing_rule,
@@ -99,7 +111,6 @@
 #           {win_rate:.2%}."
 # -- END PRD --
 
-from pydantic import BaseModel, Field
 
 
 class DefineTradingStrategyOutput(BaseModel):
@@ -136,18 +147,70 @@ def backtest_trading_strategy(define_trading_strategy_input: DefineTradingStrate
     Returns:
         BacktestTradingStrategyOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Extract and validate strategy definition
+    validated_strategy: dict = validate_strategy_definition(
+        strategy_input=define_trading_strategy_input
+    )
+    
+    # Retrieve historical price data for all assets
+    historical_data: dict = retrieve_historical_price_data(
+        assets=validated_strategy['assets_traded'],
+        timeframes=validated_strategy['required_timeframes']
+    )
+    
+    # Simulate trade execution over historical period
+    trade_results: list = simulate_trade_execution(
+        historical_data=historical_data,
+        entry_rules=validated_strategy['entry_rules'],
+        exit_rules=validated_strategy['exit_rules'],
+        position_sizing=validated_strategy['position_sizing_rule'],
+        risk_management=validated_strategy['risk_management_rule']
+    )
+    
+    # Calculate performance metrics from trade results
+    performance_metrics: dict = calculate_performance_metrics(
+        trade_results=trade_results
+    )
+    
+    # Calculate maximum drawdown from equity curve
+    max_drawdown: float = calculate_max_drawdown(
+        equity_curve=performance_metrics['equity_curve']
+    )
+    
+    # Calculate annualized return
+    annualized_return: float = calculate_annualized_return(
+        total_return=performance_metrics['total_return'],
+        trading_days=performance_metrics['total_trading_days']
+    )
+    
+    # Calculate Sharpe ratio
+    sharpe_ratio: float = calculate_sharpe_ratio(
+        daily_returns=performance_metrics['daily_returns'],
+        risk_free_rate=0.0
+    )
+    
+    # Generate performance summary
+    summary: str = generate_performance_summary(
+        strategy_name=validated_strategy['strategy_name'],
+        metrics={
+            'total_return': performance_metrics['total_return'],
+            'annualized_return': annualized_return,
+            'max_drawdown': max_drawdown,
+            'sharpe_ratio': sharpe_ratio,
+            'number_of_trades': performance_metrics['number_of_trades'],
+            'win_rate': performance_metrics['win_rate']
+        }
+    )
+    
     return BacktestTradingStrategyOutput(
-        total_return=0.0,
-        annualized_return=0.0,
-        max_drawdown=0.0,
-        sharpe_ratio=0.0,
-        number_of_trades=0,
-        win_rate=0.0,
-        avg_profit_per_trade=0.0,
-        avg_loss_per_trade=0.0,
-        win_loss_ratio=0.0,
-        performance_summary="",
+        total_return=performance_metrics['total_return'],
+        annualized_return=annualized_return,
+        max_drawdown=max_drawdown,
+        sharpe_ratio=sharpe_ratio,
+        number_of_trades=performance_metrics['number_of_trades'],
+        win_rate=performance_metrics['win_rate'],
+        avg_profit_per_trade=performance_metrics['avg_profit_per_trade'],
+        avg_loss_per_trade=performance_metrics['avg_loss_per_trade'],
+        win_loss_ratio=performance_metrics['win_loss_ratio'],
+        performance_summary=summary
     )

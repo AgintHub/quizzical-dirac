@@ -1,3 +1,19 @@
+from ._monitor_trading_performance.initialize_monitoring_state import initialize_monitoring_state
+from ._monitor_trading_performance.load_performance_thresholds import load_performance_thresholds
+from ._monitor_trading_performance.filter_successful_trades import filter_successful_trades
+from ._monitor_trading_performance.update_position_map import update_position_map
+from ._monitor_trading_performance.calculate_trade_pnl import calculate_trade_pnl
+from ._monitor_trading_performance.update_equity_curve import update_equity_curve
+from ._monitor_trading_performance.calculate_performance_metrics import calculate_performance_metrics
+from ._monitor_trading_performance.evaluate_performance_stability import evaluate_performance_stability
+from ._monitor_trading_performance.generate_recommended_adjustments import generate_recommended_adjustments
+from ._monitor_trading_performance.check_alert_conditions import check_alert_conditions
+from ._monitor_trading_performance.get_current_iso_timestamp import get_current_iso_timestamp
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
 # -- PRD --
 # 1. BULLET: Initialize monitoring state with in‑memory data structures: a position map
 #   keyed by instrument to track open positions, a list of closed trade
@@ -136,8 +152,6 @@
 #           `datetime.utcnow().isoformat()` for timestamp.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
-from typing import List
 
 
 class ExecuteTradesOutput(BaseModel):
@@ -178,19 +192,96 @@ def monitor_trading_performance(execute_trades_input: ExecuteTradesOutput, **kwa
     Returns:
         MonitorTradingPerformanceOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Initialize monitoring state with in-memory data structures
+    monitoring_state = initialize_monitoring_state()
+    position_map = monitoring_state["position_map"]
+    closed_trades = monitoring_state["closed_trades"]
+    equity_curve = monitoring_state["equity_curve"]
+    
+    # Load configuration thresholds
+    thresholds = load_performance_thresholds()
+    
+    # Filter successful trades only
+    successful_trades = filter_successful_trades(
+        trade_status=execute_trades_input.trade_execution_status,
+        trade_ids=execute_trades_input.trade_execution_ids,
+        trade_prices=execute_trades_input.trade_execution_prices,
+        trade_quantities=execute_trades_input.trade_execution_quantities,
+        trade_instruments=execute_trades_input.trade_execution_instruments,
+        trade_sides=execute_trades_input.trade_execution_sides,
+        trade_timestamps=execute_trades_input.trade_execution_timestamps
+    )
+    
+    # Process each successful trade
+    for trade in successful_trades:
+        # Update position map and detect closures
+        position_update_result = update_position_map(
+            position_map=position_map,
+            instrument=trade["instrument"],
+            side=trade["side"],
+            price=trade["price"],
+            quantity=trade["quantity"],
+            timestamp=trade["timestamp"]
+        )
+        
+        # If position was closed, calculate P&L and update records
+        if position_update_result["position_closed"]:
+            closed_trade_record = calculate_trade_pnl(
+                entry_price=position_update_result["entry_price"],
+                exit_price=trade["price"],
+                quantity=position_update_result["closed_quantity"],
+                side=position_update_result["original_side"],
+                instrument=trade["instrument"],
+                timestamp=trade["timestamp"]
+            )
+            
+            # Append to closed trades list
+            closed_trades.append(closed_trade_record)
+            
+            # Update equity curve
+            update_equity_curve(
+                equity_curve=equity_curve,
+                return_fraction=closed_trade_record["return_fraction"]
+            )
+    
+    # Calculate performance metrics
+    performance_metrics = calculate_performance_metrics(
+        closed_trades=closed_trades,
+        equity_curve=equity_curve
+    )
+    
+    # Evaluate performance stability
+    stability_result = evaluate_performance_stability(
+        metrics=performance_metrics,
+        thresholds=thresholds
+    )
+    
+    # Generate recommended adjustments
+    recommended_adjustments = generate_recommended_adjustments(
+        metrics=performance_metrics,
+        thresholds=thresholds,
+        stability_result=stability_result
+    )
+    
+    # Check alert conditions
+    alert_flag = check_alert_conditions(
+        metrics=performance_metrics,
+        alert_thresholds=thresholds["alert_thresholds"]
+    )
+    
+    # Generate current timestamp
+    current_timestamp = get_current_iso_timestamp()
+    
     return MonitorTradingPerformanceOutput(
-        timestamp="",
-        total_trades=0,
-        winning_trades=0,
-        losing_trades=0,
-        win_rate=0.0,
-        average_return_per_trade=0.0,
-        max_drawdown=0.0,
-        sharpe_ratio=0.0,
-        is_performance_stable=False,
-        recommended_adjustments="",
-        alert_flag=False,
+        timestamp=current_timestamp,
+        total_trades=performance_metrics["total_trades"],
+        winning_trades=performance_metrics["winning_trades"],
+        losing_trades=performance_metrics["losing_trades"],
+        win_rate=performance_metrics["win_rate"],
+        average_return_per_trade=performance_metrics["average_return_per_trade"],
+        max_drawdown=performance_metrics["max_drawdown"],
+        sharpe_ratio=performance_metrics["sharpe_ratio"],
+        is_performance_stable=stability_result["is_stable"],
+        recommended_adjustments=recommended_adjustments,
+        alert_flag=alert_flag
     )

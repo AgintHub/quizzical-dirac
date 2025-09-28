@@ -112,10 +112,10 @@ class ImplementRiskManagementOutput(BaseModel):
     """Pydantic model for implement_risk_management node outputs."""
     risk_per_trade: float = Field(..., description="Maximum risk per trade expressed as a percentage of total capital (e.g., 0.01 for 1%)")
     stop_loss_percentage: float = Field(..., description="Standard stop\u2011loss level expressed as a percentage of entry price (e.g., 0.02 for 2%)")
-    position_sizing_strategy: str = Field(..., description="Description of the position sizing rule (e.g., \"fixed fractional\", \"Kelly criterion\")")
+    position_sizing_strategy: str = Field(..., description="Description of the position sizing rule (e.g., "fixed fractional", "Kelly criterion")")
     max_drawdown: float = Field(..., description="Maximum allowable cumulative drawdown as a percentage of account equity (e.g., 0.20 for 20%)")
     diversification_assets: int = Field(..., description="Number of distinct assets or securities to hold in the portfolio for diversification")
-    diversification_strategy: str = Field(..., description="Approach to diversification (e.g., \"sector\u2011based\", \"beta\u2011neutral\")")
+    diversification_strategy: str = Field(..., description="Approach to diversification (e.g., "sector\u2011based", "beta\u2011neutral")")
     stop_loss_levels: float = Field(..., description="List of specific stop\u2011loss price levels for individual positions")
     is_implemented: bool = Field(..., description="Whether the risk management rules have been successfully applied to the trading system")
 
