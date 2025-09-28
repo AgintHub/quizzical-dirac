@@ -1,6 +1,5 @@
-dag_type: plain_text
-description: A workflow for building a trading system, including data collection,
-  strategy development, execution, and monitoring.
+dag_type: typed
+description: Generated workflow from UI.
 name: trading_workflow
 nodes:
   analyze_trading_results:
@@ -10,6 +9,35 @@ nodes:
     nodes_depended_on:
     - monitor_trading_performance
     nodes_dependent_on: []
+    output_structure:
+    - description: Total number of trades executed during the monitored period.
+      key: total_trades
+      type: int
+    - description: Ratio of winning trades to total trades, expressed as a decimal
+        between 0 and 1.
+      key: win_rate
+      type: float
+    - description: Mean return (profit or loss) per trade expressed as a decimal (e.g.,
+        0.02 for 2%).
+      key: average_return_per_trade
+      type: float
+    - description: Maximum percentage drop from a peak to a trough in equity during
+        the period.
+      key: max_drawdown
+      type: float
+    - description: Sharpe ratio of the strategy over the monitored period.
+      key: sharpe_ratio
+      type: float
+    - description: List of concise suggestions for strategy or risk management enhancements.
+      key: improvement_suggestions
+      type: List[str]
+    - description: Concrete action items derived from the suggestions, ready for implementation.
+      key: action_items
+      type: List[str]
+    - description: Flag indicating whether the results show a statistically significant
+        deviation from expected performance.
+      key: is_significant_change
+      type: bool
     prompt: Analyze trading results to understand the effectiveness of the strategy
       and risk management, identifying areas for improvement or optimization.
   backtest_trading_strategy:
@@ -19,6 +47,37 @@ nodes:
     nodes_depended_on:
     - define_trading_strategy
     nodes_dependent_on: []
+    output_structure:
+    - description: Total cumulative return of the strategy over the backtesting period.
+      key: total_return
+      type: float
+    - description: Annualized return of the strategy.
+      key: annualized_return
+      type: float
+    - description: Maximum drawdown observed during backtesting.
+      key: max_drawdown
+      type: float
+    - description: Sharpe ratio of the strategy.
+      key: sharpe_ratio
+      type: float
+    - description: Total number of trades executed during backtesting.
+      key: number_of_trades
+      type: int
+    - description: Fraction of profitable trades (value between 0 and 1).
+      key: win_rate
+      type: float
+    - description: Average profit per winning trade.
+      key: avg_profit_per_trade
+      type: float
+    - description: Average loss per losing trade.
+      key: avg_loss_per_trade
+      type: float
+    - description: Ratio of average profit to average loss.
+      key: win_loss_ratio
+      type: float
+    - description: Concise textual summary of backtest results.
+      key: performance_summary
+      type: str
     prompt: Backtest the defined strategy on historical data, calculating performance
       metrics such as return, drawdown, and Sharpe ratio.
   collect_historical_market_data:
@@ -27,6 +86,31 @@ nodes:
     name: collect_historical_market_data
     nodes_depended_on: []
     nodes_dependent_on: []
+    output_structure:
+    - description: List of asset tickers collected
+      key: assets
+      type: List[str]
+    - description: List of timeframes requested
+      key: timeframes
+      type: List[str]
+    - description: ISO 8601 timestamps for each data point
+      key: timestamps
+      type: List[str]
+    - description: Price values corresponding to timestamps and assets in order
+      key: price_values
+      type: List[float]
+    - description: Total number of records collected
+      key: record_count
+      type: int
+    - description: Whether the data has been cleaned and validated
+      key: is_clean
+      type: bool
+    - description: Name of data source or provider
+      key: source_name
+      type: str
+    - description: Quality score between 0 and 1
+      key: data_quality_score
+      type: float
     prompt: Collect historical price data for the desired assets and timeframes. Ensure
       data is clean and properly formatted.
   configure_trading_infrastructure:
@@ -35,6 +119,25 @@ nodes:
     name: configure_trading_infrastructure
     nodes_depended_on: []
     nodes_dependent_on: []
+    output_structure:
+    - description: The name of the selected brokerage API (e.g., "Interactive Brokers",
+        "TD Ameritrade")
+      key: brokerage_api_name
+      type: str
+    - description: Whether the API key was successfully set up
+      key: api_key_status
+      type: bool
+    - description: Whether the API secret was successfully set up
+      key: api_secret_status
+      type: bool
+    - description: Whether the trading platform was successfully configured and is
+        ready to use
+      key: platform_configured
+      type: bool
+    - description: Whether the system can establish a live connection to the brokerage
+        API
+      key: connectivity_status
+      type: bool
     prompt: Configure the trading infrastructure, including selecting a brokerage
       API, setting up a trading platform, and ensuring connectivity.
   define_trading_strategy:
@@ -44,6 +147,30 @@ nodes:
     nodes_depended_on:
     - collect_historical_market_data
     nodes_dependent_on: []
+    output_structure:
+    - description: Descriptive name of the trading strategy
+      key: strategy_name
+      type: str
+    - description: Textual description of the conditions that trigger a long or short
+        position
+      key: entry_rules
+      type: str
+    - description: Textual description of the conditions that trigger the closure
+        of a position
+      key: exit_rules
+      type: str
+    - description: Rule or formula that determines how much capital or how many shares/contracts
+        to trade
+      key: position_sizing_rule
+      type: str
+    - description: Description of stop‑loss levels, max draw‑down limits, and portfolio
+        diversification constraints
+      key: risk_management_rule
+      type: str
+    - description: List of asset symbols or identifiers that the strategy is designed
+        to trade
+      key: assets_traded
+      type: List[str]
     prompt: Using the historical data, define a trading strategy including entry and
       exit rules, risk management, and position sizing.
   execute_trades:
@@ -56,6 +183,34 @@ nodes:
     - configure_trading_infrastructure
     - implement_risk_management
     nodes_dependent_on: []
+    output_structure:
+    - description: Unique identifiers for each trade that was executed
+      key: trade_execution_ids
+      type: List[str]
+    - description: True if the trade was executed successfully, False otherwise
+      key: trade_execution_status
+      type: List[bool]
+    - description: ISO‑8601 timestamps indicating when each trade was executed
+      key: trade_execution_timestamps
+      type: List[str]
+    - description: Price at which each trade was executed
+      key: trade_execution_prices
+      type: List[float]
+    - description: Quantity (in units or shares) executed for each trade
+      key: trade_execution_quantities
+      type: List[float]
+    - description: Symbol or instrument identifier for each trade
+      key: trade_execution_instruments
+      type: List[str]
+    - description: 'Side of the trade: ''buy'' or ''sell'' for each execution'
+      key: trade_execution_sides
+      type: List[str]
+    - description: True if all trades in this batch were executed without error
+      key: overall_execution_success
+      type: bool
+    - description: Error messages for any trades that failed to execute
+      key: execution_error_messages
+      type: List[str]
     prompt: Execute trades according to the strategy, using the configured infrastructure
       and adhering to risk management rules.
   implement_risk_management:
@@ -65,6 +220,37 @@ nodes:
     nodes_depended_on:
     - define_trading_strategy
     nodes_dependent_on: []
+    output_structure:
+    - description: Maximum risk per trade expressed as a percentage of total capital
+        (e.g., 0.01 for 1%)
+      key: risk_per_trade
+      type: float
+    - description: Standard stop‑loss level expressed as a percentage of entry price
+        (e.g., 0.02 for 2%)
+      key: stop_loss_percentage
+      type: float
+    - description: Description of the position sizing rule (e.g., "fixed fractional",
+        "Kelly criterion")
+      key: position_sizing_strategy
+      type: str
+    - description: Maximum allowable cumulative drawdown as a percentage of account
+        equity (e.g., 0.20 for 20%)
+      key: max_drawdown
+      type: float
+    - description: Number of distinct assets or securities to hold in the portfolio
+        for diversification
+      key: diversification_assets
+      type: int
+    - description: Approach to diversification (e.g., "sector‑based", "beta‑neutral")
+      key: diversification_strategy
+      type: str
+    - description: List of specific stop‑loss price levels for individual positions
+      key: stop_loss_levels
+      type: List[float]
+    - description: Whether the risk management rules have been successfully applied
+        to the trading system
+      key: is_implemented
+      type: bool
     prompt: Implement risk management rules based on the strategy, including position
       sizing, stop-loss levels, and portfolio diversification.
   monitor_trading_performance:
@@ -75,6 +261,42 @@ nodes:
     nodes_depended_on:
     - execute_trades
     nodes_dependent_on: []
+    output_structure:
+    - description: Current timestamp of the monitoring snapshot
+      key: timestamp
+      type: str
+    - description: Total number of trades executed in the monitoring period
+      key: total_trades
+      type: int
+    - description: Number of trades that closed with a profit
+      key: winning_trades
+      type: int
+    - description: Number of trades that closed with a loss
+      key: losing_trades
+      type: int
+    - description: Percentage of winning trades out of total trades (0 to 1)
+      key: win_rate
+      type: float
+    - description: Average profit or loss per trade expressed as a return fraction
+      key: average_return_per_trade
+      type: float
+    - description: Maximum drawdown observed in the monitoring period
+      key: max_drawdown
+      type: float
+    - description: Sharpe ratio calculated over the monitoring period
+      key: sharpe_ratio
+      type: float
+    - description: Flag indicating whether performance metrics are within acceptable
+        ranges
+      key: is_performance_stable
+      type: bool
+    - description: List of suggested changes to strategy or risk management rules
+      key: recommended_adjustments
+      type: List[str]
+    - description: Flag indicating if an alert should be triggered due to significant
+        performance deviation
+      key: alert_flag
+      type: bool
     prompt: Monitor trading performance in real-time, tracking key metrics and adjusting
       the strategy or risk management rules as necessary to maintain optimal performance.
   refine_trading_strategy:
@@ -84,5 +306,47 @@ nodes:
     nodes_depended_on:
     - analyze_trading_results
     nodes_dependent_on: []
+    output_structure:
+    - description: Identifier of the trading strategy being refined
+      key: strategy_name
+      type: str
+    - description: Textual description of the updated entry rule
+      key: entry_rule
+      type: str
+    - description: Textual description of the updated exit rule
+      key: exit_rule
+      type: str
+    - description: Description of the updated position sizing rule
+      key: position_size_rule
+      type: str
+    - description: Stop‑loss level expressed as a percentage of the entry price
+      key: stop_loss_level
+      type: float
+    - description: Take‑profit level expressed as a percentage of the entry price
+      key: take_profit_level
+      type: float
+    - description: Maximum acceptable drawdown for the strategy, as a percentage of
+        equity
+      key: max_drawdown_limit
+      type: float
+    - description: Risk allocated per trade, expressed as a percentage of equity
+      key: risk_per_trade
+      type: float
+    - description: Projected annualized return of the refined strategy, expressed
+        as a percentage
+      key: expected_return
+      type: float
+    - description: Projected Sharpe ratio of the refined strategy
+      key: expected_sharpe_ratio
+      type: float
+    - description: Confidence level (0 to 1) that the refinements will improve performance
+      key: confidence_level
+      type: float
+    - description: Concise summary of the key adjustments made to the strategy
+      key: adjustments_summary
+      type: str
+    - description: Indicates whether the strategy has been successfully updated
+      key: is_strategy_updated
+      type: bool
     prompt: Using insights from trading results, refine the trading strategy to improve
       performance, adjusting parameters or rules as necessary.
