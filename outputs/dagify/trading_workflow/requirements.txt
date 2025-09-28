@@ -6,7 +6,7 @@
 #
 annotated-types==0.7.0
     # via pydantic
-pydantic==2.11.7
+pydantic==2.11.9
     # via -r /agint/4148125ee56dda19628e514b46e0e7adc6fc6ae66bdcdd8a69df2514405ba143/outputs/dagify/trading_workflow/requirements.in
 pydantic-core==2.33.2
     # via pydantic
