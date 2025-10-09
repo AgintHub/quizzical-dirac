@@ -36,6 +36,9 @@
 
 from typing import List
 
+import json
+import ast
+
 
 def combine_cultural_datasets(religions: str, languages: str, practices: str) -> List[str]:
     """
@@ -49,4 +52,58 @@ practices: Input parameter of type str
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    combined_data = []
+    
+    # Process each input parameter
+    for data_str in [religions, languages, practices]:
+        if not data_str:
+            continue
+            
+        try:
+            # Try to parse as JSON array first
+            if data_str.strip().startswith('[') and data_str.strip().endswith(']'):
+                try:
+                    parsed_data = json.loads(data_str)
+                    if isinstance(parsed_data, list):
+                        combined_data.extend([str(item) for item in parsed_data])
+                        continue
+                except json.JSONDecodeError:
+                    pass
+                
+                # Try using ast.literal_eval for Python list format
+                try:
+                    parsed_data = ast.literal_eval(data_str)
+                    if isinstance(parsed_data, list):
+                        combined_data.extend([str(item) for item in parsed_data])
+                        continue
+                except (ValueError, SyntaxError):
+                    pass
+            
+            # Try comma-separated values
+            if ',' in data_str:
+                items = [item.strip() for item in data_str.split(',')]
+                combined_data.extend([item for item in items if item])
+            else:
+                # Treat as single item if not empty
+                data_str = data_str.strip()
+                if data_str:
+                    combined_data.append(data_str)
+                    
+        except Exception as e:
+            # Error handling for malformed data
+            print(f"Warning: Could not parse data '{data_str}': {e}")
+            # Try to salvage by treating as single string item
+            data_str = data_str.strip()
+            if data_str:
+                combined_data.append(data_str)
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    result = []
+    for item in combined_data:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+    
+    return result

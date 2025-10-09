@@ -30,6 +30,8 @@
 #           default or fallback output when necessary.
 # -- END PRD --
 
+import re
+
 
 def format_final_report(content: str) -> str:
     """
@@ -41,4 +43,49 @@ def format_final_report(content: str) -> str:
     Returns:
         str: Output of type str
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    try:
+        # Handle cases where input is invalid or malformed
+        if not content or not isinstance(content, str):
+            return "# World Report\n\nNo content available."
+        
+        # Clean and prepare the content
+        content = content.strip()
+        
+        # Split content into lines for processing
+        lines = content.split('\n')
+        formatted_lines = []
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                formatted_lines.append('')
+                continue
+            
+            # Detect and format section headers (lines that are all caps or start with numbers/bullets)
+            if (line.isupper() and len(line.split()) <= 10) or re.match(r'^\d+\.', line) or re.match(r'^[•-]', line):
+                # Format as header
+                formatted_lines.append(f"## {line}")
+            elif re.match(r'^[A-Z][^.!?]*[.!?]?$', line) and len(line.split()) <= 15:
+                # Potential title or major header
+                formatted_lines.append(f"# {line}")
+            else:
+                # Regular text content - ensure proper paragraph formatting
+                formatted_lines.append(line)
+        
+        # Join the formatted content
+        formatted_content = '\n'.join(formatted_lines)
+        
+        # Apply final formatting standards
+        # Ensure proper spacing between sections
+        formatted_content = re.sub(r'\n{3,}', '\n\n', formatted_content)
+        
+        # Add a proper header if none exists
+        if not formatted_content.startswith('#'):
+            formatted_content = "# World Report\n\n" + formatted_content
+        
+        return formatted_content
+        
+    except Exception as e:
+        # Error handling for unexpected cases
+        return f"# World Report\n\nError formatting report: {str(e)}\n\nOriginal content:\n{content if isinstance(content, str) else 'Invalid content type'}"

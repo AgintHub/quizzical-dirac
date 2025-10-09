@@ -39,6 +39,9 @@
 
 from typing import List
 
+import re
+import json
+
 
 def extract_cultural_practices_data(practices: str) -> List[str]:
     """
@@ -50,4 +53,70 @@ def extract_cultural_practices_data(practices: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Handle empty or None input
+    if not practices or not practices.strip():
+        return []
+    
+    # Initialize result list
+    extracted_practices = []
+    
+    # Try to parse as JSON first (structured data)
+    try:
+        parsed_data = json.loads(practices)
+        if isinstance(parsed_data, list):
+            for item in parsed_data:
+                if isinstance(item, str):
+                    extracted_practices.append(item.strip())
+                elif isinstance(item, dict):
+                    # Extract text values from dictionary
+                    for value in item.values():
+                        if isinstance(value, str) and value.strip():
+                            extracted_practices.append(value.strip())
+                else:
+                    extracted_practices.append(str(item).strip())
+        elif isinstance(parsed_data, dict):
+            # Extract values from dictionary
+            for value in parsed_data.values():
+                if isinstance(value, str) and value.strip():
+                    extracted_practices.append(value.strip())
+                elif isinstance(value, list):
+                    for sub_item in value:
+                        if isinstance(sub_item, str) and sub_item.strip():
+                            extracted_practices.append(sub_item.strip())
+        else:
+            extracted_practices.append(str(parsed_data).strip())
+    except (json.JSONDecodeError, TypeError):
+        # If not JSON, treat as plain text and extract practices
+        
+        # Split by common delimiters
+        text = practices.replace('\n', '|').replace('\r', '|')
+        
+        # Split by various delimiters
+        delimiters = r'[;,\|\n\r]|\d+\.|\*|\-\s'
+        segments = re.split(delimiters, text)
+        
+        for segment in segments:
+            segment = segment.strip()
+            if segment and len(segment) > 3:  # Filter out very short segments
+                # Clean up the segment
+                cleaned_segment = re.sub(r'^[\d\W]+', '', segment)  # Remove leading numbers/symbols
+                cleaned_segment = cleaned_segment.strip()
+                if cleaned_segment and len(cleaned_segment) > 3:
+                    extracted_practices.append(cleaned_segment)
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_practices = []
+    for practice in extracted_practices:
+        if practice and practice.lower() not in seen:
+            seen.add(practice.lower())
+            unique_practices.append(practice)
+    
+    # Filter out very short or meaningless entries
+    filtered_practices = [
+        practice for practice in unique_practices 
+        if len(practice) > 3 and not re.match(r'^[\d\W]+$', practice)
+    ]
+    
+    return filtered_practices

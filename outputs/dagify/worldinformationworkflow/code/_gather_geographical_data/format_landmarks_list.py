@@ -30,6 +30,8 @@
 
 from typing import List
 
+import re
+
 
 def format_landmarks_list(data: str) -> List[str]:
     """
@@ -41,4 +43,37 @@ def format_landmarks_list(data: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Parse the input string containing major landmarks data
+    # Handle various delimiters and formats
+    if not data or not isinstance(data, str):
+        return []
+    
+    # Split by common delimiters (comma, semicolon, newline, pipe)
+    landmarks = re.split(r'[,;\n|]+', data)
+    
+    # Standardize the formatting of each landmark
+    formatted_landmarks = []
+    for landmark in landmarks:
+        # Clean and standardize each landmark
+        cleaned = landmark.strip()
+        if cleaned:  # Skip empty strings
+            # Remove extra whitespace and standardize format
+            cleaned = re.sub(r'\s+', ' ', cleaned)
+            # Apply title case formatting for consistency
+            standardized = cleaned.title()
+            formatted_landmarks.append(standardized)
+    
+    # Validate the output to ensure it meets the required List[str] format
+    # Remove duplicates while preserving order
+    seen = set()
+    result = []
+    for landmark in formatted_landmarks:
+        if landmark not in seen:
+            seen.add(landmark)
+            result.append(landmark)
+    
+    # Final validation - ensure all items are strings
+    validated_result = [str(item) for item in result if item]
+    
+    return validated_result

@@ -30,6 +30,9 @@
 #           are correctly appended to the output list.
 # -- END PRD --
 
+import re
+import json
+
 
 def extract_geographical_patterns(patterns: str) -> str:
     """
@@ -41,4 +44,58 @@ def extract_geographical_patterns(patterns: str) -> str:
     Returns:
         str: Output of type list
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Parse the input patterns to understand structure and content
+    lines = patterns.strip().split('\n')
+    parsed_patterns = []
+    for line in lines:
+        if line.strip():
+            parsed_patterns.append(line.strip())
+    
+    # Define geographical keywords and patterns for filtering
+    geographical_keywords = {
+        'continents': ['africa', 'asia', 'europe', 'north america', 'south america', 'antarctica', 'oceania'],
+        'countries': ['usa', 'united states', 'canada', 'mexico', 'brazil', 'argentina', 'china', 'india', 'japan', 'germany', 'france', 'italy', 'spain', 'uk', 'united kingdom', 'russia', 'australia'],
+        'cities': ['new york', 'london', 'paris', 'tokyo', 'beijing', 'mumbai', 'delhi', 'shanghai', 'los angeles', 'chicago', 'houston', 'phoenix', 'philadelphia', 'san antonio', 'san diego', 'dallas', 'san jose'],
+        'geographical_terms': ['mountain', 'river', 'ocean', 'sea', 'lake', 'desert', 'forest', 'valley', 'plateau', 'peninsula', 'island', 'coast', 'bay', 'gulf', 'strait', 'canyon', 'plain', 'hill', 'beach', 'harbor']
+    }
+    
+    # Flatten all geographical keywords for easier searching
+    all_geo_keywords = []
+    for category in geographical_keywords.values():
+        all_geo_keywords.extend(category)
+    
+    # Extract geographical patterns from parsed data
+    extracted_geographical_patterns = []
+    
+    for pattern in parsed_patterns:
+        pattern_lower = pattern.lower()
+        
+        # Check if pattern contains geographical keywords
+        contains_geo = False
+        for keyword in all_geo_keywords:
+            if keyword in pattern_lower:
+                contains_geo = True
+                break
+        
+        # Check for coordinate patterns (latitude/longitude)
+        coordinate_pattern = r'[-+]?\d{1,3}\.\d+[°]?\s*[NS]?\s*,?\s*[-+]?\d{1,3}\.\d+[°]?\s*[EW]?'
+        if re.search(coordinate_pattern, pattern, re.IGNORECASE):
+            contains_geo = True
+        
+        # Check for postal codes and area codes
+        postal_pattern = r'\b\d{5}(-\d{4})?\b|\b[A-Z]\d[A-Z]\s?\d[A-Z]\d\b'
+        if re.search(postal_pattern, pattern):
+            contains_geo = True
+        
+        # Check for directional indicators
+        directional_pattern = r'\b(north|south|east|west|northeast|northwest|southeast|southwest|central|northern|southern|eastern|western)\b'
+        if re.search(directional_pattern, pattern, re.IGNORECASE):
+            contains_geo = True
+        
+        if contains_geo:
+            extracted_geographical_patterns.append(pattern)
+    
+    # Format the extracted geographical patterns into a list for output
+    # Convert list to string representation as required by return type
+    return json.dumps(extracted_geographical_patterns)

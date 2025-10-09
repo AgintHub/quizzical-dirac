@@ -34,6 +34,8 @@
 
 from typing import List
 
+import re
+
 
 def format_countries_list(data: str) -> List[str]:
     """
@@ -45,4 +47,71 @@ def format_countries_list(data: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Handle empty or None input
+    if not data or not data.strip():
+        return []
+    
+    # Clean the input data
+    cleaned_data = data.strip()
+    
+    # Try multiple parsing approaches to handle different input formats
+    countries = []
+    
+    # First, try splitting by common delimiters
+    # Check for comma separation
+    if ',' in cleaned_data:
+        countries = [country.strip() for country in cleaned_data.split(',')]
+    # Check for semicolon separation
+    elif ';' in cleaned_data:
+        countries = [country.strip() for country in cleaned_data.split(';')]
+    # Check for pipe separation
+    elif '|' in cleaned_data:
+        countries = [country.strip() for country in cleaned_data.split('|')]
+    # Check for newline separation
+    elif '\n' in cleaned_data:
+        countries = [country.strip() for country in cleaned_data.split('\n')]
+    # Check for tab separation
+    elif '\t' in cleaned_data:
+        countries = [country.strip() for country in cleaned_data.split('\t')]
+    # Try to extract using regex patterns for structured data
+    else:
+        # Look for patterns like "Country: CountryName" or "- CountryName"
+        country_patterns = [
+            r'(?:Country|country)\s*:?\s*([A-Za-z\s]+)',
+            r'-\s*([A-Za-z\s]+)',
+            r'\*\s*([A-Za-z\s]+)',
+            r'\d+\.\s*([A-Za-z\s]+)',
+            r'([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)',  # Title case words
+        ]
+        
+        for pattern in country_patterns:
+            matches = re.findall(pattern, cleaned_data)
+            if matches:
+                countries.extend(matches)
+                break
+        
+        # If no patterns match, treat the entire string as a single country
+        if not countries:
+            countries = [cleaned_data]
+    
+    # Standardize the output format
+    standardized_countries = []
+    for country in countries:
+        if country and country.strip():
+            # Remove extra whitespace and convert to title case
+            standardized_country = ' '.join(country.strip().split()).title()
+            # Remove any remaining unwanted characters
+            standardized_country = re.sub(r'[^A-Za-z\s]', '', standardized_country).strip()
+            if standardized_country:
+                standardized_countries.append(standardized_country)
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    result = []
+    for country in standardized_countries:
+        if country not in seen:
+            seen.add(country)
+            result.append(country)
+    
+    return result

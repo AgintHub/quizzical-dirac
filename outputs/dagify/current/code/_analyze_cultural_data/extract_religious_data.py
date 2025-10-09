@@ -28,6 +28,7 @@
 #           according to the required output structure.
 # -- END PRD --
 
+import re
 from typing import List
 
 
@@ -41,4 +42,22 @@ def extract_religious_data(religions: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Parse the input string containing major religions into a list for processing
+    # Split by common delimiters (comma, semicolon, newline) and clean whitespace
+    religions_list = re.split(r'[,;\n]+', religions)
+    religions_list = [religion.strip() for religion in religions_list if religion.strip()]
+    
+    # Implement data processing logic to extract relevant information
+    processed_religions = []
+    for religion in religions_list:
+        # Clean and normalize the religion name
+        # Remove extra whitespace, convert to title case for consistency
+        cleaned_religion = re.sub(r'\s+', ' ', religion).strip().title()
+        
+        # Filter out invalid entries (too short, non-alphabetic characters)
+        if len(cleaned_religion) >= 2 and re.match(r'^[A-Za-z\s-]+$', cleaned_religion):
+            processed_religions.append(cleaned_religion)
+    
+    # Return the processed religious data as a list of strings
+    return processed_religions

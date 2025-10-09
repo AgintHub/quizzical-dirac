@@ -24,6 +24,8 @@
 
 from typing import List
 
+import re
+
 
 def compile_cultural_patterns(significant_patterns: str) -> List[str]:
     """
@@ -35,4 +37,31 @@ def compile_cultural_patterns(significant_patterns: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Handle empty or None input
+    if not significant_patterns or not significant_patterns.strip():
+        return []
+    
+    # Clean and normalize the input data
+    cleaned_input = significant_patterns.strip()
+    
+    # Split patterns by common delimiters (newlines, semicolons, commas)
+    # This handles different input formats
+    patterns = re.split(r'[\n;,]+', cleaned_input)
+    
+    # Process each pattern: clean whitespace, filter out empty strings
+    processed_patterns = []
+    for pattern in patterns:
+        cleaned_pattern = pattern.strip()
+        if cleaned_pattern:  # Only add non-empty patterns
+            processed_patterns.append(cleaned_pattern)
+    
+    # Remove duplicates while preserving order
+    unique_patterns = []
+    seen = set()
+    for pattern in processed_patterns:
+        if pattern.lower() not in seen:
+            unique_patterns.append(pattern)
+            seen.add(pattern.lower())
+    
+    return unique_patterns

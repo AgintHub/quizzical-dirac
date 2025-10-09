@@ -30,6 +30,8 @@
 #           the output conforms to this format.
 # -- END PRD --
 
+import re
+
 
 def parse_world_context(context: str) -> str:
     """
@@ -41,4 +43,43 @@ def parse_world_context(context: str) -> str:
     Returns:
         str: Output of type str
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Analyze the input world context to identify key geographical parameters
+    # Convert to lowercase for consistent processing
+    normalized_context = context.lower().strip()
+    
+    # Define patterns for different geographical scopes
+    scope_patterns = {
+        'global': r'\b(world|global|worldwide|international|earth|planet)\b',
+        'continental': r'\b(continent|africa|asia|europe|north america|south america|australia|antarctica)\b',
+        'national': r'\b(country|nation|state|united states|usa|canada|mexico|brazil|china|india|russia|japan)\b',
+        'regional': r'\b(region|area|zone|province|territory|district)\b',
+        'local': r'\b(city|town|village|local|municipality|urban|rural)\b'
+    }
+    
+    # Analyze context to determine geographical scope
+    detected_scope = 'unknown'
+    
+    # Check for each scope pattern in order of specificity (most specific first)
+    for scope, pattern in scope_patterns.items():
+        if re.search(pattern, normalized_context):
+            detected_scope = scope
+            break
+    
+    # Validate the parsed geographical scope against predefined criteria
+    valid_scopes = ['global', 'continental', 'national', 'regional', 'local', 'unknown']
+    
+    if detected_scope not in valid_scopes:
+        detected_scope = 'unknown'
+    
+    # If no specific scope detected, try to infer from context size
+    if detected_scope == 'unknown':
+        if len(normalized_context) > 200:
+            detected_scope = 'global'  # Assume larger contexts are global
+        elif len(normalized_context) > 50:
+            detected_scope = 'regional'  # Medium contexts are regional
+        else:
+            detected_scope = 'local'  # Small contexts are local
+    
+    # Return the determined geographical scope in standardized format
+    return detected_scope

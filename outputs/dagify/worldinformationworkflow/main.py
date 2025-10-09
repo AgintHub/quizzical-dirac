@@ -6,13 +6,13 @@ import json
 import sys
 from typing import Dict, Any, List, Callable, Coroutine, Union, Optional
 
+from code.analyze_cultural_data import analyze_cultural_data
+from code.analyze_geographical_data import analyze_geographical_data
+from code.collect_cultural_data import collect_cultural_data
 from code.define_world_context import define_world_context
 from code.gather_geographical_data import gather_geographical_data
-from code.collect_cultural_data import collect_cultural_data
-from code.analyze_geographical_data import analyze_geographical_data
-from code.analyze_cultural_data import analyze_cultural_data
-from code.integrate_findings import integrate_findings
 from code.generate_world_report import generate_world_report
+from code.integrate_findings import integrate_findings
 
 # Get async mode from environment variable or default to False
 ASYNC_MODE = os.environ.get('ASYNC_MODE', '').lower() in ('true', '1', 'yes', 'y')
@@ -34,13 +34,13 @@ def make_async(func):
 
     return async_wrapper
 
+analyze_cultural_data_async = make_async(analyze_cultural_data)
+analyze_geographical_data_async = make_async(analyze_geographical_data)
+collect_cultural_data_async = make_async(collect_cultural_data)
 define_world_context_async = make_async(define_world_context)
 gather_geographical_data_async = make_async(gather_geographical_data)
-collect_cultural_data_async = make_async(collect_cultural_data)
-analyze_geographical_data_async = make_async(analyze_geographical_data)
-analyze_cultural_data_async = make_async(analyze_cultural_data)
-integrate_findings_async = make_async(integrate_findings)
 generate_world_report_async = make_async(generate_world_report)
+integrate_findings_async = make_async(integrate_findings)
 
 async def run_workflow(user_input: str) -> Dict[str, Any]:
     """Execute the workflow by running each level in the topological sort.

@@ -23,6 +23,8 @@
 #   Method: Introduce optional parameters for customizing the output format.
 # -- END PRD --
 
+import re
+
 
 def format_narrative_output(narrative: str) -> str:
     """
@@ -34,4 +36,39 @@ def format_narrative_output(narrative: str) -> str:
     Returns:
         str: Output of type str
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Handle edge cases - empty or null input narratives
+    if not narrative or narrative.strip() == "":
+        return "No narrative content available."
+    
+    # Clean and structure the narrative using string formatting
+    # Remove excessive whitespace and normalize line breaks
+    cleaned_narrative = re.sub(r'\s+', ' ', narrative.strip())
+    
+    # Split into sentences for better formatting
+    sentences = re.split(r'(?<=[.!?])\s+', cleaned_narrative)
+    
+    # Filter out empty sentences
+    sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
+    
+    if not sentences:
+        return "No valid content found in narrative."
+    
+    # Format the narrative with proper structure
+    formatted_output = "\n\n".join(sentences)
+    
+    # Add a header and ensure proper capitalization
+    if formatted_output:
+        # Ensure first character is capitalized
+        formatted_output = formatted_output[0].upper() + formatted_output[1:] if len(formatted_output) > 1 else formatted_output.upper()
+        
+        # Add structured formatting
+        final_output = f"NARRATIVE SUMMARY:\n\n{formatted_output}"
+        
+        # Ensure proper ending punctuation
+        if not final_output.endswith(('.', '!', '?')):
+            final_output += "."
+            
+        return final_output
+    
+    return "Unable to format narrative content."

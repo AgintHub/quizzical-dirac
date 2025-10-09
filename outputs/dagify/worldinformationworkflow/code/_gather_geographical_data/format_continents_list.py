@@ -33,6 +33,8 @@
 
 from typing import List
 
+import re
+
 
 def format_continents_list(data: str) -> List[str]:
     """
@@ -44,4 +46,60 @@ def format_continents_list(data: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Handle empty or None input
+    if not data or not data.strip():
+        return []
+    
+    # Split the input string by common delimiters (comma, semicolon, newline, pipe)
+    raw_continents = re.split(r'[,;\n|]+', data)
+    
+    # Clean and standardize each continent name
+    formatted_continents = []
+    
+    for continent in raw_continents:
+        # Remove leading/trailing whitespace
+        cleaned = continent.strip()
+        
+        # Skip empty strings
+        if not cleaned:
+            continue
+            
+        # Remove special characters except spaces, hyphens, and apostrophes
+        cleaned = re.sub(r'[^a-zA-Z\s\-\']+', '', cleaned)
+        
+        # Normalize whitespace (replace multiple spaces with single space)
+        cleaned = re.sub(r'\s+', ' ', cleaned)
+        
+        # Capitalize each word (title case)
+        cleaned = cleaned.title()
+        
+        # Handle common continent name variations and standardize
+        continent_mapping = {
+            'N America': 'North America',
+            'N. America': 'North America',
+            'S America': 'South America', 
+            'S. America': 'South America',
+            'Australia/Oceania': 'Australia',
+            'Oceania': 'Australia',
+            'Antarctic': 'Antarctica',
+            'Europe/Asia': 'Eurasia'
+        }
+        
+        # Apply mapping if exists
+        if cleaned in continent_mapping:
+            cleaned = continent_mapping[cleaned]
+            
+        # Only add non-empty, valid continent names
+        if cleaned and len(cleaned) > 1:
+            formatted_continents.append(cleaned)
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    result = []
+    for continent in formatted_continents:
+        if continent not in seen:
+            seen.add(continent)
+            result.append(continent)
+    
+    return result

@@ -32,6 +32,10 @@
 #           the insights and generate the final list of key terms.
 # -- END PRD --
 
+import re
+import json
+from collections import Counter
+
 
 def identify_world_related_terms(objectives: str, input_data: str) -> str:
     """
@@ -44,4 +48,62 @@ input_data: Input parameter of type str
     Returns:
         str: Output of type list
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Define world-related keywords and patterns
+    world_keywords = [
+        'world', 'global', 'international', 'worldwide', 'earth', 'planet',
+        'universe', 'cosmos', 'society', 'humanity', 'civilization', 'culture',
+        'environment', 'ecosystem', 'geography', 'continent', 'country', 'nation',
+        'community', 'population', 'people', 'human', 'mankind', 'species'
+    ]
+    
+    # Combine objectives and input data for analysis
+    combined_text = f"{objectives} {input_data}"
+    
+    # Clean and tokenize the text
+    cleaned_text = re.sub(r'[^a-zA-Z0-9\s]', ' ', combined_text.lower())
+    words = cleaned_text.split()
+    
+    # Find terms related to 'world' using keyword matching
+    related_terms = set()
+    
+    # Direct keyword matching
+    for word in words:
+        if word in world_keywords:
+            related_terms.add(word)
+    
+    # Find words that appear in context with world-related terms
+    for i, word in enumerate(words):
+        if word in world_keywords:
+            # Add surrounding words (context window of 3 words)
+            for j in range(max(0, i-3), min(len(words), i+4)):
+                if j != i and len(words[j]) > 2:  # Exclude short words
+                    related_terms.add(words[j])
+    
+    # Pattern-based extraction for compound terms
+    compound_patterns = [
+        r'\b(world|global|international)\s+\w+',
+        r'\b\w+\s+(world|global|international)',
+        r'\b\w*world\w*\b',
+        r'\b\w*global\w*\b'
+    ]
+    
+    for pattern in compound_patterns:
+        matches = re.findall(pattern, combined_text.lower())
+        for match in matches:
+            if isinstance(match, tuple):
+                related_terms.update(match)
+            else:
+                related_terms.add(match.strip())
+    
+    # Filter out very common words and short terms
+    stop_words = {'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these', 'those'}
+    
+    filtered_terms = [term for term in related_terms if term not in stop_words and len(term) > 2]
+    
+    # Sort by relevance (terms that appear more frequently are more relevant)
+    term_counts = Counter(word for word in words if word in filtered_terms)
+    sorted_terms = sorted(set(filtered_terms), key=lambda x: term_counts.get(x, 0), reverse=True)
+    
+    # Return as JSON string representing a list
+    return json.dumps(sorted_terms[:20])  # Limit to top 20 terms

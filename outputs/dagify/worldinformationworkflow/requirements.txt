@@ -6,10 +6,18 @@
 #
 annotated-types==0.7.0
     # via pydantic
+certifi==2025.10.5
+    # via requests
+charset-normalizer==3.4.3
+    # via requests
+idna==3.10
+    # via requests
 pydantic==2.12.0
     # via -r /agint/4148125ee56dda19628e514b46e0e7adc6fc6ae66bdcdd8a69df2514405ba143/outputs/dagify/worldinformationworkflow/requirements.in
 pydantic-core==2.41.1
     # via pydantic
+requests==2.32.5
+    # via -r /agint/4148125ee56dda19628e514b46e0e7adc6fc6ae66bdcdd8a69df2514405ba143/outputs/dagify/worldinformationworkflow/requirements.in
 typing-extensions==4.15.0
     # via
     #   pydantic
@@ -17,3 +25,5 @@ typing-extensions==4.15.0
     #   typing-inspection
 typing-inspection==0.4.2
     # via pydantic
+urllib3==2.5.0
+    # via requests

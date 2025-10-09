@@ -29,6 +29,8 @@
 
 from typing import List
 
+import re
+
 
 def preprocess_patterns(patterns: str, pattern_type: str) -> List[str]:
     """
@@ -41,4 +43,51 @@ pattern_type: Input parameter of type str
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Split patterns into individual items (assuming newline or comma separated)
+    if '\n' in patterns:
+        pattern_list = patterns.split('\n')
+    elif ',' in patterns:
+        pattern_list = patterns.split(',')
+    else:
+        pattern_list = [patterns]
+    
+    # Clean each pattern to remove irrelevant information
+    cleaned_patterns = []
+    for pattern in pattern_list:
+        # Strip whitespace
+        cleaned_pattern = pattern.strip()
+        
+        # Skip empty patterns
+        if not cleaned_pattern:
+            continue
+            
+        # Remove special characters and extra whitespace based on pattern type
+        if pattern_type.lower() == 'geographical':
+            # Keep alphanumeric, spaces, hyphens, and common geographical punctuation
+            cleaned_pattern = re.sub(r'[^a-zA-Z0-9\s\-.,()]', '', cleaned_pattern)
+        elif pattern_type.lower() == 'cultural':
+            # Keep alphanumeric, spaces, and common cultural text characters
+            cleaned_pattern = re.sub(r'[^a-zA-Z0-9\s\-.,():\'"&]', '', cleaned_pattern)
+        else:
+            # Default cleaning: remove non-alphanumeric except spaces and basic punctuation
+            cleaned_pattern = re.sub(r'[^a-zA-Z0-9\s\-.,]', '', cleaned_pattern)
+        
+        # Normalize whitespace
+        cleaned_pattern = re.sub(r'\s+', ' ', cleaned_pattern).strip()
+        
+        # Only keep non-empty patterns with meaningful content (at least 2 characters)
+        if len(cleaned_pattern) >= 2:
+            cleaned_patterns.append(cleaned_pattern)
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    deduplicated_patterns = []
+    for pattern in cleaned_patterns:
+        # Case-insensitive duplicate removal
+        pattern_lower = pattern.lower()
+        if pattern_lower not in seen:
+            seen.add(pattern_lower)
+            deduplicated_patterns.append(pattern)
+    
+    return deduplicated_patterns
