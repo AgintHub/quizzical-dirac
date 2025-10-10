@@ -1,1899 +1,502 @@
-dag_type: shim
-description: A comprehensive trading workflow that analyzes market data, generates
-  trading signals, and executes trades.
+dag_type: stub
+description: A comprehensive trading workflow that encompasses data gathering, analysis,
+  and decision-making
 name: trading_workflow
 nodes:
   analyze_market_trends:
     agent: false
-    code_node_type: shim
-    description: Analyze market trends using historical data and statistical models.
+    code_node_type: stub
+    description: Analyze market trends using the gathered data
     implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass FetchMarketDataOutput(BaseModel):\n    \"\"\"Pydantic model for fetch_market_data\
+      \n\nclass GatherMarketDataOutput(BaseModel):\n    \"\"\"Pydantic model for gather_market_data\
       \ node outputs.\"\"\"\n    market_prices: List[float] = Field(..., description=\"\
-      Current prices of relevant market assets\")\n    trading_volumes: List[int]\
-      \ = Field(..., description=\"Current trading volumes of relevant market assets\"\
-      )\n\n\nclass AnalyzeMarketTrendsOutput(BaseModel):\n    \"\"\"Pydantic model\
-      \ for analyze_market_trends node outputs.\"\"\"\n    trend_directions: List[str]\
-      \ = Field(..., description=\"Directions of identified market trends (up, down,\
-      \ neutral)\")\n    trend_strengths: List[float] = Field(..., description=\"\
-      Strengths of identified market trends\")\n\n\ndef analyze_market_trends(fetch_market_data_input:\
-      \ FetchMarketDataOutput, **kwargs) -> AnalyzeMarketTrendsOutput:\n    \"\"\"\
-      Analyze market trends using historical data and statistical models.\n\n    Args:\n\
-      \        fetch_market_data_input: Input from the 'fetch_market_data' node.\n\
-      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        AnalyzeMarketTrendsOutput:\
-      \ Object containing outputs for this node.\n    \"\"\"\n    # Retrieve historical\
-      \ market data from input\n    market_prices: List[float] = fetch_market_data_input.market_prices\n\
-      \    trading_volumes: List[int] = fetch_market_data_input.trading_volumes\n\
-      \    \n    # Preprocess the market data\n    cleaned_prices: List[float] = handle_missing_values(data=market_prices)\n\
-      \    cleaned_volumes: List[float] = handle_missing_values(data=[float(v) for\
-      \ v in trading_volumes])\n    \n    normalized_prices: List[float] = normalize_data(data=cleaned_prices,\
-      \ method=\"min_max\")\n    normalized_volumes: List[float] = normalize_data(data=cleaned_volumes,\
-      \ method=\"min_max\")\n    \n    transformed_prices: List[float] = apply_transformation(data=normalized_prices,\
-      \ transformation=\"log\")\n    transformed_volumes: List[float] = apply_transformation(data=normalized_volumes,\
-      \ transformation=\"log\")\n    \n    # Apply statistical models to identify\
-      \ trends\n    price_trend_model: dict = apply_statistical_model(data=transformed_prices,\
-      \ model_type=\"arima\")\n    volume_trend_model: dict = apply_statistical_model(data=transformed_volumes,\
-      \ model_type=\"linear_regression\")\n    \n    # Determine trend directions\
-      \ and strengths\n    price_direction: str = determine_trend_direction(model_output=price_trend_model)\n\
-      \    price_strength: float = determine_trend_strength(model_output=price_trend_model)\n\
-      \    \n    volume_direction: str = determine_trend_direction(model_output=volume_trend_model)\n\
-      \    volume_strength: float = determine_trend_strength(model_output=volume_trend_model)\n\
-      \    \n    # Compile final trend directions and strengths\n    trend_directions:\
-      \ List[str] = [price_direction, volume_direction]\n    trend_strengths: List[float]\
-      \ = [price_strength, volume_strength]\n    \n    return AnalyzeMarketTrendsOutput(\n\
-      \        trend_directions=trend_directions,\n        trend_strengths=trend_strengths\n\
-      \    )"
+      List of current market prices\")\n    historical_data: List[float] = Field(...,\
+      \ description=\"Historical price data\")\n    market_volumes: List[int] = Field(...,\
+      \ description=\"List of market volumes\")\n    other_indicators: List[str] =\
+      \ Field(..., description=\"Other relevant market indicators\")\n\n\nclass AnalyzeMarketTrendsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for analyze_market_trends node outputs.\"\"\"\n  \
+      \  trend_identification: str = Field(..., description=\"Description of identified\
+      \ market trends\")\n    trend_confidence: float = Field(..., description=\"\
+      Confidence level in the identified trends\")\n\n\ndef analyze_market_trends(gather_market_data_input:\
+      \ GatherMarketDataOutput, **kwargs) -> AnalyzeMarketTrendsOutput:\n    \"\"\"\
+      Analyze market trends using the gathered data\n\n    Args:\n        gather_market_data_input:\
+      \ Input from the 'gather_market_data' node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        AnalyzeMarketTrendsOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return AnalyzeMarketTrendsOutput(\n\
+      \        trend_identification=\"\",\n        trend_confidence=0.0,\n    )"
     name: analyze_market_trends
     nodes_depended_on:
-    - fetch_market_data
-    nodes_dependent_on:
-    - generate_trading_signals
-    output_structure:
-    - description: Directions of identified market trends (up, down, neutral)
-      key: trend_directions
-      type: List[str]
-    - description: Strengths of identified market trends
-      key: trend_strengths
-      type: List[float]
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: HIGH
-        method: Use the output of 'fetch_market_data' node directly as input for analysis.
-        reason: The historical market data is necessary for analyzing market trends
-          and patterns.
-        text: Retrieve historical market data from the output of the 'fetch_market_data'
-          node, specifically using 'market_prices' and 'trading_volumes'.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Apply data preprocessing techniques such as imputation for missing
-          values, normalization using Min-Max Scaler or Standard Scaler, and transformation
-          if necessary.
-        reason: Preprocessing ensures the quality and consistency of the data, which
-          is crucial for accurate trend analysis.
-        text: Preprocess the retrieved market data by handling missing values, normalizing
-          data, and potentially transforming it (e.g., log transformation for skewed
-          distributions).
-      - complexity: HIGH
-        impact: HIGH
-        method: Use libraries like statsmodels for ARIMA, Prophet for time series
-          forecasting, or scikit-learn for linear regression. Select the most appropriate
-          model based on data characteristics and trend complexity.
-        reason: Statistical models provide a structured approach to analyzing time
-          series data and identifying trends.
-        text: Apply statistical models (e.g., ARIMA, Prophet, linear regression) to
-          the preprocessed data to identify trends and patterns.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Analyze the slope and confidence intervals of the trend lines or forecasts
-          from the statistical models to determine direction and strength.
-        reason: Trend direction and strength are critical for generating trading signals.
-        text: Determine the direction (up, down, neutral) and strength of identified
-          trends based on the output of the statistical models.
-      - complexity: LOW
-        impact: HIGH
-        method: Ensure that the output lists are correctly aligned and that the data
-          types match the expected output structure.
-        reason: The output needs to be in a format that can be easily consumed by
-          the dependent node 'generate_trading_signals'.
-        text: Output the trend directions as a list of strings and trend strengths
-          as a list of floats.
-    prompt: Analyze historical market data to identify trends and patterns.
-    shims:
-    - agent: false
-      code_node_type: virtual-stub
-      description: A shim function that handles missing values in input data by returning
-        a cleaned list of float values.
-      implementation: "def handle_missing_values(data: str) -> List[float]:\n    \"\
-        \"\"\n    A shim function that handles missing values in input data by returning\
-        \ a cleaned list of float values.\n\n    Args:\n        data: Input parameter\
-        \ of type str\n\n    Returns:\n        List[float]: Output of type List[float]\n\
-        \    \"\"\"\n    raise NotImplementedError(\"This is a virtual stub node that\
-        \ needs to be implemented\")\n"
-      name: handle_missing_values
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[float]
-        key: output
-        type: List[float]
-      - description: Input parameter of type str
-        key: data
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Prevents errors caused by missing or malformed data
-          method: Use a combination of data validation and imputation techniques,
-            such as mean or median imputation, to handle missing values
-          reason: To ensure data quality and accuracy in downstream processing
-          text: Implement a method to detect missing values in the input data
-        - complexity: LOW
-          impact: Enables seamless integration with other components
-          method: Use data type conversion to transform input data into a List[float]
-          reason: To ensure compatibility with downstream processing steps
-          text: Convert input data to a suitable format for processing
-        - complexity: LOW
-          impact: Ensures compatibility with downstream nodes
-          method: Package the cleaned data into a List[float] and return it as the
-            'output' field
-          reason: To meet the output structure requirements
-          text: Return the cleaned data in the required output format
-      prompt: Handle missing values in the input data
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Normalizes input data to a common scale using the specified normalization
-        method
-      implementation: "def normalize_data(data: str, method: str) -> List[float]:\n\
-        \    \"\"\"\n    Normalizes input data to a common scale using the specified\
-        \ normalization method\n\n    Args:\n        data: Input parameter of type\
-        \ str\nmethod: Input parameter of type str\n\n    Returns:\n        List[float]:\
-        \ Output of type List[float]\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: normalize_data
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[float]
-        key: output
-        type: List[float]
-      - description: Input parameter of type str
-        key: data
-        type: str
-      - description: Input parameter of type str
-        key: method
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Improves the stability and performance of downstream models by preventing
-            feature dominance
-          method: Use the formula (x - min) / (max - min) to normalize each data point
-          reason: To ensure that all features are on the same scale, which is crucial
-            for many machine learning algorithms
-          text: Implement the 'min_max' normalization method to scale data between
-            0 and 1
-        - complexity: MEDIUM
-          impact: Ensures the function remains robust even when dealing with constant
-            or nearly constant data
-          method: Return the original data or a default value (e.g., 0) when 'max'
-            equals 'min'
-          reason: To prevent numerical instability when all values in the data are
-            the same
-          text: Handle edge cases where 'max' equals 'min' to avoid division by zero
-        - complexity: HIGH
-          impact: Allows the function to be used in a wider range of applications
-            and datasets
-          method: Implement a modular design that allows easy addition of new normalization
-            methods
-          reason: To provide flexibility and accommodate different normalization requirements
-          text: Support additional normalization methods (e.g., standardization) as
-            needed
-      prompt: Normalize input data using a specified normalization method
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Applies a specified mathematical transformation to a list of numerical
-        data.
-      implementation: "def apply_transformation(data: str, transformation: str) ->\
-        \ List[float]:\n    \"\"\"\n    Applies a specified mathematical transformation\
-        \ to a list of numerical data.\n\n    Args:\n        data: Input parameter\
-        \ of type str\ntransformation: Input parameter of type str\n\n    Returns:\n\
-        \        List[float]: Output of type List[float]\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: apply_transformation
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[float]
-        key: output
-        type: List[float]
-      - description: Input parameter of type str
-        key: data
-        type: str
-      - description: Input parameter of type str
-        key: transformation
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Correct parsing ensures accurate transformation
-          method: Use a library like `ast` or `json` to safely parse the string into
-            a list
-          reason: The input data is provided as a string and needs to be converted
-            to a numerical format for transformation
-          text: Parse input data from string to a list of floats
-        - complexity: MEDIUM
-          impact: Correct application of the transformation is crucial for downstream
-            analysis
-          method: Implement a dictionary mapping transformation names to their corresponding
-            mathematical functions (e.g., log, sqrt) using libraries like `numpy`
-            or `math`
-          reason: The core functionality of the shim is to apply the transformation
-          text: Apply the specified mathematical transformation to the parsed data
-        - complexity: MEDIUM
-          impact: Proper error handling ensures the system remains stable even with
-            invalid inputs
-          method: Use try-except blocks to catch and handle potential errors, providing
-            informative error messages
-          reason: Robust error handling is necessary to prevent the shim from failing
-            unexpectedly
-          text: Handle potential errors in input data or transformation type
-      prompt: Apply a mathematical transformation to input data
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Applies a specified statistical model to the input data and returns
-        the model output.
-      implementation: "def apply_statistical_model(data: str, model_type: str) ->\
-        \ str:\n    \"\"\"\n    Applies a specified statistical model to the input\
-        \ data and returns the model output.\n\n    Args:\n        data: Input parameter\
-        \ of type str\nmodel_type: Input parameter of type str\n\n    Returns:\n \
-        \       str: Output of type dict\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: apply_statistical_model
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type dict
-        key: output
-        type: str
-      - description: Input parameter of type str
-        key: data
-        type: str
-      - description: Input parameter of type str
-        key: model_type
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Enables the analysis node to adapt to different market conditions
-            and data characteristics.
-          method: Use a modular design where different statistical models are implemented
-            as separate modules or classes, and a factory function determines which
-            model to apply based on the 'model_type' input.
-          reason: To allow for various statistical analyses based on the input data
-            and model type.
-          text: Implement a flexible statistical model application mechanism that
-            can handle different model types.
-        - complexity: LOW
-          impact: Simplifies the downstream processing of trend directions and strengths.
-          method: Define a consistent output structure (e.g., a dictionary with specific
-            keys) that encapsulates the results of the statistical model.
-          reason: To facilitate the use of the model output in subsequent analysis
-            steps.
-          text: Ensure the output is in a standardized format for further processing.
-        - complexity: MEDIUM
-          impact: Improves the robustness and reliability of the overall analysis
-            workflow.
-          method: Implement try-except blocks around the model application code to
-            catch and handle exceptions, providing meaningful error messages or fallback
-            values as needed.
-          reason: To prevent the analysis pipeline from failing due to issues with
-            the statistical model application.
-          text: Handle potential errors and exceptions during model application gracefully.
-      prompt: Apply statistical model to data
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: A shim node that determines the direction of a trend based on the
-        output of a statistical model.
-      implementation: "def determine_trend_direction(model_output: str) -> str:\n\
-        \    \"\"\"\n    A shim node that determines the direction of a trend based\
-        \ on the output of a statistical model.\n\n    Args:\n        model_output:\
-        \ Input parameter of type str\n\n    Returns:\n        str: Output of type\
-        \ str\n    \"\"\"\n    raise NotImplementedError(\"This is a virtual stub\
-        \ node that needs to be implemented\")\n"
-      name: determine_trend_direction
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type str
-        key: output
-        type: str
-      - description: Input parameter of type str
-        key: model_output
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: The output of this function will be used to determine the overall
-            trend direction and strength.
-          method: Use a machine learning or statistical approach to interpret the
-            model output and determine the trend direction.
-          reason: The trend direction is necessary to analyze market trends and make
-            informed decisions.
-          text: Implement a function that takes the output of a statistical model
-            as input and returns the direction of the trend.
-        - complexity: HIGH
-          impact: This will allow the function to be flexible and work with various
-            statistical models.
-          method: Implement a modular design that allows for easy integration of different
-            model output handlers.
-          reason: Different models may produce different types of output that need
-            to be handled accordingly.
-          text: Handle different types of statistical model outputs (e.g., ARIMA,
-            linear regression).
-        - complexity: LOW
-          impact: This will give confidence in the function's ability to determine
-            trend directions correctly.
-          method: Use unit testing with sample model outputs to verify the function's
-            accuracy.
-          reason: Testing is necessary to ensure the function produces accurate results.
-          text: Test the function with sample model outputs to ensure accuracy.
-      prompt: Determine the direction of the trend based on the model output.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Calculates the strength of a market trend based on the output of
-        a statistical model.
-      implementation: "def determine_trend_strength(model_output: str) -> float:\n\
-        \    \"\"\"\n    Calculates the strength of a market trend based on the output\
-        \ of a statistical model.\n\n    Args:\n        model_output: Input parameter\
-        \ of type str\n\n    Returns:\n        float: Output of type float\n    \"\
-        \"\"\n    raise NotImplementedError(\"This is a virtual stub node that needs\
-        \ to be implemented\")\n"
-      name: determine_trend_strength
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type float
-        key: output
-        type: float
-      - description: Input parameter of type str
-        key: model_output
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Accurate trend strength calculation will improve the reliability
-            of market trend analysis.
-          method: Use a library like pandas or NumPy to parse and process the model's
-            output, and apply a suitable algorithm to calculate the trend strength.
-          reason: The statistical model's output needs to be interpreted correctly
-            to determine the trend strength.
-          text: Implement a method to parse the statistical model's output and extract
-            relevant information for trend strength calculation.
-        - complexity: HIGH
-          impact: The trend strength calculation will directly affect the overall
-            market trend analysis.
-          method: Consider using techniques like regression analysis or machine learning
-            models to develop a robust trend strength calculation algorithm.
-          reason: A robust formula or algorithm is necessary to accurately quantify
-            the trend strength.
-          text: Develop a formula or algorithm to calculate the trend strength based
-            on the extracted information.
-        - complexity: MEDIUM
-          impact: Validation will improve the confidence in the trend strength calculation
-            and overall market trend analysis.
-          method: Use historical market data to backtest the trend strength calculation
-            and compare the results with actual market trends.
-          reason: Validation is crucial to ensure that the trend strength calculation
-            is accurate and reliable.
-          text: Validate the trend strength calculation against historical market
-            data to ensure accuracy and reliability.
-      prompt: Determine the strength of a trend based on the output of a statistical
-        model.
-      shims: []
-  calculate_trading_indicators:
-    agent: false
-    code_node_type: shim
-    description: Calculate technical indicators used in trading decisions.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass FetchMarketDataOutput(BaseModel):\n    \"\"\"Pydantic model for fetch_market_data\
-      \ node outputs.\"\"\"\n    market_prices: List[float] = Field(..., description=\"\
-      Current prices of relevant market assets\")\n    trading_volumes: List[int]\
-      \ = Field(..., description=\"Current trading volumes of relevant market assets\"\
-      )\n\n\nclass CalculateTradingIndicatorsOutput(BaseModel):\n    \"\"\"Pydantic\
-      \ model for calculate_trading_indicators node outputs.\"\"\"\n    indicator_values:\
-      \ List[float] = Field(..., description=\"Values of calculated technical indicators\"\
-      )\n    indicator_names: List[str] = Field(..., description=\"Names of calculated\
-      \ technical indicators\")\n\n\ndef calculate_trading_indicators(fetch_market_data_input:\
-      \ FetchMarketDataOutput, **kwargs) -> CalculateTradingIndicatorsOutput:\n  \
-      \  \"\"\"Calculate technical indicators used in trading decisions.\n\n    Args:\n\
-      \        fetch_market_data_input: Input from the 'fetch_market_data' node.\n\
-      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        CalculateTradingIndicatorsOutput:\
-      \ Object containing outputs for this node.\n    \"\"\"\n    # Retrieve market\
-      \ prices and trading volumes from input\n    market_prices: List[float] = fetch_market_data_input.market_prices\n\
-      \    trading_volumes: List[int] = fetch_market_data_input.trading_volumes\n\
-      \    \n    # Calculate RSI using 14-period window\n    rsi_value: float = calculate_rsi(prices=market_prices,\
-      \ period=14)\n    \n    # Calculate MACD with 12-period and 26-period EMAs\n\
-      \    ema_12: List[float] = calculate_ema(prices=market_prices, period=12)\n\
-      \    ema_26: List[float] = calculate_ema(prices=market_prices, period=26)\n\
-      \    macd_line: List[float] = calculate_macd_line(ema_12=ema_12, ema_26=ema_26)\n\
-      \    signal_line: List[float] = calculate_signal_line(macd_line=macd_line, period=9)\n\
-      \    current_macd: float = get_current_macd_value(macd_line=macd_line, signal_line=signal_line)\n\
-      \    \n    # Compile indicators into output structure\n    indicator_names:\
-      \ List[str] = [\"RSI\", \"MACD\"]\n    indicator_values: List[float] = [rsi_value,\
-      \ current_macd]\n    \n    return CalculateTradingIndicatorsOutput(\n      \
-      \  indicator_values=indicator_values,\n        indicator_names=indicator_names\n\
-      \    )"
-    name: calculate_trading_indicators
-    nodes_depended_on:
-    - fetch_market_data
-    nodes_dependent_on:
-    - generate_trading_signals
-    output_structure:
-    - description: Values of calculated technical indicators
-      key: indicator_values
-      type: List[float]
-    - description: Names of calculated technical indicators
-      key: indicator_names
-      type: List[str]
-    prd:
-      bullets:
-      - complexity: LOW
-        impact: HIGH
-        method: Use the output of 'fetch_market_data' node, specifically 'market_prices'
-          and 'trading_volumes'.
-        reason: The 'fetch_market_data' node provides the necessary input data for
-          calculating technical indicators.
-        text: Retrieve market prices and trading volumes from the output of the 'fetch_market_data'
-          node.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: 'Apply the RSI calculation formula: RSI = 100 - (100 / (1 + RS)),
-          where RS = Average Gain / Average Loss. Use a 14-period window for the calculation.'
-        reason: RSI is a widely used indicator for identifying overbought or oversold
-          conditions.
-        text: Calculate the Relative Strength Index (RSI) using the market prices.
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Calculate the 12-period and 26-period Exponential Moving Averages
-          (EMAs) of the market prices. Then, compute MACD = 12-period EMA - 26-period
-          EMA. Also, calculate the signal line as a 9-period EMA of the MACD.
-        reason: MACD is a trend-following momentum indicator that shows the relationship
-          between two moving averages.
-        text: Calculate the Moving Average Convergence Divergence (MACD) using the
-          market prices.
-      - complexity: LOW
-        impact: HIGH
-        method: Create lists for 'indicator_values' and 'indicator_names'. Populate
-          'indicator_names' with the names of the calculated indicators (e.g., 'RSI',
-          'MACD'). Populate 'indicator_values' with the corresponding calculated values.
-        reason: The output needs to be structured as per the defined output structure.
-        text: Compile the calculated indicators into 'indicator_values' and 'indicator_names'.
-    prompt: Calculate relevant technical indicators such as RSI, MACD, etc.
-    shims:
-    - agent: false
-      code_node_type: virtual-stub
-      description: Calculates the Relative Strength Index (RSI) of a given set of
-        prices over a specified period.
-      implementation: "def calculate_rsi(prices: str, period: str) -> float:\n   \
-        \ \"\"\"\n    Calculates the Relative Strength Index (RSI) of a given set\
-        \ of prices over a specified period.\n\n    Args:\n        prices: Input parameter\
-        \ of type str\nperiod: Input parameter of type str\n\n    Returns:\n     \
-        \   float: Output of type float\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: calculate_rsi
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type float
-        key: output
-        type: float
-      - description: Input parameter of type str
-        key: prices
-        type: str
-      - description: Input parameter of type str
-        key: period
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: The calculated RSI value will be used to inform trading decisions.
-          method: Use a Python library like Pandas to efficiently calculate the average
-            gain and loss over the specified period, then apply the RSI formula.
-          reason: The RSI is a widely used technical indicator that measures the magnitude
-            of recent price changes.
-          text: 'Implement the RSI calculation using the formula: RSI = 100 - (100
-            / (1 + RS)), where RS = average gain / average loss over the specified
-            period.'
-        - complexity: LOW
-          impact: The function will be robust and able to handle invalid inputs.
-          method: Add input validation checks at the beginning of the function to
-            raise informative errors for invalid inputs.
-          reason: To prevent errors and ensure the function behaves as expected in
-            these scenarios.
-          text: Handle edge cases such as an empty list of prices or a period less
-            than 1.
-        - complexity: HIGH
-          impact: The function will be more efficient and scalable.
-          method: Explore using vectorized operations or parallel processing techniques
-            to speed up the calculation.
-          reason: To improve performance when dealing with extensive historical price
-            data.
-          text: Consider optimizing the calculation for large lists of prices.
-      prompt: Calculate the RSI for the given market prices over a 14-period window.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Calculates the Exponential Moving Average (EMA) of a given list
-        of prices over a specified period.
-      implementation: "def calculate_ema(prices: str, period: str) -> List[float]:\n\
-        \    \"\"\"\n    Calculates the Exponential Moving Average (EMA) of a given\
-        \ list of prices over a specified period.\n\n    Args:\n        prices: Input\
-        \ parameter of type str\nperiod: Input parameter of type str\n\n    Returns:\n\
-        \        List[float]: Output of type List[float]\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: calculate_ema
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[float]
-        key: output
-        type: List[float]
-      - description: Input parameter of type str
-        key: prices
-        type: str
-      - description: Input parameter of type str
-        key: period
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Allows for easier integration with various data sources.
-          method: Use a parsing library to convert input strings into numerical values,
-            then apply the EMA formula.
-          reason: To provide a flexible input interface that can handle different
-            data formats.
-          text: The shim function will take in a string of prices and a period, parse
-            them into appropriate formats, and then calculate the EMA.
-        - complexity: HIGH
-          impact: Enables the calculation of MACD and other indicators that rely on
-            EMA.
-          method: Implement the EMA algorithm using a loop that iteratively calculates
-            the EMA for each period, using the previous EMA value and the current
-            price.
-          reason: To compute the EMA as required by the trading indicators calculation.
-          text: The EMA calculation will be performed using the parsed prices and
-            period.
-        - complexity: LOW
-          impact: Facilitates the use of EMA in subsequent calculations like MACD.
-          method: Return the calculated EMA values as a list of floats.
-          reason: To provide the calculated EMA values in a usable format for further
-            analysis.
-          text: The output will be a list of float values representing the EMA over
-            the specified period.
-      prompt: Typed node for shim calculate_ema
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Calculates the MACD line by subtracting the 26-period EMA from
-        the 12-period EMA
-      implementation: "def calculate_macd_line(ema_12: str, ema_26: str) -> List[float]:\n\
-        \    \"\"\"\n    Calculates the MACD line by subtracting the 26-period EMA\
-        \ from the 12-period EMA\n\n    Args:\n        ema_12: Input parameter of\
-        \ type str\nema_26: Input parameter of type str\n\n    Returns:\n        List[float]:\
-        \ Output of type List[float]\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: calculate_macd_line
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[float]
-        key: output
-        type: List[float]
-      - description: Input parameter of type str
-        key: ema_12
-        type: str
-      - description: Input parameter of type str
-        key: ema_26
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Enables the correct calculation of the MACD line
-          method: Use a parsing library or a simple string splitting and conversion
-            method
-          reason: The input EMAs are provided as strings and need to be converted
-            to numerical values for the MACD calculation
-          text: Parse the input EMA strings into lists of floats to perform calculations
-        - complexity: MEDIUM
-          impact: Produces the MACD line values necessary for further analysis
-          method: Use a library like NumPy for efficient element-wise operations on
-            lists of numbers
-          reason: The MACD line is defined as the difference between the 12-period
-            and 26-period EMAs
-          text: Perform element-wise subtraction of the 26-period EMA from the 12-period
-            EMA
-        - complexity: LOW
-          impact: Provides the MACD line in a usable format
-          method: Simply return the result of the subtraction as a list
-          reason: The output needs to be in a format that can be easily consumed by
-            subsequent nodes or analysis
-          text: Return the calculated MACD line as a list of floats
-      prompt: Typed node for shim calculate_macd_line
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Calculates the signal line for the MACD indicator based on the
-        MACD line and a specified period.
-      implementation: "def calculate_signal_line(macd_line: str, period: str) -> List[float]:\n\
-        \    \"\"\"\n    Calculates the signal line for the MACD indicator based on\
-        \ the MACD line and a specified period.\n\n    Args:\n        macd_line: Input\
-        \ parameter of type str\nperiod: Input parameter of type str\n\n    Returns:\n\
-        \        List[float]: Output of type List[float]\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: calculate_signal_line
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[float]
-        key: output
-        type: List[float]
-      - description: Input parameter of type str
-        key: macd_line
-        type: str
-      - description: Input parameter of type str
-        key: period
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Accurate conversion ensures correct calculation of the signal line.
-          method: Use a parsing function to convert the string representation of the
-            MACD line into a list of floats.
-          reason: The input MACD line is received as a string and needs to be converted
-            to a numerical format for processing.
-          text: Convert the input MACD line from string to a list of floats to perform
-            calculations.
-        - complexity: MEDIUM
-          impact: Correct calculation of the signal line is essential for generating
-            accurate trading signals.
-          method: Implement an EMA function that takes the MACD line and period as
-            inputs and returns the signal line.
-          reason: The signal line is a crucial component of the MACD indicator, derived
-            by smoothing the MACD line over a specified period.
-          text: Calculate the signal line using the MACD line and the specified period
-            by applying an Exponential Moving Average (EMA).
-        - complexity: LOW
-          impact: Facilitates the seamless integration of the calculated signal line
-            into the trading decision-making process.
-          method: Ensure the output structure is correctly populated with the calculated
-            signal line values.
-          reason: The output needs to be in a format that can be easily consumed by
-            subsequent nodes or processes.
-          text: Return the calculated signal line as a list of floats in the output
-            structure.
-      prompt: Calculate the signal line for MACD indicator using MACD line and period
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Calculates the current MACD value based on the provided MACD and
-        signal lines.
-      implementation: "def get_current_macd_value(macd_line: str, signal_line: str)\
-        \ -> float:\n    \"\"\"\n    Calculates the current MACD value based on the\
-        \ provided MACD and signal lines.\n\n    Args:\n        macd_line: Input parameter\
-        \ of type str\nsignal_line: Input parameter of type str\n\n    Returns:\n\
-        \        float: Output of type float\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: get_current_macd_value
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type float
-        key: output
-        type: float
-      - description: Input parameter of type str
-        key: macd_line
-        type: str
-      - description: Input parameter of type str
-        key: signal_line
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Provides the latest MACD value for trading decisions.
-          method: Access the last element of the MACD line list.
-          reason: The current MACD value is typically the last value in the MACD line
-            series.
-          text: Extract the most recent MACD value from the MACD line.
-        - complexity: MEDIUM
-          impact: Helps in identifying potential buy or sell signals based on MACD
-            crossovers.
-          method: Compare the last values of MACD and signal lines to check for crossovers.
-          reason: MACD crossovers with the signal line are significant for trading
-            signals.
-          text: Compare the MACD line and signal line to determine if there's a crossover.
-        - complexity: LOW
-          impact: Enables the use of MACD in trading indicator calculations.
-          method: Simply return the last MACD value or a calculated value based on
-            MACD and signal line interaction.
-          reason: The shim's primary function is to provide the current MACD value.
-          text: Return the calculated current MACD value.
-      prompt: Typed node for shim get_current_macd_value
-      shims: []
-  execute_trades:
-    agent: false
-    code_node_type: shim
-    description: Execute trades based on generated trading signals.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass GenerateTradingSignalsOutput(BaseModel):\n    \"\"\"Pydantic model\
-      \ for generate_trading_signals node outputs.\"\"\"\n    signal_types: List[str]\
-      \ = Field(..., description=\"Types of generated trading signals (buy, sell,\
-      \ hold)\")\n    signal_strengths: List[float] = Field(..., description=\"Strengths\
-      \ or confidence levels of generated trading signals\")\n\n\nclass ExecuteTradesOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for execute_trades node outputs.\"\"\"\n    trade_outcomes:\
-      \ List[str] = Field(..., description=\"Outcomes of executed trades (success,\
-      \ failure, partial fill)\")\n    trade_details: List[str] = Field(..., description=\"\
-      Details of executed trades, including size, price, and timing\")\n\n\ndef execute_trades(generate_trading_signals_input:\
-      \ GenerateTradingSignalsOutput, **kwargs) -> ExecuteTradesOutput:\n    \"\"\"\
-      Execute trades based on generated trading signals.\n\n    Args:\n        generate_trading_signals_input:\
-      \ Input from the 'generate_trading_signals' node.\n        **kwargs: Additional\
-      \ keyword arguments.\n\n    Returns:\n        ExecuteTradesOutput: Object containing\
-      \ outputs for this node.\n    \"\"\"\n    # Validate and prepare trading signals\
-      \ for execution\n    validated_signals: List[dict] = validate_trading_signals(\n\
-      \        signal_types=generate_trading_signals_input.signal_types,\n       \
-      \ signal_strengths=generate_trading_signals_input.signal_strengths\n    )\n\
-      \    \n    # Check market conditions and trading constraints\n    market_status:\
-      \ dict = check_market_conditions()\n    trading_constraints: dict = get_trading_constraints(**kwargs)\n\
-      \    \n    # Filter signals based on market conditions and constraints\n   \
-      \ executable_signals: List[dict] = filter_executable_signals(\n        signals=validated_signals,\n\
-      \        market_status=market_status,\n        constraints=trading_constraints\n\
-      \    )\n    \n    # Execute trades for each valid signal\n    execution_results:\
-      \ List[dict] = execute_trade_orders(\n        signals=executable_signals,\n\
-      \        market_conditions=market_status\n    )\n    \n    # Process execution\
-      \ results and extract outcomes\n    trade_outcomes: List[str] = extract_trade_outcomes(results=execution_results)\n\
-      \    trade_details: List[str] = format_trade_details(results=execution_results)\n\
-      \    \n    return ExecuteTradesOutput(\n        trade_outcomes=trade_outcomes,\n\
-      \        trade_details=trade_details,\n    )"
-    name: execute_trades
-    nodes_depended_on:
-    - generate_trading_signals
+    - gather_market_data
     nodes_dependent_on: []
     output_structure:
-    - description: Outcomes of executed trades (success, failure, partial fill)
-      key: trade_outcomes
-      type: List[str]
-    - description: Details of executed trades, including size, price, and timing
-      key: trade_details
-      type: List[str]
-    prd:
-      bullets: []
-    prompt: Execute trades according to the generated signals, considering risk management
-      and portfolio constraints.
-    shims:
-    - agent: false
-      code_node_type: virtual-stub
-      description: Validates trading signals by checking their types and strengths,
-        returning a list of validated signals.
-      implementation: "def validate_trading_signals(signal_types: str, signal_strengths:\
-        \ str) -> List[str]:\n    \"\"\"\n    Validates trading signals by checking\
-        \ their types and strengths, returning a list of validated signals.\n\n  \
-        \  Args:\n        signal_types: Input parameter of type str\nsignal_strengths:\
-        \ Input parameter of type str\n\n    Returns:\n        List[str]: Output of\
-        \ type List[dict]\n    \"\"\"\n    raise NotImplementedError(\"This is a virtual\
-        \ stub node that needs to be implemented\")\n"
-      name: validate_trading_signals
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[dict]
-        key: output
-        type: List[str]
-      - description: Input parameter of type str
-        key: signal_types
-        type: str
-      - description: Input parameter of type str
-        key: signal_strengths
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Correct parsing ensures that the validation logic operates on the
-            correct data.
-          method: Use Python's built-in string split() method to divide the input
-            strings into lists.
-          reason: The input is provided as comma-separated strings, which need to
-            be converted into lists for processing.
-          text: Parse input strings into lists of signal types and strengths.
-        - complexity: MEDIUM
-          impact: Validation filters out invalid or malformed signals, improving the
-            robustness of the trading execution pipeline.
-          method: Implement a validation function that checks each signal type against
-            a predefined set of valid types and ensures signal strengths are within
-            a valid range.
-          reason: To ensure that only valid trading signals are processed further.
-          text: Validate each signal type and strength pair.
-        - complexity: LOW
-          impact: The structured output facilitates data exchange and processing in
-            the trading execution workflow.
-          method: Create dictionaries for each valid signal pair and aggregate them
-            into a list.
-          reason: To provide a structured output that can be easily consumed by subsequent
-            nodes in the pipeline.
-          text: Format validated signals into a list of dictionaries.
-      prompt: Validate trading signals based on their types and strengths.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: A shim node that checks current market conditions and returns the
-        status as a dictionary.
-      implementation: "def check_market_conditions() -> str:\n    \"\"\"\n    A shim\
-        \ node that checks current market conditions and returns the status as a dictionary.\n\
-        \n    Args:\n        \n\n    Returns:\n        str: Output of type dict\n\
-        \    \"\"\"\n    raise NotImplementedError(\"This is a virtual stub node that\
-        \ needs to be implemented\")\n"
-      name: check_market_conditions
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type dict
-        key: output
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: This will enable the trading system to make informed decisions based
-            on current market conditions.
-          method: Implementing a data access layer to fetch real-time market data
-            and then processing it to generate the required dictionary.
-          reason: To provide a standardized way of assessing market conditions that
-            can be used across different trading strategies.
-          text: The shim will return a dictionary containing key market indicators
-            such as liquidity, volatility, and trend.
-        - complexity: HIGH
-          impact: This will prevent the trading system from crashing due to external
-            data issues.
-          method: Using try-except blocks and implementing retry logic for transient
-            failures.
-          reason: To ensure the robustness of the trading system by gracefully handling
-            potential failures.
-          text: The shim will need to handle potential exceptions such as data feed
-            unavailability or processing errors.
-        - complexity: LOW
-          impact: This will allow the trading system to be easily customized for different
-            market conditions and strategies.
-          method: Defining a configuration parameter that specifies the required market
-            indicators.
-          reason: To make the shim flexible and adaptable to different trading strategies.
-          text: The output dictionary should be configurable to include various market
-            indicators based on the requirements of the trading strategy.
-      prompt: Check current market conditions
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: A shim function that retrieves the current trading constraints.
-      implementation: "def get_trading_constraints() -> str:\n    \"\"\"\n    A shim\
-        \ function that retrieves the current trading constraints.\n\n    Args:\n\
-        \        \n\n    Returns:\n        str: Output of type dict\n    \"\"\"\n\
-        \    raise NotImplementedError(\"This is a virtual stub node that needs to\
-        \ be implemented\")\n"
-      name: get_trading_constraints
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type dict
-        key: output
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: This will directly affect the ability of the system to filter executable
-            signals and execute trades.
-          method: Use an existing API or data source to retrieve trading constraints,
-            handling potential errors and exceptions.
-          reason: The trading constraints are necessary to determine the viability
-            of executing trades based on generated signals.
-          text: Implement a function to fetch trading constraints from a predefined
-            data source or API.
-        - complexity: LOW
-          impact: This ensures that the system can reliably filter signals based on
-            valid constraints.
-          method: Implement validation logic to check the structure and content of
-            the retrieved constraints.
-          reason: To prevent errors during the execution of trades, the constraints
-            must be validated.
-          text: Parse and validate the retrieved trading constraints to ensure they
-            are in the correct format.
-        - complexity: LOW
-          impact: This allows for seamless integration with other components of the
-            system.
-          method: Serialize the validated constraints into a dict format.
-          reason: To facilitate the use of trading constraints in filtering executable
-            signals.
-          text: Return the trading constraints in a standardized format (dict) for
-            use in subsequent operations.
-      prompt: Retrieve the current trading constraints.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Filters trading signals for executability based on current market
-        conditions and predefined trading constraints
-      implementation: "def filter_executable_signals(signals: str, market_status:\
-        \ str, constraints: str) -> List[str]:\n    \"\"\"\n    Filters trading signals\
-        \ for executability based on current market conditions and predefined trading\
-        \ constraints\n\n    Args:\n        signals: Input parameter of type str\n\
-        market_status: Input parameter of type str\nconstraints: Input parameter of\
-        \ type str\n\n    Returns:\n        List[str]: Output of type List[dict]\n\
-        \    \"\"\"\n    raise NotImplementedError(\"This is a virtual stub node that\
-        \ needs to be implemented\")\n"
-      name: filter_executable_signals
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[dict]
-        key: output
-        type: List[str]
-      - description: Input parameter of type str
-        key: signals
-        type: str
-      - description: Input parameter of type str
-        key: market_status
-        type: str
-      - description: Input parameter of type str
-        key: constraints
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Enables the function to access and compare the necessary data fields
-          method: Use Python's json.loads() function to parse JSON strings into dictionaries
-          reason: To facilitate easier data manipulation and comparison
-          text: Parse input JSON strings into Python dictionaries for signals, market_status,
-            and constraints
-        - complexity: MEDIUM
-          impact: Ensures that only valid trading signals are passed through for execution
-          method: Iterate through the signals and check each against the market status
-            and constraints, using conditional logic to filter out ineligible signals
-          reason: To determine which trading signals are executable
-          text: Implement filtering logic based on market status and trading constraints
-        - complexity: LOW
-          impact: Ensures that the output is in the expected format for downstream
-            processing
-          method: Use Python's json.dumps() function to convert the filtered list
-            back into a JSON string
-          reason: To maintain consistency with the input/output structure
-          text: Convert the filtered list of executable signals back into a JSON string
-            for output
-      prompt: Filter executable trading signals based on market status and constraints
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: A shim function that simulates the execution of trade orders based
-        on given signals and market conditions.
-      implementation: "def execute_trade_orders(signals: str, market_conditions: str)\
-        \ -> List[str]:\n    \"\"\"\n    A shim function that simulates the execution\
-        \ of trade orders based on given signals and market conditions.\n\n    Args:\n\
-        \        signals: Input parameter of type str\nmarket_conditions: Input parameter\
-        \ of type str\n\n    Returns:\n        List[str]: Output of type List[dict]\n\
-        \    \"\"\"\n    raise NotImplementedError(\"This is a virtual stub node that\
-        \ needs to be implemented\")\n"
-      name: execute_trade_orders
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[dict]
-        key: output
-        type: List[str]
-      - description: Input parameter of type str
-        key: signals
-        type: str
-      - description: Input parameter of type str
-        key: market_conditions
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: The system will be able to simulate trade execution results, enabling
-            further development and testing of dependent components.
-          method: Create a simple function that returns a static or randomly generated
-            list of dictionaries representing trade execution results.
-          reason: To allow the system to continue functioning while the actual trade
-            execution logic is being developed.
-          text: Implement a placeholder function that returns a predefined list of
-            execution results based on the input signals and market conditions.
-        - complexity: MEDIUM
-          impact: The system will be more robust and less prone to errors due to invalid
-            input formats.
-          method: Implement basic validation checks using Python type checking and
-            simple conditional statements to verify the input structures.
-          reason: To prevent errors when processing the inputs and to ensure compatibility
-            with the placeholder execution results.
-          text: Validate the input signals and market conditions to ensure they are
-            in the expected format.
-        - complexity: LOW
-          impact: Developers will have clear guidance on how to implement the actual
-            trade execution functionality.
-          method: Use standard documentation practices such as docstrings and comments
-            to describe the shim's functionality and interface.
-          reason: To facilitate the eventual replacement of the shim with the actual
-            trade execution logic.
-          text: Document the shim function and its expected inputs and outputs for
-            future reference and implementation.
-      prompt: Typed node for shim execute_trade_orders
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Extracts trade outcomes from the execution results of trade orders.
-      implementation: "def extract_trade_outcomes(results: str) -> List[str]:\n  \
-        \  \"\"\"\n    Extracts trade outcomes from the execution results of trade\
-        \ orders.\n\n    Args:\n        results: Input parameter of type str\n\n \
-        \   Returns:\n        List[str]: Output of type List[str]\n    \"\"\"\n  \
-        \  raise NotImplementedError(\"This is a virtual stub node that needs to be\
-        \ implemented\")\n"
-      name: extract_trade_outcomes
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[str]
-        key: output
-        type: List[str]
-      - description: Input parameter of type str
-        key: results
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Enables the system to determine the success or failure of trades
-          method: Use a data parsing library to process the execution results and
-            extract trade outcomes
-          reason: To extract relevant information from the execution results
-          text: Parse the execution results to identify individual trade outcomes
-        - complexity: LOW
-          impact: Facilitates analysis and reporting of trade outcomes across the
-            system
-          method: Implement a mapping function that categorizes execution results
-            into standardized trade outcomes (success, failure, partial fill)
-          reason: To ensure consistency in trade outcome reporting
-          text: Map execution results to standardized trade outcome categories
-        - complexity: HIGH
-          impact: Prevents errors and ensures accurate trade outcome reporting
-          method: Implement error handling and logging mechanisms to detect and handle
-            incomplete or malformed execution results
-          reason: To ensure robustness and reliability of the trade outcome extraction
-            process
-          text: Handle edge cases where execution results are incomplete or malformed
-      prompt: Extract trade outcomes from execution results
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Formats the details of executed trades into a list of strings based
-        on the execution results.
-      implementation: "def format_trade_details(results: str) -> List[str]:\n    \"\
-        \"\"\n    Formats the details of executed trades into a list of strings based\
-        \ on the execution results.\n\n    Args:\n        results: Input parameter\
-        \ of type str\n\n    Returns:\n        List[str]: Output of type List[str]\n\
-        \    \"\"\"\n    raise NotImplementedError(\"This is a virtual stub node that\
-        \ needs to be implemented\")\n"
-      name: format_trade_details
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[str]
-        key: output
-        type: List[str]
-      - description: Input parameter of type str
-        key: results
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Enables standardized processing and display of trade details.
-          method: Implement a parser that can handle the execution results, which
-            are expected to be in a specific format (e.g., JSON or dictionary). The
-            parser should extract the necessary details and format them into a list
-            of strings.
-          reason: To provide a structured format for the trade details that can be
-            easily consumed by subsequent processes.
-          text: Parse the execution results to extract relevant trade details such
-            as size, price, and timing.
-        - complexity: LOW
-          impact: Facilitates uniform reporting and logging of trade details.
-          method: Use a templating engine or a simple string formatting function to
-            convert the extracted details into the required string format.
-          reason: To ensure consistency in how trade details are presented across
-            the system.
-          text: Format the extracted trade details into a list of strings according
-            to a predefined template or specification.
-        - complexity: HIGH
-          impact: Enhances the reliability of the trade details formatting process.
-          method: Implement error handling mechanisms such as try-except blocks to
-            catch and manage exceptions. Validate the input data to ensure it conforms
-            to the expected format before processing.
-          reason: To prevent the function from failing due to unexpected input formats
-            or missing data.
-          text: Handle any potential errors or inconsistencies in the execution results
-            to ensure robustness.
-      prompt: Formats the execution results into a list of trade details.
-      shims: []
-  fetch_market_data:
-    agent: false
-    code_node_type: shim
-    description: Retrieve current market data, including prices and trading volumes.
-    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass FetchMarketDataOutput(BaseModel):\n    \"\"\"Pydantic model for fetch_market_data\
-      \ node outputs.\"\"\"\n    market_prices: List[float] = Field(..., description=\"\
-      Current prices of relevant market assets\")\n    trading_volumes: List[int]\
-      \ = Field(..., description=\"Current trading volumes of relevant market assets\"\
-      )\n\n\ndef fetch_market_data(general_input: str, **kwargs) -> FetchMarketDataOutput:\n\
-      \    \"\"\"Retrieve current market data, including prices and trading volumes.\n\
-      \n    Args:\n        general_input: General input string for the root node.\n\
-      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        FetchMarketDataOutput:\
-      \ Object containing outputs for this node.\n    \"\"\"\n    # Identify and select\
-      \ reliable data sources\n    data_sources: List[str] = identify_reliable_data_sources(input_criteria=general_input)\n\
-      \    selected_source: str = select_best_data_source(sources=data_sources, requirements=kwargs)\n\
-      \    \n    # Fetch market data from selected source\n    raw_market_data: dict\
-      \ = fetch_data_from_api(source=selected_source, symbols=general_input)\n   \
-      \ \n    # Parse and format the retrieved data\n    parsed_prices: List[float]\
-      \ = parse_market_prices(raw_data=raw_market_data)\n    parsed_volumes: List[int]\
-      \ = parse_trading_volumes(raw_data=raw_market_data)\n    \n    # Validate and\
-      \ clean the data\n    validated_prices: List[float] = validate_price_data(prices=parsed_prices)\n\
-      \    validated_volumes: List[int] = validate_volume_data(volumes=parsed_volumes)\n\
-      \    \n    # Store data for caching and debugging\n    store_market_data(prices=validated_prices,\
-      \ volumes=validated_volumes, source=selected_source)\n    \n    return FetchMarketDataOutput(\n\
-      \        market_prices=validated_prices,\n        trading_volumes=validated_volumes,\n\
-      \    )"
-    name: fetch_market_data
-    nodes_depended_on: []
-    nodes_dependent_on:
-    - analyze_market_trends
-    - calculate_trading_indicators
-    output_structure:
-    - description: Current prices of relevant market assets
-      key: market_prices
-      type: List[float]
-    - description: Current trading volumes of relevant market assets
-      key: trading_volumes
-      type: List[int]
+    - description: Description of identified market trends
+      key: trend_identification
+      type: str
+    - description: Confidence level in the identified trends
+      key: trend_confidence
+      type: float
     prd:
       bullets:
       - complexity: LOW
         impact: HIGH
-        method: Research and list potential data sources, evaluate their credibility,
-          and select the most appropriate ones based on the specific requirements
-          of the trading workflow.
-        reason: To ensure data accuracy and reliability, it's crucial to select reputable
-          sources.
-        text: Identify reliable data sources for market data, such as financial APIs
-          (e.g., Alpha Vantage, Yahoo Finance) or data feeds (e.g., Quandl).
-      - complexity: MEDIUM
-        impact: HIGH
-        method: Use HTTP request libraries (e.g., requests in Python) for API calls
-          or relevant libraries for data feeds (e.g., Quandl's Python library). Handle
-          authentication, rate limiting, and error handling appropriately.
-        reason: Direct data retrieval is necessary for up-to-date market information.
-        text: Implement API calls or data feed connections to fetch the latest market
-          prices and trading volumes.
+        method: 'Access the output fields of ''gather_market_data'' node, specifically:
+          market_prices (LIST_FLOAT), historical_data (LIST_FLOAT), market_volumes
+          (LIST_INT), and other_indicators (LIST_STR).'
+        reason: To analyze market trends, we need the raw data collected from the
+          'gather_market_data' node.
+        text: Extract relevant data from the output of 'gather_market_data' node,
+          including market prices, historical data, market volumes, and other indicators.
       - complexity: MEDIUM
         impact: MEDIUM
-        method: Use data parsing libraries (e.g., pandas for data manipulation) to
-          convert raw data into the required formats. Implement data cleaning and
-          validation to ensure data integrity.
-        reason: The output needs to conform to the specified data types to be usable
-          by dependent nodes.
-        text: Parse the retrieved data into the required format, specifically lists
-          of floats for market prices and lists of integers for trading volumes.
-      - complexity: MEDIUM
-        impact: LOW
-        method: Use databases (e.g., relational databases like MySQL or NoSQL databases
-          like MongoDB) or caching solutions (e.g., Redis) to store the data. Implement
-          data models or schemas as necessary.
-        reason: Having a record of fetched data can be useful for analysis, debugging,
-          and potentially improving the trading workflow.
-        text: Implement data storage or caching mechanisms to store fetched market
-          data for potential reuse or debugging purposes.
+        method: Use data preprocessing techniques such as handling missing values
+          (e.g., imputation), removing outliers (e.g., using IQR method), and normalizing
+          data (e.g., Min-Max Scaling).
+        reason: Raw data may contain missing values, outliers, or be in an inappropriate
+          format for analysis.
+        text: Apply data preprocessing techniques to clean and normalize the extracted
+          data.
+      - complexity: HIGH
+        impact: HIGH
+        method: Choose an appropriate trend analysis algorithm based on the nature
+          of the data and the specific requirements of the task. For example, use
+          linear regression for simple trend analysis or more complex models like
+          LSTM for time series forecasting.
+        reason: Trend identification requires analyzing the preprocessed data using
+          a statistical or machine learning approach.
+        text: Utilize a suitable algorithm (e.g., linear regression, moving averages,
+          or machine learning models) to identify trends in the preprocessed data.
       - complexity: MEDIUM
         impact: HIGH
-        method: Implement try-except blocks and error handling mechanisms for anticipated
-          exceptions. Use logging to track errors and potentially implement retry
-          mechanisms for transient errors.
-        reason: Robust error handling is crucial for maintaining the reliability and
-          stability of the trading workflow.
-        text: Handle errors and exceptions that may occur during data fetching, parsing,
-          or storage, such as network errors, data format issues, or storage failures.
-    prompt: Fetch the latest market data from reliable sources.
-    shims:
-    - agent: false
-      code_node_type: virtual-stub
-      description: Identifies reliable data sources based on given input criteria.
-      implementation: "def identify_reliable_data_sources(input_criteria: str) ->\
-        \ List[str]:\n    \"\"\"\n    Identifies reliable data sources based on given\
-        \ input criteria.\n\n    Args:\n        input_criteria: Input parameter of\
-        \ type str\n\n    Returns:\n        List[str]: Output of type List[str]\n\
-        \    \"\"\"\n    raise NotImplementedError(\"This is a virtual stub node that\
-        \ needs to be implemented\")\n"
-      name: identify_reliable_data_sources
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[str]
-        key: output
-        type: List[str]
-      - description: Input parameter of type str
-        key: input_criteria
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Provides a foundational list that can be filtered or ranked.
-          method: Utilize existing industry reports, previous project data, and known
-            data providers to compile an initial list.
-          reason: To establish a baseline for what could be considered reliable.
-          text: Develop a list of potential data sources based on industry standards
-            and previous data interactions.
-        - complexity: HIGH
-          impact: Ensures that only high-quality data sources are used for further
-            processing.
-          method: Use a combination of metrics such as data accuracy, update frequency,
-            and historical reliability to rank sources.
-          reason: To narrow down the list to sources that are actually reliable and
-            relevant.
-          text: Implement a filtering or ranking mechanism to identify the most reliable
-            sources from the list.
-        - complexity: MEDIUM
-          impact: Allows for the practical application of the identified reliable
-            data sources.
-          method: Modify the existing fetch_market_data function to utilize the output
-            of identify_reliable_data_sources for selecting data sources.
-          reason: To ensure seamless integration with the current system.
-          text: Integrate the identified reliable data sources into the existing data
-            fetching pipeline.
-      prompt: Identify reliable data sources for the given input criteria.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Selects the best data source based on the provided sources and
-        requirements.
-      implementation: "def select_best_data_source(sources: str, requirements: str)\
-        \ -> str:\n    \"\"\"\n    Selects the best data source based on the provided\
-        \ sources and requirements.\n\n    Args:\n        sources: Input parameter\
-        \ of type str\nrequirements: Input parameter of type str\n\n    Returns:\n\
-        \        str: Output of type str\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: select_best_data_source
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type str
-        key: output
-        type: str
-      - description: Input parameter of type str
-        key: sources
-        type: str
-      - description: Input parameter of type str
-        key: requirements
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Ensures that the most suitable data source is chosen, potentially
-            improving the quality of the fetched market data.
-          method: Develop a weighted scoring algorithm that considers various factors
-            such as data source reliability, update frequency, and compatibility with
-            the requirements.
-          reason: To systematically compare and select the best data source.
-          text: Implement a scoring system to evaluate data sources based on the given
-            requirements.
-        - complexity: LOW
-          impact: Provides a fallback strategy, ensuring the function can still operate
-            when there's not a single best source.
-          method: Implement a simple tie-breaker rule, such as selecting the first
-            source encountered with the highest score.
-          reason: To ensure the function can handle tie-breaker situations.
-          text: Handle cases where multiple data sources have the same highest score.
-        - complexity: LOW
-          impact: Reduces the risk of runtime errors, making the function more robust.
-          method: Add input validation checks at the beginning of the function to
-            ensure that 'sources' and 'requirements' are not empty and are of the
-            expected type.
-          reason: To ensure the function receives valid inputs and can operate correctly.
-          text: Validate the input sources and requirements to prevent errors.
-      prompt: Typed node for shim select_best_data_source
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Fetches market data from an external API based on the provided
-        source and symbols.
-      implementation: "def fetch_data_from_api(source: str, symbols: str) -> str:\n\
-        \    \"\"\"\n    Fetches market data from an external API based on the provided\
-        \ source and symbols.\n\n    Args:\n        source: Input parameter of type\
-        \ str\nsymbols: Input parameter of type str\n\n    Returns:\n        str:\
-        \ Output of type dict\n    \"\"\"\n    raise NotImplementedError(\"This is\
-        \ a virtual stub node that needs to be implemented\")\n"
-      name: fetch_data_from_api
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type dict
-        key: output
-        type: str
-      - description: Input parameter of type str
-        key: source
-        type: str
-      - description: Input parameter of type str
-        key: symbols
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Enables the system to gather necessary data for further processing
-            and analysis.
-          method: Use a suitable HTTP client library (e.g., requests in Python) to
-            make API calls. Handle different data formats (e.g., JSON, XML) based
-            on the API's response structure.
-          reason: To retrieve the required market data from external sources.
-          text: Implement API request logic to fetch market data based on the provided
-            source and symbols.
-        - complexity: MEDIUM
-          impact: Improves the reliability and stability of the data fetching process.
-          method: Implement try-except blocks to catch exceptions, and use retry mechanisms
-            (e.g., exponential backoff) for transient errors.
-          reason: To ensure the system remains robust and can recover from potential
-            issues like network failures or API rate limits.
-          text: Handle errors and exceptions that may occur during the API request.
-        - complexity: LOW
-          impact: Simplifies subsequent data processing and analysis steps.
-          method: Use data parsing libraries (e.g., json.loads for JSON data) to convert
-            the API response into a Python dictionary.
-          reason: To provide a consistent data structure for downstream processing.
-          text: Parse the API response into a standardized dictionary format.
-      prompt: 'Fetch market data from API using source: {source} and symbols: {symbols}'
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Parses raw market data to extract a list of market prices as floats.
-      implementation: "def parse_market_prices(raw_data: str) -> List[float]:\n  \
-        \  \"\"\"\n    Parses raw market data to extract a list of market prices as\
-        \ floats.\n\n    Args:\n        raw_data: Input parameter of type str\n\n\
-        \    Returns:\n        List[float]: Output of type List[float]\n    \"\"\"\
-        \n    raise NotImplementedError(\"This is a virtual stub node that needs to\
-        \ be implemented\")\n"
-      name: parse_market_prices
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[float]
-        key: output
-        type: List[float]
-      - description: Input parameter of type str
-        key: raw_data
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Enables the fetch_market_data function to obtain the necessary market
-            prices.
-          method: Use a parsing library or regular expressions to identify and extract
-            numerical price data from the raw input string.
-          reason: To fulfill the requirement of extracting market prices from raw
-            data.
-          text: Implement data extraction logic to parse raw market data into a list
-            of float prices.
-        - complexity: MEDIUM
-          impact: Prevents the system from crashing due to malformed data and allows
-            for graceful error handling.
-          method: Implement try-except blocks to catch parsing errors and return meaningful
-            error messages or default values.
-          reason: To ensure robustness against varying or incorrect data formats.
-          text: Handle potential errors in data format or type during the parsing
-            process.
-        - complexity: HIGH
-          impact: Enhances the overall performance of the fetch_market_data function,
-            reducing latency.
-          method: Use efficient data structures and algorithms for parsing, such as
-            using Pandas for data manipulation or optimizing regular expressions.
-          reason: To improve the efficiency of the market data fetching process.
-          text: Optimize the parsing logic for performance, especially for large datasets.
-      prompt: Typed node for shim parse_market_prices
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Parses raw market data to extract trading volumes as a list of
-        integers.
-      implementation: "def parse_trading_volumes(raw_data: str) -> List[int]:\n  \
-        \  \"\"\"\n    Parses raw market data to extract trading volumes as a list\
-        \ of integers.\n\n    Args:\n        raw_data: Input parameter of type str\n\
-        \n    Returns:\n        List[int]: Output of type List[int]\n    \"\"\"\n\
-        \    raise NotImplementedError(\"This is a virtual stub node that needs to\
-        \ be implemented\")\n"
-      name: parse_trading_volumes
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[int]
-        key: output
-        type: List[int]
-      - description: Input parameter of type str
-        key: raw_data
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Allows the system to accurately extract and utilize trading volume
-            data from raw market data.
-          method: Use a parsing library or regular expressions to identify and extract
-            trading volume information from the raw data string.
-          reason: To enable the fetch_market_data function to retrieve and process
-            trading volumes correctly.
-          text: Implement data extraction logic to parse raw market data and identify
-            trading volumes.
-        - complexity: MEDIUM
-          impact: Prevents the system from crashing due to malformed input data and
-            provides a more stable data processing pipeline.
-          method: Implement try-except blocks and default values for missing data
-            to handle potential errors gracefully.
-          reason: To ensure robustness and reliability of the parse_trading_volumes
-            function.
-          text: Handle potential errors in data format or missing values in raw market
-            data.
-        - complexity: LOW
-          impact: Enhances data quality and reduces the risk of downstream errors
-            due to invalid trading volume data.
-          method: Apply simple range checks to verify that the extracted trading volumes
-            are within plausible limits.
-          reason: To prevent incorrect data from being processed further in the system.
-          text: Validate the extracted trading volumes to ensure they are within expected
-            ranges.
-      prompt: Typed node for shim parse_trading_volumes
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Validates the given price data to ensure it conforms to expected
-        standards.
-      implementation: "def validate_price_data(prices: str) -> List[float]:\n    \"\
-        \"\"\n    Validates the given price data to ensure it conforms to expected\
-        \ standards.\n\n    Args:\n        prices: Input parameter of type str\n\n\
-        \    Returns:\n        List[float]: Output of type List[float]\n    \"\"\"\
-        \n    raise NotImplementedError(\"This is a virtual stub node that needs to\
-        \ be implemented\")\n"
-      name: validate_price_data
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[float]
-        key: output
-        type: List[float]
-      - description: Input parameter of type str
-        key: prices
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Enables further validation and processing of the price data.
-          method: Use a parsing library or a simple split and conversion method to
-            transform the string into a list of floats.
-          reason: To convert the input string into a numerical format that can be
-            analyzed.
-          text: Parse the input string into a list of float values representing prices.
-        - complexity: MEDIUM
-          impact: Prevents erroneous or malicious data from being processed further.
-          method: Implement a validation function that checks each price against the
-            criteria and filters or corrects the data as necessary.
-          reason: To ensure the prices are valid and reasonable.
-          text: Validate the parsed prices against a set of predefined criteria (e.g.,
-            non-negative, within a certain range).
-        - complexity: MEDIUM
-          impact: Improves the reliability and stability of the overall system.
-          method: Use try-except blocks to catch and handle exceptions, providing
-            meaningful error messages or fallback values as needed.
-          reason: To ensure the function is robust and can manage unexpected inputs.
-          text: Handle any exceptions or errors that occur during parsing or validation.
-      prompt: 'Validate the given price data: {prices}'
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Validates the given trading volume data to ensure it's correct
-        and consistent.
-      implementation: "def validate_volume_data(volumes: str) -> List[int]:\n    \"\
-        \"\"\n    Validates the given trading volume data to ensure it's correct and\
-        \ consistent.\n\n    Args:\n        volumes: Input parameter of type str\n\
-        \n    Returns:\n        List[int]: Output of type List[int]\n    \"\"\"\n\
-        \    raise NotImplementedError(\"This is a virtual stub node that needs to\
-        \ be implemented\")\n"
-      name: validate_volume_data
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[int]
-        key: output
-        type: List[int]
-      - description: Input parameter of type str
-        key: volumes
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Improperly formatted data could lead to errors or incorrect results
-            downstream.
-          method: Use a schema validation library to check the input data structure.
-          reason: To ensure that the data is properly structured and can be processed
-            further.
-          text: Check if the input volume data is in the correct format and contains
-            the expected number of elements.
-        - complexity: MEDIUM
-          impact: Out-of-range values could significantly skew results or lead to
-            incorrect conclusions.
-          method: Implement range checks based on historical data or known limits
-            for trading volumes.
-          reason: To prevent outliers or incorrect data from affecting the analysis
-            or results.
-          text: Validate the trading volume values to ensure they are within reasonable
-            and expected ranges.
-        - complexity: HIGH
-          impact: Inconsistent or missing data could lead to errors or reduced accuracy
-            in subsequent steps.
-          method: Use data cleaning and normalization techniques such as interpolation
-            for missing values or smoothing for outliers.
-          reason: To ensure that the data is consistent and ready for further analysis
-            or processing.
-          text: Clean and normalize the volume data to handle any inconsistencies
-            or missing values.
-      prompt: Validate the given trading volume data.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: A shim function that stores market data for caching and debugging
-        purposes.
-      implementation: "def store_market_data(prices: str, volumes: str, source: str)\
-        \ -> str:\n    \"\"\"\n    A shim function that stores market data for caching\
-        \ and debugging purposes.\n\n    Args:\n        prices: Input parameter of\
-        \ type str\nvolumes: Input parameter of type str\nsource: Input parameter\
-        \ of type str\n\n    Returns:\n        str: Output of type Any\n    \"\"\"\
-        \n    raise NotImplementedError(\"This is a virtual stub node that needs to\
-        \ be implemented\")\n"
-      name: store_market_data
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type Any
-        key: output
-        type: str
-      - description: Input parameter of type str
-        key: prices
-        type: str
-      - description: Input parameter of type str
-        key: volumes
-        type: str
-      - description: Input parameter of type str
-        key: source
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Enables data retrieval for analysis and debugging
-          method: Use a database or file storage system to store market data
-          reason: To cache and debug market data effectively
-          text: Implement data storage mechanism
-        - complexity: LOW
-          impact: Prevents corrupted or invalid data from being stored
-          method: Check input data types and ranges before storing
-          reason: To ensure data integrity and consistency
-          text: Validate input data
-        - complexity: HIGH
-          impact: Ensures that the system remains operational even if storage fails
-          method: Implement error handling and retry mechanisms for data storage
-          reason: To prevent data loss and ensure robustness
-          text: Handle data storage failures
-      prompt: 'Description: Typed node for shim store_market_data'
-      shims: []
-  generate_trading_signals:
+        method: Use metrics such as R-squared for linear regression or Mean Absolute
+          Error (MAE) and Mean Squared Error (MSE) for more complex models to evaluate
+          the performance and derive a confidence level.
+        reason: Understanding the confidence in the identified trends is crucial for
+          making informed decisions.
+        text: Calculate the confidence level in the identified trends based on the
+          performance of the trend analysis algorithm.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use the results from the trend analysis algorithm to craft a concise
+          and informative description of the identified trends.
+        reason: A clear description is necessary for understanding and communicating
+          the trends.
+        text: Formulate a description of the identified market trends based on the
+          analysis.
+      - complexity: LOW
+        impact: HIGH
+        method: 'Format the results into the required output fields: trend_identification
+          (STR) and trend_confidence (FLOAT).'
+        reason: To meet the output requirements of the node.
+        text: Output the trend identification description and the trend confidence
+          level as per the defined output structure.
+    prompt: Use the collected market data to identify trends and patterns
+    shims: []
+  evaluate_risk_factors:
     agent: false
-    code_node_type: shim
-    description: Generate trading signals based on analyzed trends and indicators.
+    code_node_type: stub
+    description: Assess potential risk factors that could impact trading decisions
     implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
-      \n\nclass AnalyzeMarketTrendsOutput(BaseModel):\n    \"\"\"Pydantic model for\
-      \ analyze_market_trends node outputs.\"\"\"\n    trend_directions: List[str]\
-      \ = Field(..., description=\"Directions of identified market trends (up, down,\
-      \ neutral)\")\n    trend_strengths: List[float] = Field(..., description=\"\
-      Strengths of identified market trends\")\n\n\nclass CalculateTradingIndicatorsOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for calculate_trading_indicators node outputs.\"\"\
-      \"\n    indicator_values: List[float] = Field(..., description=\"Values of calculated\
-      \ technical indicators\")\n    indicator_names: List[str] = Field(..., description=\"\
-      Names of calculated technical indicators\")\n\n\nclass GenerateTradingSignalsOutput(BaseModel):\n\
-      \    \"\"\"Pydantic model for generate_trading_signals node outputs.\"\"\"\n\
-      \    signal_types: List[str] = Field(..., description=\"Types of generated trading\
-      \ signals (buy, sell, hold)\")\n    signal_strengths: List[float] = Field(...,\
-      \ description=\"Strengths or confidence levels of generated trading signals\"\
-      )\n\n\ndef generate_trading_signals(analyze_market_trends_input: AnalyzeMarketTrendsOutput,\
-      \ calculate_trading_indicators_input: CalculateTradingIndicatorsOutput, **kwargs)\
-      \ -> GenerateTradingSignalsOutput:\n    \"\"\"Generate trading signals based\
-      \ on analyzed trends and indicators.\n\n    Args:\n        analyze_market_trends_input:\
-      \ Input from the 'analyze_market_trends' node.\n        calculate_trading_indicators_input:\
-      \ Input from the 'calculate_trading_indicators' node.\n        **kwargs: Additional\
-      \ keyword arguments.\n\n    Returns:\n        GenerateTradingSignalsOutput:\
-      \ Object containing outputs for this node.\n    \"\"\"\n    # Combine trend\
-      \ and indicator data for signal generation\n    combined_data: dict = combine_trend_and_indicator_data(\n\
-      \        trend_directions=analyze_market_trends_input.trend_directions,\n  \
-      \      trend_strengths=analyze_market_trends_input.trend_strengths,\n      \
-      \  indicator_values=calculate_trading_indicators_input.indicator_values,\n \
-      \       indicator_names=calculate_trading_indicators_input.indicator_names\n\
-      \    )\n    \n    # Apply trading signal generation rules\n    raw_signals:\
-      \ List[dict] = apply_trading_rules(combined_data=combined_data)\n    \n    #\
-      \ Filter and validate signals based on confidence thresholds\n    filtered_signals:\
-      \ List[dict] = filter_signals_by_confidence(\n        signals=raw_signals,\n\
-      \        min_confidence=0.6\n    )\n    \n    # Extract signal types and strengths\
-      \ from filtered results\n    signal_types: List[str] = extract_signal_types(signals=filtered_signals)\n\
-      \    signal_strengths: List[float] = extract_signal_strengths(signals=filtered_signals)\n\
-      \    \n    return GenerateTradingSignalsOutput(\n        signal_types=signal_types,\n\
-      \        signal_strengths=signal_strengths\n    )"
-    name: generate_trading_signals
+      \n\nclass GatherMarketDataOutput(BaseModel):\n    \"\"\"Pydantic model for gather_market_data\
+      \ node outputs.\"\"\"\n    market_prices: List[float] = Field(..., description=\"\
+      List of current market prices\")\n    historical_data: List[float] = Field(...,\
+      \ description=\"Historical price data\")\n    market_volumes: List[int] = Field(...,\
+      \ description=\"List of market volumes\")\n    other_indicators: List[str] =\
+      \ Field(..., description=\"Other relevant market indicators\")\n\n\nclass EvaluateRiskFactorsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for evaluate_risk_factors node outputs.\"\"\"\n  \
+      \  risk_level: float = Field(..., description=\"Assessed level of risk\")\n\
+      \    risk_factors: str = Field(..., description=\"List of identified risk factors\"\
+      )\n\n\ndef evaluate_risk_factors(gather_market_data_input: GatherMarketDataOutput,\
+      \ **kwargs) -> EvaluateRiskFactorsOutput:\n    \"\"\"Assess potential risk factors\
+      \ that could impact trading decisions\n\n    Args:\n        gather_market_data_input:\
+      \ Input from the 'gather_market_data' node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        EvaluateRiskFactorsOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return EvaluateRiskFactorsOutput(\n\
+      \        risk_level=0.0,\n        risk_factors=\"\",\n    )"
+    name: evaluate_risk_factors
+    nodes_depended_on:
+    - gather_market_data
+    nodes_dependent_on: []
+    output_structure:
+    - description: Assessed level of risk
+      key: risk_level
+      type: float
+    - description: List of identified risk factors
+      key: risk_factors
+      type: str
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the historical price data to calculate the standard deviation
+          of returns, and consider market volumes to gauge liquidity risks
+        reason: Market volatility is a key risk factor that can impact trading decisions
+        text: Calculate market volatility using the historical price data and market
+          volumes obtained from the 'gather_market_data' node
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Parse the 'other_indicators' list to identify relevant economic indicators,
+          and assess their current state and trends
+        reason: Economic indicators can significantly impact market performance and
+          trading outcomes
+        text: Analyze economic indicators from the 'other_indicators' output of 'gather_market_data'
+          to identify potential economic risks
+      - complexity: HIGH
+        impact: HIGH
+        method: Integrate external APIs or news feeds to gather information on geopolitical
+          events, and use natural language processing to assess their potential impact
+        reason: Geopolitical events can have sudden and significant impacts on market
+          stability and trading decisions
+        text: Assess geopolitical events and their potential impact on the market
+          using external data sources and news feeds
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a weighted scoring system to combine the risk assessments from
+          different factors, with weights based on their relative importance
+        reason: A comprehensive risk assessment requires considering multiple factors
+        text: Combine the assessments of market volatility, economic indicators, and
+          geopolitical events to determine the overall risk level
+      - complexity: LOW
+        impact: MEDIUM
+        method: Compile the risk factors identified during the assessment into a list
+          for output
+        reason: Providing a list of specific risk factors helps in understanding the
+          sources of risk
+        text: Identify and list specific risk factors based on the assessments made
+          in previous steps
+      - complexity: LOW
+        impact: LOW
+        method: Apply a min-max scaling or a sigmoid function to normalize the risk
+          level
+        reason: Normalization ensures consistency in risk level representation
+        text: Normalize the risk level to a float value between 0 and 1
+    prompt: Evaluate risk factors such as market volatility, economic indicators,
+      and geopolitical events
+    shims: []
+  execute_trades:
+    agent: false
+    code_node_type: stub
+    description: Execute trades according to the formulated strategy
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass FormulateTradingStrategyOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for formulate_trading_strategy node outputs.\"\"\"\
+      \n    trading_strategy: str = Field(..., description=\"Description of the formulated\
+      \ trading strategy\")\n    expected_returns: float = Field(..., description=\"\
+      Expected returns based on the strategy\")\n    risk_mitigation_measures: str\
+      \ = Field(..., description=\"Measures to mitigate identified risks\")\n\n\n\
+      class ExecuteTradesOutput(BaseModel):\n    \"\"\"Pydantic model for execute_trades\
+      \ node outputs.\"\"\"\n    trade_execution_status: bool = Field(..., description=\"\
+      Status of trade execution\")\n    trade_details: str = Field(..., description=\"\
+      Details of executed trades\")\n\n\ndef execute_trades(formulate_trading_strategy_input:\
+      \ FormulateTradingStrategyOutput, **kwargs) -> ExecuteTradesOutput:\n    \"\"\
+      \"Execute trades according to the formulated strategy\n\n    Args:\n       \
+      \ formulate_trading_strategy_input: Input from the 'formulate_trading_strategy'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       ExecuteTradesOutput: Object containing outputs for this node.\n    \"\
+      \"\"\n    # TODO: Implement this function\n\n    # Return stub output with placeholder\
+      \ values\n    return ExecuteTradesOutput(\n        trade_execution_status=False,\n\
+      \        trade_details=\"\",\n    )"
+    name: execute_trades
+    nodes_depended_on:
+    - formulate_trading_strategy
+    nodes_dependent_on: []
+    output_structure:
+    - description: Status of trade execution
+      key: trade_execution_status
+      type: bool
+    - description: Details of executed trades
+      key: trade_details
+      type: str
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Use a parsing algorithm to extract the relevant information from the
+          trading strategy output.
+        reason: The trading strategy output provides crucial information needed to
+          execute trades effectively.
+        text: Parse the trading strategy output from the 'formulate_trading_strategy'
+          node to extract the trading strategy, expected returns, and risk mitigation
+          measures.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Implement a validation check using a rules engine or a similar compliance
+          checking mechanism.
+        reason: Ensuring compliance with trading rules and regulations is critical
+          to avoid legal and financial repercussions.
+        text: Validate the extracted trading strategy against a set of predefined
+          trading rules and regulations to ensure compliance.
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Integrate with a trading execution platform or API to automate the
+          trade execution process.
+        reason: Automating trade execution ensures timely and accurate execution of
+          trades.
+        text: Execute trades based on the validated trading strategy using a trading
+          execution platform or API.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a logging or database mechanism to store the details of executed
+          trades.
+        reason: Recording trade details is essential for tracking trade performance
+          and for audit purposes.
+        text: Capture and record the details of executed trades, including any relevant
+          metadata such as trade timestamp, quantity, and price.
+      - complexity: LOW
+        impact: HIGH
+        method: Evaluate the outcome of trade execution and update the trade execution
+          status based on the result.
+        reason: Accurately reporting trade execution status is crucial for downstream
+          processes and decision-making.
+        text: Determine the status of trade execution (success or failure) and update
+          the trade execution status accordingly.
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a data formatting or serialization technique to compile the output
+          into the required format.
+        reason: Formatting the output correctly is necessary for compatibility with
+          downstream nodes.
+        text: Compile the trade execution status and trade details into the required
+          output format.
+    prompt: Carry out the trades as per the developed strategy, ensuring compliance
+      with trading rules and regulations
+    shims: []
+  formulate_trading_strategy:
+    agent: false
+    code_node_type: stub
+    description: Develop a trading strategy based on the analysis and risk assessment
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass AnalyzeMarketTrendsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for analyze_market_trends node outputs.\"\"\"\n  \
+      \  trend_identification: str = Field(..., description=\"Description of identified\
+      \ market trends\")\n    trend_confidence: float = Field(..., description=\"\
+      Confidence level in the identified trends\")\n\n\nclass EvaluateRiskFactorsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for evaluate_risk_factors node outputs.\"\"\"\n  \
+      \  risk_level: float = Field(..., description=\"Assessed level of risk\")\n\
+      \    risk_factors: str = Field(..., description=\"List of identified risk factors\"\
+      )\n\n\nclass FormulateTradingStrategyOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for formulate_trading_strategy node outputs.\"\"\"\n    trading_strategy:\
+      \ str = Field(..., description=\"Description of the formulated trading strategy\"\
+      )\n    expected_returns: float = Field(..., description=\"Expected returns based\
+      \ on the strategy\")\n    risk_mitigation_measures: str = Field(..., description=\"\
+      Measures to mitigate identified risks\")\n\n\ndef formulate_trading_strategy(analyze_market_trends_input:\
+      \ AnalyzeMarketTrendsOutput, evaluate_risk_factors_input: EvaluateRiskFactorsOutput,\
+      \ **kwargs) -> FormulateTradingStrategyOutput:\n    \"\"\"Develop a trading\
+      \ strategy based on the analysis and risk assessment\n\n    Args:\n        analyze_market_trends_input:\
+      \ Input from the 'analyze_market_trends' node.\n        evaluate_risk_factors_input:\
+      \ Input from the 'evaluate_risk_factors' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        FormulateTradingStrategyOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ FormulateTradingStrategyOutput(\n        trading_strategy=\"\",\n        expected_returns=0.0,\n\
+      \        risk_mitigation_measures=\"\",\n    )"
+    name: formulate_trading_strategy
     nodes_depended_on:
     - analyze_market_trends
-    - calculate_trading_indicators
-    nodes_dependent_on:
-    - execute_trades
+    - evaluate_risk_factors
+    nodes_dependent_on: []
     output_structure:
-    - description: Types of generated trading signals (buy, sell, hold)
-      key: signal_types
-      type: List[str]
-    - description: Strengths or confidence levels of generated trading signals
-      key: signal_strengths
-      type: List[float]
+    - description: Description of the formulated trading strategy
+      key: trading_strategy
+      type: str
+    - description: Expected returns based on the strategy
+      key: expected_returns
+      type: float
+    - description: Measures to mitigate identified risks
+      key: risk_mitigation_measures
+      type: str
     prd:
-      bullets: []
-    prompt: Generate buy or sell signals based on the analyzed trends and indicators.
-    shims:
-    - agent: false
-      code_node_type: virtual-stub
-      description: Combines trend and indicator data into a dictionary for further
-        processing in trading signal generation.
-      implementation: "def combine_trend_and_indicator_data(trend_directions: str,\
-        \ trend_strengths: str, indicator_values: str, indicator_names: str) -> str:\n\
-        \    \"\"\"\n    Combines trend and indicator data into a dictionary for further\
-        \ processing in trading signal generation.\n\n    Args:\n        trend_directions:\
-        \ Input parameter of type str\ntrend_strengths: Input parameter of type str\n\
-        indicator_values: Input parameter of type str\nindicator_names: Input parameter\
-        \ of type str\n\n    Returns:\n        str: Output of type dict\n    \"\"\"\
-        \n    raise NotImplementedError(\"This is a virtual stub node that needs to\
-        \ be implemented\")\n"
-      name: combine_trend_and_indicator_data
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type dict
-        key: output
-        type: str
-      - description: Input parameter of type str
-        key: trend_directions
-        type: str
-      - description: Input parameter of type str
-        key: trend_strengths
-        type: str
-      - description: Input parameter of type str
-        key: indicator_values
-        type: str
-      - description: Input parameter of type str
-        key: indicator_names
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Correct data formatting is crucial for accurate signal generation.
-          method: Use Python's `ast.literal_eval()` or a similar method to safely
-            convert string representations of lists into actual lists.
-          reason: The inputs are provided as strings but need to be converted into
-            lists for processing.
-          text: Parse input strings into their respective list formats.
-        - complexity: LOW
-          impact: Enables the application of trading rules and signal filtering.
-          method: Create a dictionary with appropriate keys (e.g., 'trend_directions',
-            'trend_strengths', 'indicator_values', 'indicator_names') and assign the
-            parsed input lists to their corresponding keys.
-          reason: A unified data structure is necessary for the subsequent steps of
-            trading signal generation.
-          text: Combine the parsed trend directions, trend strengths, indicator values,
-            and indicator names into a single dictionary.
-        - complexity: LOW
-          impact: Ensures compatibility with the expected output format.
-          method: Use `json.dumps()` to convert the dictionary into a JSON string,
-            which is a string representation that can be easily parsed later.
-          reason: The output needs to be in a string format as per the defined output
-            structure.
-          text: Return the combined data dictionary as a string.
-      prompt: Combine trend directions, trend strengths, indicator values, and indicator
-        names into a single data structure for trading signal generation.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Applies predefined trading rules to the combined market trend and
-        technical indicator data to generate raw trading signals.
-      implementation: "def apply_trading_rules(combined_data: str) -> List[str]:\n\
-        \    \"\"\"\n    Applies predefined trading rules to the combined market trend\
-        \ and technical indicator data to generate raw trading signals.\n\n    Args:\n\
-        \        combined_data: Input parameter of type str\n\n    Returns:\n    \
-        \    List[str]: Output of type List[dict]\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: apply_trading_rules
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[dict]
-        key: output
-        type: List[str]
-      - description: Input parameter of type str
-        key: combined_data
-        type: str
-      prd:
-        bullets:
-        - complexity: LOW
-          impact: Properly structured input data will enable accurate and efficient
-            generation of trading signals.
-          method: Specify a clear schema or data structure for the combined data,
-            including trend directions, trend strengths, indicator values, and indicator
-            names.
-          reason: To ensure that the input data is properly formatted and contains
-            all necessary information for generating trading signals.
-          text: Define the structure of the combined data that will be used as input
-            for applying trading rules.
-        - complexity: MEDIUM
-          impact: The quality and accuracy of the generated trading signals will directly
-            depend on the effectiveness of the implemented trading rules.
-          method: Use a rules-based system or decision trees to apply trading rules,
-            potentially leveraging machine learning models or expert-defined rules.
-          reason: To generate raw trading signals based on the analyzed market trends
-            and technical indicators.
-          text: Implement the logic for applying predefined trading rules to the combined
-            data.
-        - complexity: LOW
-          impact: Properly formatted output will enable seamless integration with
-            subsequent steps in the trading signal generation pipeline.
-          method: Implement data serialization or formatting logic to ensure the output
-            conforms to the expected structure.
-          reason: To facilitate downstream processing and filtering of the generated
-            signals.
-          text: Ensure the output is in the required format, i.e., a list of dictionaries
-            representing raw trading signals.
-      prompt: Apply trading rules to the combined data to generate raw trading signals.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Filters trading signals based on a minimum confidence threshold.
-      implementation: "def filter_signals_by_confidence(signals: str, min_confidence:\
-        \ str) -> List[str]:\n    \"\"\"\n    Filters trading signals based on a minimum\
-        \ confidence threshold.\n\n    Args:\n        signals: Input parameter of\
-        \ type str\nmin_confidence: Input parameter of type str\n\n    Returns:\n\
-        \        List[str]: Output of type List[dict]\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: filter_signals_by_confidence
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[dict]
-        key: output
-        type: List[str]
-      - description: Input parameter of type str
-        key: signals
-        type: str
-      - description: Input parameter of type str
-        key: min_confidence
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Correct parsing ensures that the filtering operation is performed
-            on the correct data.
-          method: Use a JSON parsing library to convert the input string into a list
-            of dictionaries.
-          reason: The input 'signals' is a string that needs to be converted into
-            a usable format for filtering.
-          text: Parse the input 'signals' string into a list of dictionaries to process
-            the trading signals.
-        - complexity: LOW
-          impact: Correct conversion enables accurate comparison and filtering based
-            on the confidence threshold.
-          method: Use a type conversion function to change the 'min_confidence' string
-            to a float.
-          reason: The 'min_confidence' threshold needs to be in a numerical format
-            to compare with signal confidences.
-          text: Convert the 'min_confidence' input string to a numerical value for
-            comparison.
-        - complexity: MEDIUM
-          impact: This ensures that only high-confidence signals are passed through
-            for further processing or action.
-          method: Implement a list comprehension or loop that checks each signal's
-            confidence against the threshold and includes it in the output if it meets
-            the criteria.
-          reason: The core functionality of this shim is to filter out signals that
-            do not meet the minimum confidence requirement.
-          text: Filter the parsed signals based on their confidence levels being greater
-            than or equal to the minimum confidence threshold.
-      prompt: Filter trading signals with confidence below the specified minimum threshold.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Extracts signal types from a list of signal objects.
-      implementation: "def extract_signal_types(signals: str) -> List[str]:\n    \"\
-        \"\"\n    Extracts signal types from a list of signal objects.\n\n    Args:\n\
-        \        signals: Input parameter of type str\n\n    Returns:\n        List[str]:\
-        \ Output of type List[str]\n    \"\"\"\n    raise NotImplementedError(\"This\
-        \ is a virtual stub node that needs to be implemented\")\n"
-      name: extract_signal_types
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[str]
-        key: output
-        type: List[str]
-      - description: Input parameter of type str
-        key: signals
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Correct parsing ensures that the signal objects are properly interpreted.
-          method: Use a JSON parsing library to convert the input string into a list
-            of dictionaries representing signal objects.
-          reason: The input is a string representation of a list of signal objects,
-            and we need to convert it into a usable format.
-          text: Parse the input string into a list of signal objects.
-        - complexity: LOW
-          impact: Successful extraction provides the required output.
-          method: Iterate over the list of signal objects and extract the 'type' or
-            equivalent field from each object.
-          reason: The task requires isolating the signal types from the other information
-            contained in the signal objects.
-          text: Extract the signal types from the parsed signal objects.
-        - complexity: LOW
-          impact: The output can be directly used by the calling function.
-          method: Simply return the list of extracted signal types.
-          reason: The output needs to be in the specified format.
-          text: Return the extracted signal types as a list of strings.
-      prompt: Extract signal types from the given list of signals.
-      shims: []
-    - agent: false
-      code_node_type: virtual-stub
-      description: Extracts signal strengths from a list of trading signals.
-      implementation: "def extract_signal_strengths(signals: str) -> List[float]:\n\
-        \    \"\"\"\n    Extracts signal strengths from a list of trading signals.\n\
-        \n    Args:\n        signals: Input parameter of type str\n\n    Returns:\n\
-        \        List[float]: Output of type List[float]\n    \"\"\"\n    raise NotImplementedError(\"\
-        This is a virtual stub node that needs to be implemented\")\n"
-      name: extract_signal_strengths
-      nodes_depended_on: []
-      nodes_dependent_on: []
-      output_structure:
-      - description: Output of type List[float]
-        key: output
-        type: List[float]
-      - description: Input parameter of type str
-        key: signals
-        type: str
-      prd:
-        bullets:
-        - complexity: MEDIUM
-          impact: Successful parsing enables the extraction of signal strengths.
-          method: Use a JSON parsing library or a similar approach to convert the
-            string into a Python object.
-          reason: The input is a string and needs to be converted into a format that
-            allows extraction of signal strengths.
-          text: Parse the input string into a usable format to access individual signal
-            data.
-        - complexity: LOW
-          impact: This step directly achieves the goal of extracting signal strengths.
-          method: Use a loop to iterate through the signal data and extract the strengths.
-          reason: The signal strengths are embedded within the signal data and need
-            to be accessed iteratively.
-          text: Iterate through the parsed signal data to extract the signal strengths.
-        - complexity: MEDIUM
-          impact: Robust error handling ensures the function remains operational despite
-            input issues.
-          method: Implement try-except blocks and validation checks to manage potential
-            errors.
-          reason: Input data may be malformed or missing required information, which
-            could cause extraction errors.
-          text: Handle potential errors or inconsistencies in the input signal data.
-      prompt: Extract signal strengths from the given list of trading signals.
-      shims: []
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the trend identification (PrimitiveType.STR) and trend confidence
+          (PrimitiveType.FLOAT) from 'analyze_market_trends' to assess market direction
+          and strength
+        reason: Understanding market trends is crucial for developing an effective
+          trading strategy
+        text: Analyze the trend identification and confidence level from the 'analyze_market_trends'
+          node to determine the overall market direction and strength
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the risk level (PrimitiveType.FLOAT) and risk factors (PrimitiveType.LIST_STR)
+          from 'evaluate_risk_factors' to identify potential risks
+        reason: Risk assessment is critical for balancing potential returns with risk
+          management
+        text: Evaluate the risk level and identified risk factors from the 'evaluate_risk_factors'
+          node to understand potential threats to the trading strategy
+      - complexity: HIGH
+        impact: HIGH
+        method: Use the insights from 'analyze_market_trends' and 'evaluate_risk_factors'
+          to formulate a trading strategy, including measures to mitigate risks
+        reason: The trading strategy should balance potential returns with risk management
+          based on market analysis and risk assessment
+        text: Develop a trading strategy that aligns with the analyzed market trends
+          and mitigates identified risks
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Use historical data and market analysis to estimate the expected returns
+          (PrimitiveType.FLOAT) of the trading strategy
+        reason: Expected returns are necessary for evaluating the potential performance
+          of the trading strategy
+        text: Calculate the expected returns based on the formulated trading strategy
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Based on the risk factors (PrimitiveType.LIST_STR) from 'evaluate_risk_factors',
+          develop and list specific risk mitigation measures (PrimitiveType.LIST_STR)
+        reason: Risk mitigation measures are essential for managing potential risks
+          associated with the trading strategy
+        text: Identify and document risk mitigation measures to address the identified
+          risk factors
+    prompt: Create a trading strategy that balances potential returns with risk management
+    shims: []
+  gather_market_data:
+    agent: false
+    code_node_type: stub
+    description: Collect relevant market data including prices, volumes, and other
+      indicators
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass GatherMarketDataOutput(BaseModel):\n    \"\"\"Pydantic model for gather_market_data\
+      \ node outputs.\"\"\"\n    market_prices: List[float] = Field(..., description=\"\
+      List of current market prices\")\n    historical_data: List[float] = Field(...,\
+      \ description=\"Historical price data\")\n    market_volumes: List[int] = Field(...,\
+      \ description=\"List of market volumes\")\n    other_indicators: List[str] =\
+      \ Field(..., description=\"Other relevant market indicators\")\n\n\ndef gather_market_data(general_input:\
+      \ str, **kwargs) -> GatherMarketDataOutput:\n    \"\"\"Collect relevant market\
+      \ data including prices, volumes, and other indicators\n\n    Args:\n      \
+      \  general_input: General input string for the root node.\n        **kwargs:\
+      \ Additional keyword arguments.\n\n    Returns:\n        GatherMarketDataOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ GatherMarketDataOutput(\n        market_prices=[],\n        historical_data=[],\n\
+      \        market_volumes=[],\n        other_indicators=[],\n    )"
+    name: gather_market_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    output_structure:
+    - description: List of current market prices
+      key: market_prices
+      type: List[float]
+    - description: Historical price data
+      key: historical_data
+      type: List[float]
+    - description: List of market volumes
+      key: market_volumes
+      type: List[int]
+    - description: Other relevant market indicators
+      key: other_indicators
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use a combination of financial data providers like Bloomberg, Quandl,
+          or Alpha Vantage for current and historical market data
+        reason: To ensure the accuracy and reliability of the gathered data
+        text: Identify reliable sources for market data such as financial APIs, databases,
+          or reputable financial news websites
+      - complexity: HIGH
+        impact: HIGH
+        method: Utilize APIs and data scraping techniques where necessary, ensuring
+          compliance with data provider terms of service
+        reason: To automate the process of gathering market data
+        text: Develop a data ingestion pipeline to fetch current market prices, historical
+          price data, market volumes, and other relevant indicators from the identified
+          sources
+      - complexity: MEDIUM
+        impact: MEDIUM
+        method: Apply statistical methods for handling missing values and outliers,
+          and normalize data as necessary
+        reason: To ensure the quality and consistency of the gathered data
+        text: Implement data cleaning and preprocessing steps to handle missing values,
+          outliers, and data normalization
+      - complexity: LOW
+        impact: MEDIUM
+        method: Use a database or data storage solution like pandas DataFrame, CSV,
+          or a dedicated time-series database
+        reason: To facilitate easy access and analysis of the market data
+        text: Store the gathered and processed market data in a structured format
+          suitable for analysis
+      - complexity: LOW
+        impact: LOW
+        method: Ensure the data processing pipeline outputs data in the specified
+          formats
+        reason: To meet the output structure requirements of the node
+        text: 'Output the market data in the required format: market_prices as List[float],
+          historical_data as List[float], market_volumes as List[int], and other_indicators
+          as List[str]'
+    prompt: Gather current and historical market data from reliable sources
+    shims: []
+  monitor_and_adjust:
+    agent: false
+    code_node_type: stub
+    description: Continuously monitor the trading performance and adjust the strategy
+      as needed
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ExecuteTradesOutput(BaseModel):\n    \"\"\"Pydantic model for execute_trades\
+      \ node outputs.\"\"\"\n    trade_execution_status: bool = Field(..., description=\"\
+      Status of trade execution\")\n    trade_details: str = Field(..., description=\"\
+      Details of executed trades\")\n\n\nclass MonitorAndAdjustOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for monitor_and_adjust node outputs.\"\"\"\n    performance_metrics:\
+      \ List[float] = Field(..., description=\"Key performance metrics of the trading\
+      \ strategy\")\n    adjustment_recommendations: List[str] = Field(..., description=\"\
+      Recommendations for adjusting the trading strategy\")\n\n\ndef monitor_and_adjust(execute_trades_input:\
+      \ ExecuteTradesOutput, **kwargs) -> MonitorAndAdjustOutput:\n    \"\"\"Continuously\
+      \ monitor the trading performance and adjust the strategy as needed\n\n    Args:\n\
+      \        execute_trades_input: Input from the 'execute_trades' node.\n     \
+      \   **kwargs: Additional keyword arguments.\n\n    Returns:\n        MonitorAndAdjustOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ MonitorAndAdjustOutput(\n        performance_metrics=[],\n        adjustment_recommendations=[],\n\
+      \    )"
+    name: monitor_and_adjust
+    nodes_depended_on:
+    - execute_trades
+    nodes_dependent_on: []
+    output_structure:
+    - description: Key performance metrics of the trading strategy
+      key: performance_metrics
+      type: List[float]
+    - description: Recommendations for adjusting the trading strategy
+      key: adjustment_recommendations
+      type: List[str]
+    prd:
+      bullets:
+      - complexity: LOW
+        impact: HIGH
+        method: Retrieve the output of the 'execute_trades' node, specifically 'trade_execution_status'
+          and 'trade_details'
+        reason: To monitor trading performance, we need the output of the 'execute_trades'
+          node, which includes trade execution status and trade details
+        text: Collect trade execution status and trade details from the 'execute_trades'
+          node
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use financial metrics formulas to calculate performance metrics from
+          'trade_details'
+        reason: To assess trading performance, we need to calculate metrics such as
+          return on investment, Sharpe ratio, and drawdown
+        text: Calculate key performance metrics using the trade details
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Monitor market data feeds and news to identify significant changes
+          or new information that could impact the trading strategy
+        reason: Changing market conditions or new data may require adjustments to
+          the trading strategy
+        text: Analyze market conditions and new data to identify potential adjustments
+      - complexity: MEDIUM
+        impact: HIGH
+        method: Use the calculated performance metrics and market analysis to determine
+          necessary adjustments to the trading strategy, such as rebalancing or changing
+          the risk management approach
+        reason: To improve trading performance, we need to adjust the strategy based
+          on its current performance and changing market conditions
+        text: Generate adjustment recommendations based on performance metrics and
+          market analysis
+      - complexity: LOW
+        impact: HIGH
+        method: Format the calculated performance metrics and generated adjustment
+          recommendations into the required output structure
+        reason: To provide a clear overview of trading performance and proposed adjustments
+        text: Output performance metrics and adjustment recommendations
+    prompt: Monitor trading performance and be prepared to adjust the strategy based
+      on new data or changing market conditions
+    shims: []

@@ -2,44 +2,42 @@ dag_type: plain_text
 description: Generated workflow from UI.
 name: Generated Workflow from UI
 nodes:
-  analyze_market_trends:
+  create_workflow_dag:
     agent: false
-    description: Analyze market trends using historical data and statistical models.
-    name: analyze_market_trends
+    description: Create a Directed Acyclic Graph (DAG) representing the workflow
+    name: create_workflow_dag
     nodes_depended_on:
-    - fetch_market_data
+    - determine_task_dependencies
     nodes_dependent_on: []
-    prompt: Analyze historical market data to identify trends and patterns.
-  calculate_trading_indicators:
+    prompt: Using the task dependencies, create a DAG representing the workflow.
+  define_workflow_objective:
     agent: false
-    description: Calculate technical indicators used in trading decisions.
-    name: calculate_trading_indicators
-    nodes_depended_on:
-    - fetch_market_data
-    nodes_dependent_on: []
-    prompt: Calculate relevant technical indicators such as RSI, MACD, etc.
-  execute_trades:
-    agent: false
-    description: Execute trades based on generated trading signals.
-    name: execute_trades
-    nodes_depended_on:
-    - generate_trading_signals
-    nodes_dependent_on: []
-    prompt: Execute trades according to the generated signals, considering risk management
-      and portfolio constraints.
-  fetch_market_data:
-    agent: false
-    description: Retrieve current market data, including prices and trading volumes.
-    name: fetch_market_data
+    description: Define the objective of the simple workflow
+    name: define_workflow_objective
     nodes_depended_on: []
     nodes_dependent_on: []
-    prompt: Fetch the latest market data from reliable sources.
-  generate_trading_signals:
+    prompt: Identify the primary goal of the simple workflow.
+  determine_task_dependencies:
     agent: false
-    description: Generate trading signals based on analyzed trends and indicators.
-    name: generate_trading_signals
+    description: Determine dependencies between the identified tasks
+    name: determine_task_dependencies
     nodes_depended_on:
-    - analyze_market_trends
-    - calculate_trading_indicators
+    - identify_required_tasks
     nodes_dependent_on: []
-    prompt: Generate buy or sell signals based on the analyzed trends and indicators.
+    prompt: Analyze the tasks and determine their dependencies.
+  identify_required_tasks:
+    agent: false
+    description: Identify tasks required to achieve the workflow objective
+    name: identify_required_tasks
+    nodes_depended_on:
+    - define_workflow_objective
+    nodes_dependent_on: []
+    prompt: List the tasks necessary to accomplish the workflow objective.
+  validate_workflow:
+    agent: false
+    description: Validate the created workflow DAG
+    name: validate_workflow
+    nodes_depended_on:
+    - create_workflow_dag
+    nodes_dependent_on: []
+    prompt: Check the workflow DAG for correctness and acyclicity.
