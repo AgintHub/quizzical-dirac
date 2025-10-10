@@ -32,6 +32,9 @@
 
 from typing import List
 
+import json
+import re
+
 
 def extract_cpu_metrics(parsed_metrics: str) -> List[float]:
     """
@@ -43,4 +46,69 @@ def extract_cpu_metrics(parsed_metrics: str) -> List[float]:
     Returns:
         List[float]: Output of type List[float]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    cpu_metrics = []
+    
+    try:
+        # Parse the input string as JSON
+        data = json.loads(parsed_metrics)
+        
+        # Handle different data structures - list or dict
+        if isinstance(data, list):
+            items_to_process = data
+        elif isinstance(data, dict):
+            items_to_process = [data]
+        else:
+            return cpu_metrics
+        
+        # Extract CPU metrics from the data
+        for item in items_to_process:
+            if isinstance(item, dict):
+                # Look for CPU-related keys
+                for key, value in item.items():
+                    key_lower = key.lower()
+                    if any(cpu_term in key_lower for cpu_term in ['cpu', 'processor', 'utilization']):
+                        try:
+                            # Convert to float and validate
+                            cpu_value = float(value)
+                            # Validate range (0-100 for percentage)
+                            if 0.0 <= cpu_value <= 100.0:
+                                cpu_metrics.append(cpu_value)
+                        except (ValueError, TypeError):
+                            # Skip invalid values
+                            continue
+                
+                # Also check nested structures
+                if 'metrics' in item and isinstance(item['metrics'], dict):
+                    for metric_key, metric_value in item['metrics'].items():
+                        if 'cpu' in metric_key.lower():
+                            try:
+                                cpu_value = float(metric_value)
+                                if 0.0 <= cpu_value <= 100.0:
+                                    cpu_metrics.append(cpu_value)
+                            except (ValueError, TypeError):
+                                continue
+    
+    except json.JSONDecodeError:
+        # Try to extract numbers using regex as fallback
+        try:
+            # Look for patterns like "cpu: 45.6" or "CPU utilization: 23.4%"
+            cpu_pattern = r'(?i)cpu[^\d]*([\d]+\.?[\d]*)'  
+            matches = re.findall(cpu_pattern, parsed_metrics)
+            
+            for match in matches:
+                try:
+                    cpu_value = float(match)
+                    if 0.0 <= cpu_value <= 100.0:
+                        cpu_metrics.append(cpu_value)
+                except ValueError:
+                    continue
+        except Exception:
+            # Return empty list if all parsing attempts fail
+            pass
+    
+    except Exception:
+        # Handle any other unexpected errors
+        pass
+    
+    return cpu_metrics

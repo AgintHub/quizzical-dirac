@@ -30,6 +30,8 @@
 
 from typing import List
 
+import json
+
 
 def consolidate_vulnerabilities(image_vulns: str, resource_vulns: str, port_vulns: str) -> List[str]:
     """
@@ -43,4 +45,50 @@ port_vulns: Input parameter of type str
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Parse input vulnerability lists from string format to list format
+    parsed_image_vulns = []
+    parsed_resource_vulns = []
+    parsed_port_vulns = []
+    
+    # Parse image_vulns
+    if image_vulns:
+        try:
+            # Try parsing as JSON first
+            parsed_image_vulns = json.loads(image_vulns)
+            if not isinstance(parsed_image_vulns, list):
+                parsed_image_vulns = [str(parsed_image_vulns)]
+        except (json.JSONDecodeError, TypeError):
+            # If not JSON, split by common delimiters
+            parsed_image_vulns = [vuln.strip() for vuln in image_vulns.replace(',', '\n').replace(';', '\n').split('\n') if vuln.strip()]
+    
+    # Parse resource_vulns
+    if resource_vulns:
+        try:
+            # Try parsing as JSON first
+            parsed_resource_vulns = json.loads(resource_vulns)
+            if not isinstance(parsed_resource_vulns, list):
+                parsed_resource_vulns = [str(parsed_resource_vulns)]
+        except (json.JSONDecodeError, TypeError):
+            # If not JSON, split by common delimiters
+            parsed_resource_vulns = [vuln.strip() for vuln in resource_vulns.replace(',', '\n').replace(';', '\n').split('\n') if vuln.strip()]
+    
+    # Parse port_vulns
+    if port_vulns:
+        try:
+            # Try parsing as JSON first
+            parsed_port_vulns = json.loads(port_vulns)
+            if not isinstance(parsed_port_vulns, list):
+                parsed_port_vulns = [str(parsed_port_vulns)]
+        except (json.JSONDecodeError, TypeError):
+            # If not JSON, split by common delimiters
+            parsed_port_vulns = [vuln.strip() for vuln in port_vulns.replace(',', '\n').replace(';', '\n').split('\n') if vuln.strip()]
+    
+    # Merge the parsed lists and remove duplicates using set
+    all_vulnerabilities = parsed_image_vulns + parsed_resource_vulns + parsed_port_vulns
+    
+    # Use set to eliminate duplicates, then convert back to list
+    unique_vulnerabilities = list(set(all_vulnerabilities))
+    
+    # Return the consolidated list in the required output format
+    return unique_vulnerabilities

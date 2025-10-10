@@ -33,4 +33,25 @@ def format_timestamps_to_string(timestamps: str) -> str:
     Returns:
         str: Output of type str
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    # Handle None or empty input
+    if timestamps is None:
+        return ""
+    
+    # If input is already a string, return it as-is (assuming it's already formatted)
+    if isinstance(timestamps, str):
+        # Handle empty string case
+        if not timestamps.strip():
+            return ""
+        return timestamps.strip()
+    
+    # If somehow we get a list (though signature says str), handle it
+    try:
+        if hasattr(timestamps, '__iter__') and not isinstance(timestamps, str):
+            # Convert list-like object to comma-separated string
+            return ", ".join(str(item) for item in timestamps if item is not None)
+    except (TypeError, AttributeError):
+        # Fallback: convert whatever we have to string
+        return str(timestamps)
+    
+    # Default fallback
+    return str(timestamps)

@@ -44,4 +44,76 @@ security_insights: Input parameter of type str
     Returns:
         str: Output of type str
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Parse and analyze resource insights
+    resource_findings = []
+    if resource_insights:
+        # Extract key resource metrics and issues
+        lines = resource_insights.strip().split('\n')
+        for line in lines:
+            line = line.strip()
+            if line and ('high' in line.lower() or 'critical' in line.lower() or 'warning' in line.lower()):
+                resource_findings.append(line)
+    
+    # Parse and analyze security insights
+    security_findings = []
+    if security_insights:
+        # Extract key security issues and vulnerabilities
+        lines = security_insights.strip().split('\n')
+        for line in lines:
+            line = line.strip()
+            if line and ('vulnerability' in line.lower() or 'security' in line.lower() or 'risk' in line.lower() or 'threat' in line.lower()):
+                security_findings.append(line)
+    
+    # Generate executive summary
+    summary_parts = []
+    
+    # Add header
+    summary_parts.append("EXECUTIVE SUMMARY - Container Configuration Analysis")
+    summary_parts.append("=" * 60)
+    
+    # Resource insights summary
+    if resource_findings:
+        summary_parts.append("\nRESOURCE UTILIZATION FINDINGS:")
+        summary_parts.append(f"- {len(resource_findings)} critical resource issues identified")
+        for finding in resource_findings[:3]:  # Limit to top 3 findings
+            summary_parts.append(f"- {finding}")
+        if len(resource_findings) > 3:
+            summary_parts.append(f"- ... and {len(resource_findings) - 3} additional issues")
+    else:
+        summary_parts.append("\nRESOURCE UTILIZATION: No critical issues identified")
+    
+    # Security insights summary
+    if security_findings:
+        summary_parts.append("\nSECURITY FINDINGS:")
+        summary_parts.append(f"- {len(security_findings)} security concerns identified")
+        for finding in security_findings[:3]:  # Limit to top 3 findings
+            summary_parts.append(f"- {finding}")
+        if len(security_findings) > 3:
+            summary_parts.append(f"- ... and {len(security_findings) - 3} additional concerns")
+    else:
+        summary_parts.append("\nSECURITY: No critical security issues identified")
+    
+    # Overall assessment
+    total_issues = len(resource_findings) + len(security_findings)
+    summary_parts.append("\nOVERALL ASSESSMENT:")
+    if total_issues == 0:
+        summary_parts.append("- Container configurations appear to be healthy with no critical issues")
+        summary_parts.append("- Recommended action: Continue monitoring")
+    elif total_issues <= 3:
+        summary_parts.append("- Minor issues identified that should be addressed")
+        summary_parts.append("- Recommended action: Schedule maintenance window for remediation")
+    else:
+        summary_parts.append("- Multiple critical issues require immediate attention")
+        summary_parts.append("- Recommended action: Prioritize remediation efforts based on security and resource impact")
+    
+    # Recommendations
+    summary_parts.append("\nRECOMMENDATIONS:")
+    if security_findings:
+        summary_parts.append("- Address security vulnerabilities as highest priority")
+    if resource_findings:
+        summary_parts.append("- Optimize resource allocation to improve efficiency")
+    summary_parts.append("- Implement continuous monitoring for early detection")
+    summary_parts.append("- Schedule regular configuration reviews")
+    
+    return "\n".join(summary_parts)

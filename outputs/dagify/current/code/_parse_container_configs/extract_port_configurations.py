@@ -30,6 +30,10 @@
 
 from typing import List
 
+import json
+import yaml
+import re
+
 
 def extract_port_configurations(configs: str) -> List[int]:
     """
@@ -41,4 +45,78 @@ def extract_port_configurations(configs: str) -> List[int]:
     Returns:
         List[int]: Output of type List[int]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    ports = []
+    
+    try:
+        # Try to parse as JSON first
+        try:
+            data = json.loads(configs)
+        except json.JSONDecodeError:
+            # If JSON parsing fails, try YAML
+            try:
+                data = yaml.safe_load(configs)
+            except yaml.YAMLError:
+                # If both fail, try to extract port numbers using regex
+                port_pattern = r'(?:port|expose|ports?)\s*[:\-=]?\s*(\d+)'
+                matches = re.findall(port_pattern, configs, re.IGNORECASE)
+                for match in matches:
+                    try:
+                        port = int(match)
+                        if 1 <= port <= 65535:  # Valid port range
+                            ports.append(port)
+                    except ValueError:
+                        continue
+                return sorted(list(set(ports)))
+        
+        # Extract ports from parsed data structure
+        def extract_ports_recursive(obj):
+            if isinstance(obj, dict):
+                for key, value in obj.items():
+                    key_lower = str(key).lower()
+                    if any(port_key in key_lower for port_key in ['port', 'expose', 'containerport', 'hostport']):
+                        if isinstance(value, (int, str)):
+                            try:
+                                port = int(value)
+                                if 1 <= port <= 65535:
+                                    ports.append(port)
+                            except (ValueError, TypeError):
+                                pass
+                        elif isinstance(value, list):
+                            for item in value:
+                                if isinstance(item, (int, str)):
+                                    try:
+                                        port = int(item)
+                                        if 1 <= port <= 65535:
+                                            ports.append(port)
+                                    except (ValueError, TypeError):
+                                        pass
+                                elif isinstance(item, dict) and 'containerPort' in item:
+                                    try:
+                                        port = int(item['containerPort'])
+                                        if 1 <= port <= 65535:
+                                            ports.append(port)
+                                    except (ValueError, TypeError, KeyError):
+                                        pass
+                    else:
+                        extract_ports_recursive(value)
+            elif isinstance(obj, list):
+                for item in obj:
+                    extract_ports_recursive(item)
+        
+        extract_ports_recursive(data)
+        
+    except Exception as e:
+        # Fallback: try regex extraction on the original string
+        port_pattern = r'(?:port|expose|ports?)\s*[:\-=]?\s*(\d+)'
+        matches = re.findall(port_pattern, configs, re.IGNORECASE)
+        for match in matches:
+            try:
+                port = int(match)
+                if 1 <= port <= 65535:
+                    ports.append(port)
+            except ValueError:
+                continue
+    
+    # Remove duplicates and sort
+    return sorted(list(set(ports)))

@@ -6,11 +6,11 @@ import json
 import sys
 from typing import Dict, Any, List, Callable, Coroutine, Union, Optional
 
-from code.collect_container_data import collect_container_data
-from code.parse_container_configs import parse_container_configs
 from code.analyze_resource_utilization import analyze_resource_utilization
 from code.check_security_configurations import check_security_configurations
+from code.collect_container_data import collect_container_data
 from code.generate_analysis_report import generate_analysis_report
+from code.parse_container_configs import parse_container_configs
 
 # Get async mode from environment variable or default to False
 ASYNC_MODE = os.environ.get('ASYNC_MODE', '').lower() in ('true', '1', 'yes', 'y')
@@ -32,11 +32,11 @@ def make_async(func):
 
     return async_wrapper
 
-collect_container_data_async = make_async(collect_container_data)
-parse_container_configs_async = make_async(parse_container_configs)
 analyze_resource_utilization_async = make_async(analyze_resource_utilization)
 check_security_configurations_async = make_async(check_security_configurations)
+collect_container_data_async = make_async(collect_container_data)
 generate_analysis_report_async = make_async(generate_analysis_report)
+parse_container_configs_async = make_async(parse_container_configs)
 
 async def run_workflow(user_input: str) -> Dict[str, Any]:
     """Execute the workflow by running each level in the topological sort.

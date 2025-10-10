@@ -28,6 +28,8 @@
 
 from typing import List
 
+import json
+
 
 def combine_resource_metrics(cpu: str, memory: str) -> List[float]:
     """
@@ -40,4 +42,34 @@ memory: Input parameter of type str
     Returns:
         List[float]: Output of type List[float]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Parse CPU and memory strings into lists
+    try:
+        cpu_list = json.loads(cpu)
+        memory_list = json.loads(memory)
+    except (json.JSONDecodeError, TypeError) as e:
+        raise ValueError(f"Invalid JSON format in input strings: {e}")
+    
+    # Validate that inputs are lists
+    if not isinstance(cpu_list, list) or not isinstance(memory_list, list):
+        raise ValueError("Input strings must represent JSON lists")
+    
+    # Handle edge case of empty lists
+    if len(cpu_list) == 0 and len(memory_list) == 0:
+        return []
+    
+    # Validate that lists are of the same length
+    if len(cpu_list) != len(memory_list):
+        raise ValueError(f"CPU and memory lists must be of the same length. CPU: {len(cpu_list)}, Memory: {len(memory_list)}")
+    
+    # Validate that all elements are valid float values
+    try:
+        cpu_floats = [float(x) for x in cpu_list]
+        memory_floats = [float(x) for x in memory_list]
+    except (ValueError, TypeError) as e:
+        raise ValueError(f"All elements in CPU and memory lists must be convertible to float: {e}")
+    
+    # Combine metrics by averaging corresponding elements
+    combined_metrics = [(cpu_val + memory_val) / 2.0 for cpu_val, memory_val in zip(cpu_floats, memory_floats)]
+    
+    return combined_metrics

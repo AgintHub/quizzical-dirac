@@ -28,6 +28,10 @@
 
 from typing import List
 
+import json
+import yaml
+import re
+
 
 def extract_container_names(configs: str) -> List[str]:
     """
@@ -39,4 +43,84 @@ def extract_container_names(configs: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    container_names = []
+    
+    # Split configs by common delimiters to handle multiple manifests
+    config_parts = re.split(r'\n---\n|\n\n(?=\{)|\n\n(?=[a-zA-Z])', configs.strip())
+    
+    for config_part in config_parts:
+        config_part = config_part.strip()
+        if not config_part:
+            continue
+            
+        try:
+            # Try to detect format and parse accordingly
+            parsed_config = None
+            
+            # Try JSON first
+            if config_part.startswith('{') or config_part.startswith('['):
+                try:
+                    parsed_config = json.loads(config_part)
+                except json.JSONDecodeError:
+                    pass
+            
+            # Try YAML if JSON failed
+            if parsed_config is None:
+                try:
+                    parsed_config = yaml.safe_load(config_part)
+                except yaml.YAMLError:
+                    pass
+            
+            # Skip if we couldn't parse the config
+            if parsed_config is None:
+                continue
+                
+            # Extract container names from parsed config
+            def extract_names_recursive(obj, names_list):
+                if isinstance(obj, dict):
+                    # Common container name fields
+                    name_fields = ['name', 'container_name', 'containerName', 'image']
+                    for field in name_fields:
+                        if field in obj and isinstance(obj[field], str):
+                            # Extract just the name part if it's an image reference
+                            name_value = obj[field]
+                            if '/' in name_value:
+                                name_value = name_value.split('/')[-1]
+                            if ':' in name_value:
+                                name_value = name_value.split(':')[0]
+                            if name_value and name_value not in names_list:
+                                names_list.append(name_value)
+                    
+                    # Look for containers array/list
+                    if 'containers' in obj and isinstance(obj['containers'], list):
+                        for container in obj['containers']:
+                            extract_names_recursive(container, names_list)
+                    
+                    # Look for spec section (common in Kubernetes)
+                    if 'spec' in obj:
+                        extract_names_recursive(obj['spec'], names_list)
+                    
+                    # Recursively search other dict values
+                    for value in obj.values():
+                        if isinstance(value, (dict, list)):
+                            extract_names_recursive(value, names_list)
+                            
+                elif isinstance(obj, list):
+                    for item in obj:
+                        if isinstance(item, (dict, list)):
+                            extract_names_recursive(item, names_list)
+            
+            extract_names_recursive(parsed_config, container_names)
+            
+        except Exception:
+            # Skip malformed configs
+            continue
+    
+    # Remove duplicates while preserving order
+    unique_names = []
+    for name in container_names:
+        if name not in unique_names:
+            unique_names.append(name)
+    
+    return unique_names

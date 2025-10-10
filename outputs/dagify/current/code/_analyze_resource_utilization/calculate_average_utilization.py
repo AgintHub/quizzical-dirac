@@ -24,6 +24,8 @@
 #           specific value or throw a meaningful exception.
 # -- END PRD --
 
+import json
+
 
 def calculate_average_utilization(metrics: str) -> float:
     """
@@ -35,4 +37,28 @@ def calculate_average_utilization(metrics: str) -> float:
     Returns:
         float: Output of type float
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Parse the input string to get a list of metrics
+    try:
+        metrics_list = json.loads(metrics)
+    except json.JSONDecodeError:
+        # If it's not valid JSON, try to parse as comma-separated values
+        try:
+            metrics_list = [float(x.strip()) for x in metrics.split(',') if x.strip()]
+        except ValueError:
+            raise ValueError("Invalid metrics format")
+    
+    # Handle edge case: empty list of metrics
+    if not metrics_list or len(metrics_list) == 0:
+        return 0.0
+    
+    # Sum all the utilization metrics
+    total_sum = sum(metrics_list)
+    
+    # Count the number of utilization metrics
+    count = len(metrics_list)
+    
+    # Calculate and return the average
+    average = total_sum / count
+    
+    return average

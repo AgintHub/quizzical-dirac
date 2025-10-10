@@ -29,6 +29,9 @@
 
 from typing import List
 
+import json
+import re
+
 
 def extract_memory_metrics(parsed_metrics: str) -> List[float]:
     """
@@ -40,4 +43,55 @@ def extract_memory_metrics(parsed_metrics: str) -> List[float]:
     Returns:
         List[float]: Output of type List[float]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # Parse the input string into a structured data format
+    try:
+        # First try to parse as JSON
+        parsed_data = json.loads(parsed_metrics)
+    except json.JSONDecodeError:
+        # If JSON parsing fails, try to extract numeric values using regex
+        # Look for memory-related patterns like "memory: 85.5%" or "mem_util: 0.75"
+        memory_pattern = r'(?:memory|mem|ram)(?:[_\s]*(?:util|usage|used|percent))?[:\s=]+([0-9]*\.?[0-9]+)'
+        matches = re.findall(memory_pattern, parsed_metrics, re.IGNORECASE)
+        if matches:
+            return [float(match) for match in matches]
+        
+        # Fallback: extract all numeric values that could be percentages or ratios
+        numeric_pattern = r'([0-9]*\.?[0-9]+)%?'
+        all_numbers = re.findall(numeric_pattern, parsed_metrics)
+        return [float(num) for num in all_numbers if num]
+    
+    # Extract memory metrics from parsed JSON/dict data
+    memory_metrics = []
+    
+    def extract_from_dict(data_item):
+        """Helper function to extract memory values from a dictionary"""
+        if isinstance(data_item, dict):
+            for key, value in data_item.items():
+                # Check if key relates to memory
+                if any(mem_keyword in key.lower() for mem_keyword in ['memory', 'mem', 'ram', 'util', 'usage']):
+                    if isinstance(value, (int, float)):
+                        memory_metrics.append(float(value))
+                    elif isinstance(value, str):
+                        # Try to extract numeric value from string (e.g., "85.5%")
+                        numeric_match = re.search(r'([0-9]*\.?[0-9]+)', value)
+                        if numeric_match:
+                            memory_metrics.append(float(numeric_match.group(1)))
+                elif isinstance(value, (dict, list)):
+                    extract_from_dict(value)
+        elif isinstance(data_item, list):
+            for item in data_item:
+                extract_from_dict(item)
+    
+    # Handle different data structures
+    if isinstance(parsed_data, list):
+        for item in parsed_data:
+            extract_from_dict(item)
+    elif isinstance(parsed_data, dict):
+        extract_from_dict(parsed_data)
+    else:
+        # If it's a simple numeric value
+        if isinstance(parsed_data, (int, float)):
+            memory_metrics.append(float(parsed_data))
+    
+    return memory_metrics

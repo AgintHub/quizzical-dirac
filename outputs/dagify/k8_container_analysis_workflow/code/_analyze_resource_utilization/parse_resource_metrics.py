@@ -28,6 +28,8 @@
 # -- END PRD --
 
 from typing import List
+import re
+import json
 
 
 def parse_resource_metrics(utilization_data: str) -> List[str]:
@@ -40,4 +42,71 @@ def parse_resource_metrics(utilization_data: str) -> List[str]:
     Returns:
         List[str]: Output of type List[dict]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    # --- PURE IMPLEMENTATION ---
+    
+    # Validate input data format
+    if not isinstance(utilization_data, str):
+        raise ValueError("Input data must be a string")
+    
+    if not utilization_data.strip():
+        raise ValueError("Input data cannot be empty")
+    
+    metrics = []
+    
+    try:
+        # Parse the input data line by line
+        lines = utilization_data.strip().split('\n')
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+                
+            # Try to parse as JSON first
+            try:
+                parsed_data = json.loads(line)
+                if isinstance(parsed_data, dict):
+                    # Extract resource metrics from JSON
+                    metric_keys = ['cpu', 'memory', 'disk', 'network', 'utilization', 'usage', 'percent']
+                    for key, value in parsed_data.items():
+                        if any(metric_key in key.lower() for metric_key in metric_keys):
+                            metrics.append(f"{key}: {value}")
+                continue
+            except json.JSONDecodeError:
+                pass
+            
+            # Parse key-value pairs (e.g., "cpu_usage=75%")
+            if '=' in line:
+                key_value_pairs = re.findall(r'([\w_]+)\s*=\s*([\d.%]+)', line)
+                for key, value in key_value_pairs:
+                    if any(metric in key.lower() for metric in ['cpu', 'memory', 'disk', 'network', 'utilization', 'usage']):
+                        metrics.append(f"{key}: {value}")
+                continue
+            
+            # Parse colon-separated values (e.g., "CPU Usage: 75%")
+            if ':' in line:
+                colon_pairs = re.findall(r'([\w\s]+):\s*([\d.%]+)', line)
+                for key, value in colon_pairs:
+                    key = key.strip()
+                    if any(metric in key.lower() for metric in ['cpu', 'memory', 'disk', 'network', 'utilization', 'usage']):
+                        metrics.append(f"{key}: {value}")
+                continue
+            
+            # Parse space-separated metrics (e.g., "cpu 75% memory 60%")
+            space_metrics = re.findall(r'(cpu|memory|disk|network)\s+([\d.%]+)', line.lower())
+            for metric, value in space_metrics:
+                metrics.append(f"{metric}: {value}")
+    
+    except Exception as e:
+        raise ValueError(f"Error parsing resource metrics: {str(e)}")
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_metrics = []
+    for metric in metrics:
+        if metric not in seen:
+            seen.add(metric)
+            unique_metrics.append(metric)
+    
+    return unique_metrics

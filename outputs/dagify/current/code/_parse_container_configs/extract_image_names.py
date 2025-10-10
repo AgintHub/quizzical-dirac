@@ -29,6 +29,10 @@
 
 from typing import List
 
+import json
+import yaml
+import re
+
 
 def extract_image_names(configs: str) -> List[str]:
     """
@@ -40,4 +44,50 @@ def extract_image_names(configs: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    image_names = []
+    
+    # Try to detect and parse the configuration format
+    configs = configs.strip()
+    
+    # Try JSON first
+    try:
+        config_data = json.loads(configs)
+    except json.JSONDecodeError:
+        # Try YAML
+        try:
+            config_data = yaml.safe_load(configs)
+        except yaml.YAMLError:
+            # If both fail, return empty list
+            return image_names
+    
+    # Extract image names from the parsed configuration
+    def extract_images_recursive(data):
+        if isinstance(data, dict):
+            for key, value in data.items():
+                # Common keys that contain image names
+                if key.lower() in ['image', 'container_image', 'docker_image', 'from']:
+                    if isinstance(value, str):
+                        image_names.append(value)
+                elif isinstance(value, (dict, list)):
+                    extract_images_recursive(value)
+        elif isinstance(data, list):
+            for item in data:
+                extract_images_recursive(item)
+        elif isinstance(data, str):
+            # Look for image patterns in strings (e.g., in commands or scripts)
+            image_pattern = r'(?:FROM|image:|docker pull)\s+([\w\-./]+(?::[\w\-./]+)?(?:@sha256:[a-f0-9]+)?)'
+            matches = re.findall(image_pattern, data, re.IGNORECASE)
+            image_names.extend(matches)
+    
+    extract_images_recursive(config_data)
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_images = []
+    for img in image_names:
+        if img not in seen:
+            seen.add(img)
+            unique_images.append(img)
+    
+    return unique_images

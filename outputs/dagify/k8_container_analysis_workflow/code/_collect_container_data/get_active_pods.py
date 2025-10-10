@@ -24,6 +24,8 @@
 
 from typing import List
 
+from kubernetes import client as k8s_client, config
+
 
 def get_active_pods(client: str) -> List[str]:
     """
@@ -35,4 +37,30 @@ def get_active_pods(client: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    try:
+        # Load Kubernetes configuration
+        config.load_incluster_config()
+    except:
+        try:
+            config.load_kube_config()
+        except Exception as e:
+            raise ValueError(f"Failed to load Kubernetes configuration: {e}")
+    
+    # Initialize the Kubernetes API client
+    v1 = k8s_client.CoreV1Api()
+    
+    try:
+        # Fetch all pods across all namespaces
+        pods = v1.list_pod_for_all_namespaces()
+        
+        # Filter for active/running pods and extract names
+        active_pod_names = []
+        for pod in pods.items:
+            if pod.status.phase == 'Running':
+                active_pod_names.append(pod.metadata.name)
+        
+        return active_pod_names
+        
+    except Exception as e:
+        raise RuntimeError(f"Failed to retrieve pods from Kubernetes cluster: {e}")

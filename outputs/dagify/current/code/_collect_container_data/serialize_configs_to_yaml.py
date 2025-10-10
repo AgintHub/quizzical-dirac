@@ -32,6 +32,8 @@
 # -- END PRD --
 
 from typing import List
+import yaml
+import json
 
 
 def serialize_configs_to_yaml(configs: str) -> List[str]:
@@ -44,4 +46,38 @@ def serialize_configs_to_yaml(configs: str) -> List[str]:
     Returns:
         List[str]: Output of type List[str]
     """
-    raise NotImplementedError("This is a virtual stub node that needs to be implemented")
+    
+    try:
+        # Parse the input string as JSON to get list of dictionaries
+        config_list = json.loads(configs)
+        
+        # Validate that input is a list
+        if not isinstance(config_list, list):
+            raise ValueError("Input must be a JSON string representing a list of dictionaries")
+        
+        # Validate that each item in the list is a dictionary
+        for i, config in enumerate(config_list):
+            if not isinstance(config, dict):
+                raise ValueError(f"Item at index {i} is not a dictionary")
+        
+        # Process configurations in chunks for large lists (performance optimization)
+        chunk_size = 100  # Process 100 configs at a time
+        yaml_results = []
+        
+        for i in range(0, len(config_list), chunk_size):
+            chunk = config_list[i:i + chunk_size]
+            
+            # Convert each config dictionary to YAML format
+            for config in chunk:
+                try:
+                    yaml_string = yaml.dump(config, default_flow_style=False, allow_unicode=True)
+                    yaml_results.append(yaml_string.strip())
+                except Exception as e:
+                    raise ValueError(f"Failed to serialize config to YAML: {str(e)}")
+        
+        return yaml_results
+        
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON input: {str(e)}")
+    except Exception as e:
+        raise ValueError(f"Error processing configurations: {str(e)}")
