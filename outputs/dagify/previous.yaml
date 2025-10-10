@@ -2,90 +2,83 @@ dag_type: plain_text
 description: Generated workflow from UI.
 name: Generated Workflow from UI
 nodes:
-  collect_sports_data:
+  compile_trading_workflow_documentation:
     agent: false
-    description: Gather relevant sports data, including game statistics, player performance,
-      and other factors that could influence game outcomes.
-    name: collect_sports_data
+    description: Compile all elements into a comprehensive trading workflow documentation.
+    name: compile_trading_workflow_documentation
+    nodes_depended_on:
+    - define_trading_objectives
+    - select_trading_strategy
+    - identify_tradable_assets
+    - define_risk_management_rules
+    - specify_execution_plan
+    - develop_performance_metrics
+    - create_monitoring_and_control_process
+    nodes_dependent_on: []
+    prompt: Synthesize the outputs from prior steps into a cohesive document outlining
+      the complete trading workflow.
+  create_monitoring_and_control_process:
+    agent: false
+    description: Establish a process for ongoing monitoring and control of the trading
+      workflow.
+    name: create_monitoring_and_control_process
+    nodes_depended_on:
+    - specify_execution_plan
+    - develop_performance_metrics
+    nodes_dependent_on: []
+    prompt: Outline the process for continuously monitoring the trading workflow's
+      performance and risk, and for making adjustments as necessary.
+  define_risk_management_rules:
+    agent: false
+    description: Establish risk management rules to control exposure.
+    name: define_risk_management_rules
+    nodes_depended_on:
+    - select_trading_strategy
+    nodes_dependent_on: []
+    prompt: Specify risk management rules, including position sizing, stop-loss levels,
+      and portfolio diversification requirements.
+  define_trading_objectives:
+    agent: false
+    description: Identify the primary objectives for the trading workflow.
+    name: define_trading_objectives
     nodes_depended_on: []
     nodes_dependent_on: []
-    prompt: Collect comprehensive sports data, focusing on variables that impact game
-      results, such as team and player statistics, past performances, and external
-      factors like weather or venue.
-  evaluate_model_performance:
+    prompt: State the core objectives for the trading workflow, including target returns,
+      risk tolerance, and any specific constraints.
+  develop_performance_metrics:
     agent: false
-    description: Assess the performance of the trained model using the testing data,
-      evaluating its predictive accuracy and reliability.
-    name: evaluate_model_performance
+    description: Define metrics to evaluate the performance of the trading workflow.
+    name: develop_performance_metrics
     nodes_depended_on:
-    - train_simple_sports_model
-    - split_data_into_training_and_testing_sets
+    - define_trading_objectives
     nodes_dependent_on: []
-    prompt: Evaluate the trained model's performance on the testing data, using metrics
-      such as accuracy, precision, recall, or mean squared error, and provide an overall
-      assessment of its reliability for predicting sports outcomes.
-  extract_relevant_features:
+    prompt: Specify the key performance indicators (KPIs) to be used, such as return
+      on investment (ROI), Sharpe ratio, or maximum drawdown.
+  identify_tradable_assets:
     agent: false
-    description: Identify and extract relevant features from the preprocessed data
-      that will be used to train the sports model.
-    name: extract_relevant_features
+    description: Determine the assets or instruments to be traded.
+    name: identify_tradable_assets
     nodes_depended_on:
-    - preprocess_sports_data
+    - select_trading_strategy
     nodes_dependent_on: []
-    prompt: Extract meaningful features from the preprocessed sports data, focusing
-      on those that are most predictive of game outcomes, such as team strength, player
-      injuries, or historical matchups.
-  finalize_sports_model:
+    prompt: List the specific assets or instruments that the chosen strategy will
+      trade, such as stocks, futures, or currencies.
+  select_trading_strategy:
     agent: false
-    description: Finalize the sports model, ensuring it is well-tuned and ready for
-      deployment or further analysis.
-    name: finalize_sports_model
+    description: Choose a suitable trading strategy based on the defined objectives.
+    name: select_trading_strategy
     nodes_depended_on:
-    - refine_model_based_on_evaluation
+    - define_trading_objectives
     nodes_dependent_on: []
-    prompt: Finalize the simple sports model, confirming that it has been optimized
-      for predictive performance and is prepared for use in analyzing sports data
-      or making predictions.
-  preprocess_sports_data:
+    prompt: Select a trading strategy that aligns with the stated objectives, such
+      as trend following, mean reversion, or statistical arbitrage.
+  specify_execution_plan:
     agent: false
-    description: Clean and preprocess the collected data to prepare it for analysis,
-      handling missing values, and normalizing data as necessary.
-    name: preprocess_sports_data
+    description: Outline the plan for executing trades.
+    name: specify_execution_plan
     nodes_depended_on:
-    - collect_sports_data
+    - identify_tradable_assets
+    - define_risk_management_rules
     nodes_dependent_on: []
-    prompt: Preprocess the sports data by handling missing values, scaling/normalizing
-      data, and performing any necessary data transformations to ensure quality and
-      consistency.
-  refine_model_based_on_evaluation:
-    agent: false
-    description: Refine the model based on the evaluation results, making adjustments
-      as necessary to improve its predictive performance.
-    name: refine_model_based_on_evaluation
-    nodes_depended_on:
-    - evaluate_model_performance
-    nodes_dependent_on: []
-    prompt: Based on the evaluation results, refine the simple sports model by adjusting
-      parameters, exploring different algorithms, or incorporating additional data
-      to enhance its predictive capabilities.
-  split_data_into_training_and_testing_sets:
-    agent: false
-    description: Divide the preprocessed data into training and testing sets to facilitate
-      model training and evaluation.
-    name: split_data_into_training_and_testing_sets
-    nodes_depended_on:
-    - extract_relevant_features
-    nodes_dependent_on: []
-    prompt: Split the feature-engineered sports data into training and testing datasets,
-      ensuring a suitable ratio for model training and validation.
-  train_simple_sports_model:
-    agent: false
-    description: Train a simple predictive model using the training data, focusing
-      on a straightforward algorithm suitable for sports data analysis.
-    name: train_simple_sports_model
-    nodes_depended_on:
-    - split_data_into_training_and_testing_sets
-    nodes_dependent_on: []
-    prompt: Train a simple model, such as a linear regression or logistic regression,
-      on the training data, optimizing for the best predictive performance on sports
-      outcomes.
+    prompt: Describe the execution plan, including the trading venues, order types,
+      and any specific execution algorithms to be used.
