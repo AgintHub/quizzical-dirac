@@ -1,84 +1,85 @@
 dag_type: plain_text
-description: A workflow for creating a trading system, including defining strategy,
-  setting up infrastructure, and implementing risk management.
+description: A workflow for creating a comprehensive trading workflow, including strategy
+  development, risk management, and execution planning.
 name: create_trading_workflow
 nodes:
-  backtest_trading_strategy:
+  compile_trading_workflow_documentation:
     agent: false
-    description: Test the trading strategy on historical data.
-    name: backtest_trading_strategy
+    description: Compile all elements into a comprehensive trading workflow documentation.
+    name: compile_trading_workflow_documentation
     nodes_depended_on:
-    - define_trading_strategy
-    - configure_trading_infrastructure
+    - define_trading_objectives
+    - select_trading_strategy
+    - identify_tradable_assets
+    - define_risk_management_rules
+    - specify_execution_plan
+    - develop_performance_metrics
+    - create_monitoring_and_control_process
     nodes_dependent_on: []
-    prompt: 'Backtest the trading strategy using historical data. Report key performance
-      metrics: returns, Sharpe ratio, drawdowns.'
-  compile_trading_workflow_summary:
+    prompt: Synthesize the outputs from prior steps into a cohesive document outlining
+      the complete trading workflow.
+  create_monitoring_and_control_process:
     agent: false
-    description: Summarize the trading workflow, including strategy, infrastructure,
-      and risk management.
-    name: compile_trading_workflow_summary
+    description: Establish a process for ongoing monitoring and control of the trading
+      workflow.
+    name: create_monitoring_and_control_process
     nodes_depended_on:
-    - define_trading_strategy
-    - configure_trading_infrastructure
-    - implement_risk_management
+    - specify_execution_plan
+    - develop_performance_metrics
     nodes_dependent_on: []
-    prompt: Compile a comprehensive summary of the trading workflow, covering the
-      strategy, infrastructure setup, and risk management implementation. Provide
-      an overview of the entire system.
-  configure_trading_infrastructure:
-    agent: false
-    description: Set up the necessary infrastructure for trading.
-    name: configure_trading_infrastructure
-    nodes_depended_on:
-    - select_trading_platform
-    nodes_dependent_on: []
-    prompt: Configure the trading infrastructure, including setting up API connections,
-      data feeds, and execution systems. List the specific components and their configurations.
+    prompt: Outline the process for continuously monitoring the trading workflow's
+      performance and risk, and for making adjustments as necessary.
   define_risk_management_rules:
     agent: false
     description: Establish risk management rules to control exposure.
     name: define_risk_management_rules
     nodes_depended_on:
-    - define_trading_strategy
+    - select_trading_strategy
     nodes_dependent_on: []
-    prompt: Define risk management rules, including position sizing, stop-loss levels,
-      and portfolio hedging strategies. Provide specific numerical values or rules.
-  define_trading_strategy:
+    prompt: Specify risk management rules, including position sizing, stop-loss levels,
+      and portfolio diversification requirements.
+  define_trading_objectives:
     agent: false
-    description: Identify the core trading strategy and its key components.
-    name: define_trading_strategy
+    description: Identify the primary objectives for the trading workflow.
+    name: define_trading_objectives
     nodes_depended_on: []
     nodes_dependent_on: []
-    prompt: 'Specify the primary trading strategy (e.g., trend following, mean reversion).
-      List key factors: indicators, signals, entry/exit rules.'
-  implement_risk_management:
+    prompt: State the core objectives for the trading workflow, including target returns,
+      risk tolerance, and any specific constraints.
+  develop_performance_metrics:
     agent: false
-    description: Integrate risk management rules into the trading system.
-    name: implement_risk_management
+    description: Define metrics to evaluate the performance of the trading workflow.
+    name: develop_performance_metrics
     nodes_depended_on:
-    - configure_trading_infrastructure
+    - define_trading_objectives
+    nodes_dependent_on: []
+    prompt: Specify the key performance indicators (KPIs) to be used, such as return
+      on investment (ROI), Sharpe ratio, or maximum drawdown.
+  identify_tradable_assets:
+    agent: false
+    description: Determine the assets or instruments to be traded.
+    name: identify_tradable_assets
+    nodes_depended_on:
+    - select_trading_strategy
+    nodes_dependent_on: []
+    prompt: List the specific assets or instruments that the chosen strategy will
+      trade, such as stocks, futures, or currencies.
+  select_trading_strategy:
+    agent: false
+    description: Choose a suitable trading strategy based on the defined objectives.
+    name: select_trading_strategy
+    nodes_depended_on:
+    - define_trading_objectives
+    nodes_dependent_on: []
+    prompt: Select a trading strategy that aligns with the stated objectives, such
+      as trend following, mean reversion, or statistical arbitrage.
+  specify_execution_plan:
+    agent: false
+    description: Outline the plan for executing trades.
+    name: specify_execution_plan
+    nodes_depended_on:
+    - identify_tradable_assets
     - define_risk_management_rules
     nodes_dependent_on: []
-    prompt: Implement risk management rules within the trading infrastructure. Describe
-      how each rule is integrated and monitored.
-  monitor_and_adjust:
-    agent: false
-    description: Continuously monitor the trading system's performance and adjust
-      as needed.
-    name: monitor_and_adjust
-    nodes_depended_on:
-    - implement_risk_management
-    - backtest_trading_strategy
-    nodes_dependent_on: []
-    prompt: Establish a monitoring process to track the trading system's performance.
-      Describe the metrics to be monitored and the adjustment procedures.
-  select_trading_platform:
-    agent: false
-    description: Choose the trading platform or broker to execute trades.
-    name: select_trading_platform
-    nodes_depended_on:
-    - define_trading_strategy
-    nodes_dependent_on: []
-    prompt: Select a suitable trading platform or broker based on the strategy's requirements
-      (e.g., API access, asset coverage). Provide the platform name and key features.
+    prompt: Describe the execution plan, including the trading venues, order types,
+      and any specific execution algorithms to be used.
