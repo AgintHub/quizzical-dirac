@@ -9,11 +9,13 @@ from .format_market_data_output import format_market_data_output
 from .define_trading_strategy import define_trading_strategy
 from .deserialize_monitoring_snapshot import deserialize_monitoring_snapshot
 from .execute_trades import execute_trades
+from .calculate_trading_indicators import calculate_trading_indicators
 from .validate_and_structure_data import validate_and_structure_data
 from .filter_tradeable_assets import filter_tradeable_assets
 from .backtest_trading_strategy import backtest_trading_strategy
 from .choose_trading_strategy import choose_trading_strategy
 from .design_risk_management_framework import design_risk_management_framework
+from .generate_trading_signals import generate_trading_signals
 from .collect_historical_market_data import collect_historical_market_data
 from .refine_trading_strategy import refine_trading_strategy
 from .fetch_raw_market_data import fetch_raw_market_data
@@ -46,7 +48,9 @@ from .check_alert_conditions import check_alert_conditions
 from .calculate_sharpe_ratio import calculate_sharpe_ratio
 from .produce_final_trading_report import produce_final_trading_report
 from .calculate_win_rate import calculate_win_rate
+from .fetch_market_data import fetch_market_data
 from .calculate_trade_pnl import calculate_trade_pnl
+from .analyze_market_trends import analyze_market_trends
 from .simulate_trade_execution import simulate_trade_execution
 from .calculate_average_return_per_trade import calculate_average_return_per_trade
 from .evaluate_performance_stability import evaluate_performance_stability
@@ -59,10 +63,15 @@ from .compute_descriptive_statistics import compute_descriptive_statistics
 from .assess_statistical_significance import assess_statistical_significance
 from .calculate_max_drawdown import calculate_max_drawdown
 from . import _monitor_trading_performance
+from . import _execute_trades
+from . import _calculate_trading_indicators
 from . import _define_trading_strategy
 from . import _analyze_trading_results
+from . import _generate_trading_signals
 from . import _collect_historical_market_data
 from . import _backtest_trading_strategy
+from . import _fetch_market_data
+from . import _analyze_market_trends
 
 
 __all__ = [
@@ -77,11 +86,13 @@ __all__ = [
     'define_trading_strategy',
     'deserialize_monitoring_snapshot',
     'execute_trades',
+    'calculate_trading_indicators',
     'validate_and_structure_data',
     'filter_tradeable_assets',
     'backtest_trading_strategy',
     'choose_trading_strategy',
     'design_risk_management_framework',
+    'generate_trading_signals',
     'collect_historical_market_data',
     'refine_trading_strategy',
     'fetch_raw_market_data',
@@ -114,7 +125,9 @@ __all__ = [
     'calculate_sharpe_ratio',
     'produce_final_trading_report',
     'calculate_win_rate',
+    'fetch_market_data',
     'calculate_trade_pnl',
+    'analyze_market_trends',
     'simulate_trade_execution',
     'calculate_average_return_per_trade',
     'evaluate_performance_stability',
@@ -127,8 +140,13 @@ __all__ = [
     'assess_statistical_significance',
     'calculate_max_drawdown',
     '_monitor_trading_performance',
+    '_execute_trades',
+    '_calculate_trading_indicators',
     '_define_trading_strategy',
     '_analyze_trading_results',
+    '_generate_trading_signals',
     '_collect_historical_market_data',
-    '_backtest_trading_strategy'
+    '_backtest_trading_strategy',
+    '_fetch_market_data',
+    '_analyze_market_trends'
 ]

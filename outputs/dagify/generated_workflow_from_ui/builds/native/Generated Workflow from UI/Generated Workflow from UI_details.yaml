@@ -2,63 +2,44 @@ dag_type: plain_text
 description: Generated workflow from UI.
 name: Generated Workflow from UI
 nodes:
-  analyze_cultural_data:
+  analyze_market_trends:
     agent: false
-    description: Analyze the collected cultural data
-    name: analyze_cultural_data
+    description: Analyze market trends using historical data and statistical models.
+    name: analyze_market_trends
     nodes_depended_on:
-    - collect_cultural_data
+    - fetch_market_data
     nodes_dependent_on: []
-    prompt: Analyze the cultural data to identify patterns or significant features.
-  analyze_geographical_data:
+    prompt: Analyze historical market data to identify trends and patterns.
+  calculate_trading_indicators:
     agent: false
-    description: Analyze the collected geographical data
-    name: analyze_geographical_data
+    description: Calculate technical indicators used in trading decisions.
+    name: calculate_trading_indicators
     nodes_depended_on:
-    - gather_geographical_data
+    - fetch_market_data
     nodes_dependent_on: []
-    prompt: Analyze the geographical data to identify patterns or significant features.
-  collect_cultural_data:
+    prompt: Calculate relevant technical indicators such as RSI, MACD, etc.
+  execute_trades:
     agent: false
-    description: Collect cultural data about the world
-    name: collect_cultural_data
+    description: Execute trades based on generated trading signals.
+    name: execute_trades
     nodes_depended_on:
-    - define_world_context
+    - generate_trading_signals
     nodes_dependent_on: []
-    prompt: Gather cultural information such as major religions, languages, and cultural
-      practices.
-  define_world_context:
+    prompt: Execute trades according to the generated signals, considering risk management
+      and portfolio constraints.
+  fetch_market_data:
     agent: false
-    description: Define the context and scope of 'world' for this workflow
-    name: define_world_context
+    description: Retrieve current market data, including prices and trading volumes.
+    name: fetch_market_data
     nodes_depended_on: []
     nodes_dependent_on: []
-    prompt: Determine what 'world' refers to in this context. Is it geographical,
-      cultural, or something else?
-  gather_geographical_data:
+    prompt: Fetch the latest market data from reliable sources.
+  generate_trading_signals:
     agent: false
-    description: Collect geographical data about the world
-    name: gather_geographical_data
+    description: Generate trading signals based on analyzed trends and indicators.
+    name: generate_trading_signals
     nodes_depended_on:
-    - define_world_context
+    - analyze_market_trends
+    - calculate_trading_indicators
     nodes_dependent_on: []
-    prompt: Gather geographical information such as continents, countries, and major
-      landmarks.
-  generate_world_report:
-    agent: false
-    description: Generate a report summarizing the findings about the world
-    name: generate_world_report
-    nodes_depended_on:
-    - integrate_findings
-    nodes_dependent_on: []
-    prompt: Create a comprehensive report based on the integrated findings.
-  integrate_findings:
-    agent: false
-    description: Integrate geographical and cultural findings
-    name: integrate_findings
-    nodes_depended_on:
-    - analyze_geographical_data
-    - analyze_cultural_data
-    nodes_dependent_on: []
-    prompt: Combine the geographical and cultural analyses to form a comprehensive
-      view of the world.
+    prompt: Generate buy or sell signals based on the analyzed trends and indicators.
