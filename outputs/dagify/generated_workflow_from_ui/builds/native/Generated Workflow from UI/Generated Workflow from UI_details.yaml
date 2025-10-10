@@ -2,56 +2,82 @@ dag_type: plain_text
 description: Generated workflow from UI.
 name: Generated Workflow from UI
 nodes:
-  analyze_market_trends:
+  backtest_trading_strategy:
     agent: false
-    description: Analyze market trends using the gathered data
-    name: analyze_market_trends
+    description: Test the trading strategy on historical data.
+    name: backtest_trading_strategy
     nodes_depended_on:
-    - gather_market_data
+    - define_trading_strategy
+    - configure_trading_infrastructure
     nodes_dependent_on: []
-    prompt: Use the collected market data to identify trends and patterns
-  evaluate_risk_factors:
+    prompt: 'Backtest the trading strategy using historical data. Report key performance
+      metrics: returns, Sharpe ratio, drawdowns.'
+  compile_trading_workflow_summary:
     agent: false
-    description: Assess potential risk factors that could impact trading decisions
-    name: evaluate_risk_factors
+    description: Summarize the trading workflow, including strategy, infrastructure,
+      and risk management.
+    name: compile_trading_workflow_summary
     nodes_depended_on:
-    - gather_market_data
+    - define_trading_strategy
+    - configure_trading_infrastructure
+    - implement_risk_management
     nodes_dependent_on: []
-    prompt: Evaluate risk factors such as market volatility, economic indicators,
-      and geopolitical events
-  execute_trades:
+    prompt: Compile a comprehensive summary of the trading workflow, covering the
+      strategy, infrastructure setup, and risk management implementation. Provide
+      an overview of the entire system.
+  configure_trading_infrastructure:
     agent: false
-    description: Execute trades according to the formulated strategy
-    name: execute_trades
+    description: Set up the necessary infrastructure for trading.
+    name: configure_trading_infrastructure
     nodes_depended_on:
-    - formulate_trading_strategy
+    - select_trading_platform
     nodes_dependent_on: []
-    prompt: Carry out the trades as per the developed strategy, ensuring compliance
-      with trading rules and regulations
-  formulate_trading_strategy:
+    prompt: Configure the trading infrastructure, including setting up API connections,
+      data feeds, and execution systems. List the specific components and their configurations.
+  define_risk_management_rules:
     agent: false
-    description: Develop a trading strategy based on the analysis and risk assessment
-    name: formulate_trading_strategy
+    description: Establish risk management rules to control exposure.
+    name: define_risk_management_rules
     nodes_depended_on:
-    - analyze_market_trends
-    - evaluate_risk_factors
+    - define_trading_strategy
     nodes_dependent_on: []
-    prompt: Create a trading strategy that balances potential returns with risk management
-  gather_market_data:
+    prompt: Define risk management rules, including position sizing, stop-loss levels,
+      and portfolio hedging strategies. Provide specific numerical values or rules.
+  define_trading_strategy:
     agent: false
-    description: Collect relevant market data including prices, volumes, and other
-      indicators
-    name: gather_market_data
+    description: Identify the core trading strategy and its key components.
+    name: define_trading_strategy
     nodes_depended_on: []
     nodes_dependent_on: []
-    prompt: Gather current and historical market data from reliable sources
+    prompt: 'Specify the primary trading strategy (e.g., trend following, mean reversion).
+      List key factors: indicators, signals, entry/exit rules.'
+  implement_risk_management:
+    agent: false
+    description: Integrate risk management rules into the trading system.
+    name: implement_risk_management
+    nodes_depended_on:
+    - configure_trading_infrastructure
+    - define_risk_management_rules
+    nodes_dependent_on: []
+    prompt: Implement risk management rules within the trading infrastructure. Describe
+      how each rule is integrated and monitored.
   monitor_and_adjust:
     agent: false
-    description: Continuously monitor the trading performance and adjust the strategy
-      as needed
+    description: Continuously monitor the trading system's performance and adjust
+      as needed.
     name: monitor_and_adjust
     nodes_depended_on:
-    - execute_trades
+    - implement_risk_management
+    - backtest_trading_strategy
     nodes_dependent_on: []
-    prompt: Monitor trading performance and be prepared to adjust the strategy based
-      on new data or changing market conditions
+    prompt: Establish a monitoring process to track the trading system's performance.
+      Describe the metrics to be monitored and the adjustment procedures.
+  select_trading_platform:
+    agent: false
+    description: Choose the trading platform or broker to execute trades.
+    name: select_trading_platform
+    nodes_depended_on:
+    - define_trading_strategy
+    nodes_dependent_on: []
+    prompt: Select a suitable trading platform or broker based on the strategy's requirements
+      (e.g., API access, asset coverage). Provide the platform name and key features.
