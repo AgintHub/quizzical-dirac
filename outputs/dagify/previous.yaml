@@ -2,42 +2,56 @@ dag_type: plain_text
 description: Generated workflow from UI.
 name: Generated Workflow from UI
 nodes:
-  create_workflow_dag:
+  analyze_market_trends:
     agent: false
-    description: Create a Directed Acyclic Graph (DAG) representing the workflow
-    name: create_workflow_dag
+    description: Analyze market trends using the gathered data
+    name: analyze_market_trends
     nodes_depended_on:
-    - determine_task_dependencies
+    - gather_market_data
     nodes_dependent_on: []
-    prompt: Using the task dependencies, create a DAG representing the workflow.
-  define_workflow_objective:
+    prompt: Use the collected market data to identify trends and patterns
+  evaluate_risk_factors:
     agent: false
-    description: Define the objective of the simple workflow
-    name: define_workflow_objective
+    description: Assess potential risk factors that could impact trading decisions
+    name: evaluate_risk_factors
+    nodes_depended_on:
+    - gather_market_data
+    nodes_dependent_on: []
+    prompt: Evaluate risk factors such as market volatility, economic indicators,
+      and geopolitical events
+  execute_trades:
+    agent: false
+    description: Execute trades according to the formulated strategy
+    name: execute_trades
+    nodes_depended_on:
+    - formulate_trading_strategy
+    nodes_dependent_on: []
+    prompt: Carry out the trades as per the developed strategy, ensuring compliance
+      with trading rules and regulations
+  formulate_trading_strategy:
+    agent: false
+    description: Develop a trading strategy based on the analysis and risk assessment
+    name: formulate_trading_strategy
+    nodes_depended_on:
+    - analyze_market_trends
+    - evaluate_risk_factors
+    nodes_dependent_on: []
+    prompt: Create a trading strategy that balances potential returns with risk management
+  gather_market_data:
+    agent: false
+    description: Collect relevant market data including prices, volumes, and other
+      indicators
+    name: gather_market_data
     nodes_depended_on: []
     nodes_dependent_on: []
-    prompt: Identify the primary goal of the simple workflow.
-  determine_task_dependencies:
+    prompt: Gather current and historical market data from reliable sources
+  monitor_and_adjust:
     agent: false
-    description: Determine dependencies between the identified tasks
-    name: determine_task_dependencies
+    description: Continuously monitor the trading performance and adjust the strategy
+      as needed
+    name: monitor_and_adjust
     nodes_depended_on:
-    - identify_required_tasks
+    - execute_trades
     nodes_dependent_on: []
-    prompt: Analyze the tasks and determine their dependencies.
-  identify_required_tasks:
-    agent: false
-    description: Identify tasks required to achieve the workflow objective
-    name: identify_required_tasks
-    nodes_depended_on:
-    - define_workflow_objective
-    nodes_dependent_on: []
-    prompt: List the tasks necessary to accomplish the workflow objective.
-  validate_workflow:
-    agent: false
-    description: Validate the created workflow DAG
-    name: validate_workflow
-    nodes_depended_on:
-    - create_workflow_dag
-    nodes_dependent_on: []
-    prompt: Check the workflow DAG for correctness and acyclicity.
+    prompt: Monitor trading performance and be prepared to adjust the strategy based
+      on new data or changing market conditions
