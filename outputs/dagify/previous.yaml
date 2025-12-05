@@ -2,83 +2,66 @@ dag_type: plain_text
 description: Generated workflow from UI.
 name: Generated Workflow from UI
 nodes:
-  compile_trading_workflow_documentation:
+  decompose_tasks_into_steps:
     agent: false
-    description: Compile all elements into a comprehensive trading workflow documentation.
-    name: compile_trading_workflow_documentation
+    description: Decompose identified tasks into fundamental steps
+    name: decompose_tasks_into_steps
     nodes_depended_on:
-    - define_trading_objectives
-    - select_trading_strategy
-    - identify_tradable_assets
-    - define_risk_management_rules
-    - specify_execution_plan
-    - develop_performance_metrics
-    - create_monitoring_and_control_process
+    - identify_required_tasks
     nodes_dependent_on: []
-    prompt: Synthesize the outputs from prior steps into a cohesive document outlining
-      the complete trading workflow.
-  create_monitoring_and_control_process:
+    prompt: Take each identified task and decompose it into the most granular, actionable
+      steps possible. Ensure each step is self-contained and focused on a single outcome.
+  define_prompts_for_each_step:
     agent: false
-    description: Establish a process for ongoing monitoring and control of the trading
-      workflow.
-    name: create_monitoring_and_control_process
+    description: Create specific prompts or instructions for each step in the DAG
+    name: define_prompts_for_each_step
     nodes_depended_on:
-    - specify_execution_plan
-    - develop_performance_metrics
+    - organize_steps_into_dag
     nodes_dependent_on: []
-    prompt: Outline the process for continuously monitoring the trading workflow's
-      performance and risk, and for making adjustments as necessary.
-  define_risk_management_rules:
+    prompt: For each step in the DAG, craft a clear, concise prompt that guides the
+      execution of that step. Ensure the prompt is focused on the specific task or
+      operation.
+  define_workflow_objective:
     agent: false
-    description: Establish risk management rules to control exposure.
-    name: define_risk_management_rules
-    nodes_depended_on:
-    - select_trading_strategy
-    nodes_dependent_on: []
-    prompt: Specify risk management rules, including position sizing, stop-loss levels,
-      and portfolio diversification requirements.
-  define_trading_objectives:
-    agent: false
-    description: Identify the primary objectives for the trading workflow.
-    name: define_trading_objectives
+    description: Define the objective of the workflow
+    name: define_workflow_objective
     nodes_depended_on: []
     nodes_dependent_on: []
-    prompt: State the core objectives for the trading workflow, including target returns,
-      risk tolerance, and any specific constraints.
-  develop_performance_metrics:
+    prompt: Clearly state the primary goal or objective of the workflow. What is it
+      intended to achieve?
+  determine_step_dependencies:
     agent: false
-    description: Define metrics to evaluate the performance of the trading workflow.
-    name: develop_performance_metrics
+    description: Determine dependencies between the decomposed steps
+    name: determine_step_dependencies
     nodes_depended_on:
-    - define_trading_objectives
+    - decompose_tasks_into_steps
     nodes_dependent_on: []
-    prompt: Specify the key performance indicators (KPIs) to be used, such as return
-      on investment (ROI), Sharpe ratio, or maximum drawdown.
-  identify_tradable_assets:
+    prompt: Analyze the decomposed steps to identify any dependencies between them.
+      Determine which steps must be completed before others can begin.
+  finalize_workflow_dag:
     agent: false
-    description: Determine the assets or instruments to be traded.
-    name: identify_tradable_assets
+    description: Compile the final workflow DAG with all steps and dependencies
+    name: finalize_workflow_dag
     nodes_depended_on:
-    - select_trading_strategy
+    - define_prompts_for_each_step
     nodes_dependent_on: []
-    prompt: List the specific assets or instruments that the chosen strategy will
-      trade, such as stocks, futures, or currencies.
-  select_trading_strategy:
+    prompt: Combine the structured DAG, step prompts, and dependencies into a comprehensive
+      workflow definition. Ensure all elements are correctly connected and referenced.
+  identify_required_tasks:
     agent: false
-    description: Choose a suitable trading strategy based on the defined objectives.
-    name: select_trading_strategy
+    description: Identify tasks required to achieve the workflow objective
+    name: identify_required_tasks
     nodes_depended_on:
-    - define_trading_objectives
+    - define_workflow_objective
     nodes_dependent_on: []
-    prompt: Select a trading strategy that aligns with the stated objectives, such
-      as trend following, mean reversion, or statistical arbitrage.
-  specify_execution_plan:
+    prompt: List the specific tasks or operations necessary to achieve the workflow's
+      objective. Break down complex tasks into simpler components.
+  organize_steps_into_dag:
     agent: false
-    description: Outline the plan for executing trades.
-    name: specify_execution_plan
+    description: Organize the steps into a Directed Acyclic Graph (DAG) structure
+    name: organize_steps_into_dag
     nodes_depended_on:
-    - identify_tradable_assets
-    - define_risk_management_rules
+    - determine_step_dependencies
     nodes_dependent_on: []
-    prompt: Describe the execution plan, including the trading venues, order types,
-      and any specific execution algorithms to be used.
+    prompt: Using the identified dependencies, structure the steps into a DAG that
+      maximizes concurrency while maintaining the required dependencies.
