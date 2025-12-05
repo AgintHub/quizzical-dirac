@@ -104,10 +104,10 @@ class AssembleFeatureMatrixOutput(BaseModel):
 
 class AnalyzeFeatureImportanceOutput(BaseModel):
     """Pydantic model for analyze_feature_importance node outputs."""
-    model_id: str = Field(..., description="Identifier of the model selected as best (e.g., \"GBM_v1\" or \"LSTM_ensemble\")")
+    model_id: str = Field(..., description="Identifier of the model selected as best (e.g., "GBM_v1" or "LSTM_ensemble")")
     feature_names: str = Field(..., description="List of feature names sorted from most to least important")
     importance_scores: float = Field(..., description="Corresponding importance scores for each feature in feature_names (higher means more important)")
-    ranking_method: str = Field(..., description="Method used to compute importance (e.g., \"SHAP\", \"gain\", \"permutation\")")
+    ranking_method: str = Field(..., description="Method used to compute importance (e.g., "SHAP", "gain", "permutation")")
 
 
 def analyze_feature_importance(select_best_model_input: SelectBestModelOutput, assemble_feature_matrix_input: AssembleFeatureMatrixOutput, **kwargs) -> AnalyzeFeatureImportanceOutput:

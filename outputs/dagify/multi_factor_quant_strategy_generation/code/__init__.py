@@ -25,6 +25,14 @@ from .analyze_feature_importance import analyze_feature_importance
 from .list_data_sources import list_data_sources
 from .define_hyperparameter_grid import define_hyperparameter_grid
 from .align_and_clean_data import align_and_clean_data
+from . import _draft_execution_logic
+from . import _compute_regime_features
+from . import _fetch_volatility_data
+from . import _compute_cross_asset_features
+from . import _compute_volatility_features
+from . import _fetch_cross_asset_data
+from . import _assemble_feature_matrix
+from . import _evaluate_models
 
 
 __all__ = [
@@ -54,5 +62,13 @@ __all__ = [
     'analyze_feature_importance',
     'list_data_sources',
     'define_hyperparameter_grid',
-    'align_and_clean_data'
+    'align_and_clean_data',
+    '_draft_execution_logic',
+    '_compute_regime_features',
+    '_fetch_volatility_data',
+    '_compute_cross_asset_features',
+    '_compute_volatility_features',
+    '_fetch_cross_asset_data',
+    '_assemble_feature_matrix',
+    '_evaluate_models'
 ]

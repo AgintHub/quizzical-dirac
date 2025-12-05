@@ -1,3 +1,15 @@
+from ._draft_execution_logic.define_fetch_latest_feature_vector_function import define_fetch_latest_feature_vector_function
+from ._draft_execution_logic.define_generate_position_signal_function import define_generate_position_signal_function
+from ._draft_execution_logic.define_apply_risk_controls_function import define_apply_risk_controls_function
+from ._draft_execution_logic.define_compute_order_size_function import define_compute_order_size_function
+from ._draft_execution_logic.generate_execution_pseudocode_block import generate_execution_pseudocode_block
+from ._draft_execution_logic.generate_risk_control_implementation_details import generate_risk_control_implementation_details
+from ._draft_execution_logic.validate_execution_logic_outputs import validate_execution_logic_outputs
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
 # -- PRD --
 # 1. BULLET: Load parent node outputs: retrieve `best_model_identifier` and its
 #   performance metrics from `select_best_model`; retrieve
@@ -113,8 +125,6 @@
 #           if any check fails.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
-from typing import List
 
 
 class SelectBestModelOutput(BaseModel):
@@ -129,7 +139,7 @@ class DesignRiskControlsOutput(BaseModel):
     """Pydantic model for design_risk_controls node outputs."""
     risk_control_names: List[str] = Field(..., description="Identifier for each risk control (e.g., max_gross_exposure, var_99, max_asset_weight, daily_stop_loss, monthly_turnover).")
     risk_control_thresholds: List[float] = Field(..., description="Numeric threshold for each risk control in the same order as risk_control_names (e.g., 0.20 for 20% gross exposure, 0.02 for 2% VaR).")
-    risk_control_formulas: List[str] = Field(..., description="Short implementation formula or rule for each risk control (e.g., \"GrossExposure <= 0.20\", \"VaR_99 <= 0.02\").")
+    risk_control_formulas: List[str] = Field(..., description="Short implementation formula or rule for each risk control (e.g., "GrossExposure <= 0.20", "VaR_99 <= 0.02").")
 
 
 class DraftExecutionLogicOutput(BaseModel):
@@ -150,11 +160,55 @@ def draft_execution_logic(select_best_model_input: SelectBestModelOutput, design
     Returns:
         DraftExecutionLogicOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Load parent node outputs
+    model_id: str = select_best_model_input.best_model_identifier
+    risk_names: List[str] = design_risk_controls_input.risk_control_names
+    risk_limits: List[float] = design_risk_controls_input.risk_control_thresholds
+    risk_formulas: List[str] = design_risk_controls_input.risk_control_formulas
+    
+    # Define order sizing formula string
+    order_sizing_formula: str = "size = min( capital * signal * leverage, risk_limit * capital )"
+    
+    # Create function definition for fetching latest feature vector
+    feature_fetch_function: str = define_fetch_latest_feature_vector_function()
+    
+    # Create function definition for generating position signal
+    signal_generation_function: str = define_generate_position_signal_function(model_id=model_id)
+    
+    # Create function definition for applying risk controls
+    risk_control_function: str = define_apply_risk_controls_function(
+        risk_names=risk_names,
+        risk_formulas=risk_formulas,
+        risk_limits=risk_limits
+    )
+    
+    # Create function definition for computing order size
+    order_size_function: str = define_compute_order_size_function(formula=order_sizing_formula)
+    
+    # Generate the main execution logic pseudocode
+    execution_pseudocode: str = generate_execution_pseudocode_block(
+        feature_function=feature_fetch_function,
+        signal_function=signal_generation_function,
+        risk_function=risk_control_function,
+        sizing_function=order_size_function
+    )
+    
+    # Generate risk control implementation details
+    risk_control_details: List[str] = generate_risk_control_implementation_details(
+        risk_names=risk_names,
+        risk_formulas=risk_formulas,
+        risk_limits=risk_limits
+    )
+    
+    # Validate outputs
+    validate_execution_logic_outputs(
+        pseudocode=execution_pseudocode,
+        risk_details=risk_control_details,
+        sizing_formula=order_sizing_formula
+    )
+    
     return DraftExecutionLogicOutput(
-        execution_logic_pseudocode="",
-        risk_control_implementation_details=[],
-        order_sizing_formula="",
+        execution_logic_pseudocode=execution_pseudocode,
+        risk_control_implementation_details=risk_control_details,
+        order_sizing_formula=order_sizing_formula
     )

@@ -1,11 +1,66 @@
-dag_type: spec
+dag_type: stub
 description: Generated workflow from UI.
 name: multi_factor_quant_strategy_generation
 nodes:
   align_and_clean_data:
     agent: false
+    code_node_type: stub
     description: Synchronize all fetched datasets to a common calendar, handle missing
       values, and store a clean master dataset.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass FetchPriceDataOutput(BaseModel):\n    \"\"\"Pydantic model for fetch_price_data\
+      \ node outputs.\"\"\"\n    dates: List[str] = Field(..., description=\"List\
+      \ of dates for the price data.\")\n    opens: List[float] = Field(..., description=\"\
+      List of opening prices for each date.\")\n    highs: List[float] = Field(...,\
+      \ description=\"List of high prices for each date.\")\n    lows: List[float]\
+      \ = Field(..., description=\"List of low prices for each date.\")\n    closes:\
+      \ List[float] = Field(..., description=\"List of closing prices for each date.\"\
+      )\n    volumes: List[int] = Field(..., description=\"List of trading volumes\
+      \ for each date.\")\n\n\nclass FetchCrossAssetDataOutput(BaseModel):\n    \"\
+      \"\"Pydantic model for fetch_cross_asset_data node outputs.\"\"\"\n    csv_data:\
+      \ str = Field(..., description=\"CSV\\u2011formatted string of the resulting\
+      \ table, with a \\\"Date\\\" column followed by a column for each cross\\u2011asset's\
+      \ closing price.\")\n    asset_names: List[str] = Field(..., description=\"\
+      List of cross\\u2011asset identifiers (e.g., ticker symbols) that were fetched.\"\
+      )\n    start_date: str = Field(..., description=\"ISO\\u20118601 formatted first\
+      \ date of the returned series.\")\n    end_date: str = Field(..., description=\"\
+      ISO\\u20118601 formatted last date of the returned series.\")\n    row_count:\
+      \ int = Field(..., description=\"Number of rows (dates) in the returned table.\"\
+      )\n\n\nclass FetchRegimeIndicatorDataOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for fetch_regime_indicator_data node outputs.\"\"\"\n    regime_indicator_csv:\
+      \ str = Field(..., description=\"CSV formatted table containing a Date column\
+      \ and one column for each regime indicator, aligned to the price\\u2011data\
+      \ calendar.\")\n\n\nclass FetchVolatilityDataOutput(BaseModel):\n    \"\"\"\
+      Pydantic model for fetch_volatility_data node outputs.\"\"\"\n    dates: List[str]\
+      \ = Field(..., description=\"List of dates for which volatility data is provided,\
+      \ formatted as YYYY-MM-DD.\")\n    realized_vol: List[float] = Field(..., description=\"\
+      30\\u2011day rolling realized volatility values corresponding to each date.\"\
+      )\n    implied_vol: List[float] = Field(..., description=\"Implied volatility\
+      \ index values for the primary asset corresponding to each date.\")\n\n\nclass\
+      \ AlignAndCleanDataOutput(BaseModel):\n    \"\"\"Pydantic model for align_and_clean_data\
+      \ node outputs.\"\"\"\n    cleaned_data_csv: str = Field(..., description=\"\
+      CSV\\u2011formatted text of the cleaned master DataFrame after merging and imputation.\"\
+      )\n    row_count: int = Field(..., description=\"Number of rows (dates) present\
+      \ in the cleaned DataFrame.\")\n    column_names: List[str] = Field(..., description=\"\
+      List of column names in the cleaned DataFrame, including the primary asset fields\
+      \ and all feature columns.\")\n    missing_values_filled: bool = Field(...,\
+      \ description=\"Indicates whether any missing values were forward\\u2011filled\
+      \ during the cleaning process (true if any fill occurred, false if none were\
+      \ needed).\")\n\n\ndef align_and_clean_data(fetch_price_data_input: FetchPriceDataOutput,\
+      \ fetch_cross_asset_data_input: FetchCrossAssetDataOutput, fetch_regime_indicator_data_input:\
+      \ FetchRegimeIndicatorDataOutput, fetch_volatility_data_input: FetchVolatilityDataOutput,\
+      \ **kwargs) -> AlignAndCleanDataOutput:\n    \"\"\"Synchronize all fetched datasets\
+      \ to a common calendar, handle missing values, and store a clean master dataset.\n\
+      \n    Args:\n        fetch_price_data_input: Input from the 'fetch_price_data'\
+      \ node.\n        fetch_cross_asset_data_input: Input from the 'fetch_cross_asset_data'\
+      \ node.\n        fetch_regime_indicator_data_input: Input from the 'fetch_regime_indicator_data'\
+      \ node.\n        fetch_volatility_data_input: Input from the 'fetch_volatility_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       AlignAndCleanDataOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return AlignAndCleanDataOutput(\n        cleaned_data_csv=\"\
+      \",\n        row_count=0,\n        column_names=[],\n        missing_values_filled=False,\n\
+      \    )"
     name: align_and_clean_data
     nodes_depended_on:
     - fetch_price_data
@@ -108,10 +163,43 @@ nodes:
           and return it to the workflow engine.
     prompt: Merge the five tables on Date, forward‑fill any missing values, and drop
       rows still containing NaNs. Return the cleaned DataFrame as CSV text.
+    shims: []
   analyze_feature_importance:
     agent: false
+    code_node_type: stub
     description: Compute and report the importance of each feature for the selected
       model.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass SelectBestModelOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for select_best_model node outputs.\"\"\"\n    best_model_identifier:\
+      \ str = Field(..., description=\"Identifier of the selected best model.\")\n\
+      \    sharpe_ratio: float = Field(..., description=\"Sharpe ratio of the selected\
+      \ model.\")\n    max_drawdown: float = Field(..., description=\"Maximum drawdown\
+      \ of the selected model.\")\n    annualized_return: float = Field(..., description=\"\
+      Annualized return of the selected model.\")\n\n\nclass AssembleFeatureMatrixOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for assemble_feature_matrix node outputs.\"\"\"\n\
+      \    feature_matrix_csv: str = Field(..., description=\"CSV\\u2011formatted\
+      \ string containing the complete feature matrix with a Date column, all merged\
+      \ feature columns, and a Target column for the next\\u2011day return.\")\n\n\
+      \nclass AnalyzeFeatureImportanceOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for analyze_feature_importance node outputs.\"\"\"\n    model_id: str = Field(...,\
+      \ description=\"Identifier of the model selected as best (e.g., \\\"GBM_v1\\\
+      \" or \\\"LSTM_ensemble\\\")\")\n    feature_names: str = Field(..., description=\"\
+      List of feature names sorted from most to least important\")\n    importance_scores:\
+      \ float = Field(..., description=\"Corresponding importance scores for each\
+      \ feature in feature_names (higher means more important)\")\n    ranking_method:\
+      \ str = Field(..., description=\"Method used to compute importance (e.g., \\\
+      \"SHAP\\\", \\\"gain\\\", \\\"permutation\\\")\")\n\n\ndef analyze_feature_importance(select_best_model_input:\
+      \ SelectBestModelOutput, assemble_feature_matrix_input: AssembleFeatureMatrixOutput,\
+      \ **kwargs) -> AnalyzeFeatureImportanceOutput:\n    \"\"\"Compute and report\
+      \ the importance of each feature for the selected model.\n\n    Args:\n    \
+      \    select_best_model_input: Input from the 'select_best_model' node.\n   \
+      \     assemble_feature_matrix_input: Input from the 'assemble_feature_matrix'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       AnalyzeFeatureImportanceOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return AnalyzeFeatureImportanceOutput(\n    \
+      \    model_id=\"\",\n        feature_names=\"\",\n        importance_scores=0.0,\n\
+      \        ranking_method=\"\",\n    )"
     name: analyze_feature_importance
     nodes_depended_on:
     - select_best_model
@@ -203,10 +291,63 @@ nodes:
           `importance_scores`, and `ranking_method`.
     prompt: For the chosen model, generate a ranked list of feature importances (e.g.,
       gain, SHAP values). Present as a table with Feature and ImportanceScore.
+    shims: []
   assemble_feature_matrix:
     agent: false
+    code_node_type: stub
     description: Combine all individual feature tables into a single matrix aligned
       with the target variable.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ComputePriceActionFeaturesOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for compute_price_action_features node outputs.\"\"\"\n    csv_data: str =\
+      \ Field(..., description=\"CSV\\u2011formatted text containing the Date column\
+      \ followed by each computed feature column (log_return, ma_10, ma_30, rsi, macd,\
+      \ atr).\")\n    feature_names: List[str] = Field(..., description=\"List of\
+      \ feature column names in the order they appear in the CSV (excluding the Date\
+      \ column).\")\n    row_count: int = Field(..., description=\"Number of rows\
+      \ (dates) in the generated feature table.\")\n\n\nclass ComputeCrossAssetFeaturesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for compute_cross_asset_features node outputs.\"\"\
+      \"\n    date: List[str] = Field(..., description=\"List of dates for the computed\
+      \ features (ISO\\u20118601 strings, sorted ascending).\")\n    asset_pairs:\
+      \ List[str] = Field(..., description=\"List of cross\\u2011asset pair identifiers\
+      \ used for correlation and spread calculation, formatted as \\\"Primary-SecondaryTicker\\\
+      \".\")\n    correlations: List[float] = Field(..., description=\"Flattened list\
+      \ of rolling 20\\u2011day Pearson correlation values. Order is by date (earliest\
+      \ to latest) then by asset_pairs order.\")\n    price_spreads: List[float] =\
+      \ Field(..., description=\"Flattened list of daily price spread values (PrimaryClose\
+      \ - SecondaryClose). Order matches the correlations list.\")\n\n\nclass ComputeRegimeFeaturesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for compute_regime_features node outputs.\"\"\"\n\
+      \    dates: List[str] = Field(..., description=\"List of dates (ISO\\u20118601\
+      \ strings) for which regime signals are generated.\")\n    regime_labels: List[str]\
+      \ = Field(..., description=\"Corresponding regime label for each date: either\
+      \ \\\"high_vol\\\" or \\\"low_vol\\\".\")\n    pmi_flags: List[bool] = Field(...,\
+      \ description=\"Binary flag indicating PMI direction for each date: true for\
+      \ positive PMI, false for negative PMI.\")\n\n\nclass ComputeVolatilityFeaturesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for compute_volatility_features node outputs.\"\"\"\
+      \n    dates: List[str] = Field(..., description=\"List of dates (ISO format)\
+      \ for which the forecasts are generated.\")\n    garch_forecasts: List[float]\
+      \ = Field(..., description=\"One\\u2011step\\u2011ahead volatility forecast\
+      \ from the GARCH(1,1) model for each corresponding date.\")\n    implied_vol_delta_5d:\
+      \ List[float] = Field(..., description=\"5\\u2011day change in implied volatility\
+      \ (ImpliedVol[t] - ImpliedVol[t-5]) for each date.\")\n\n\nclass AssembleFeatureMatrixOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for assemble_feature_matrix node outputs.\"\"\"\n\
+      \    feature_matrix_csv: str = Field(..., description=\"CSV\\u2011formatted\
+      \ string containing the complete feature matrix with a Date column, all merged\
+      \ feature columns, and a Target column for the next\\u2011day return.\")\n\n\
+      \ndef assemble_feature_matrix(compute_price_action_features_input: ComputePriceActionFeaturesOutput,\
+      \ compute_cross_asset_features_input: ComputeCrossAssetFeaturesOutput, compute_regime_features_input:\
+      \ ComputeRegimeFeaturesOutput, compute_volatility_features_input: ComputeVolatilityFeaturesOutput,\
+      \ **kwargs) -> AssembleFeatureMatrixOutput:\n    \"\"\"Combine all individual\
+      \ feature tables into a single matrix aligned with the target variable.\n\n\
+      \    Args:\n        compute_price_action_features_input: Input from the 'compute_price_action_features'\
+      \ node.\n        compute_cross_asset_features_input: Input from the 'compute_cross_asset_features'\
+      \ node.\n        compute_regime_features_input: Input from the 'compute_regime_features'\
+      \ node.\n        compute_volatility_features_input: Input from the 'compute_volatility_features'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       AssembleFeatureMatrixOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return AssembleFeatureMatrixOutput(\n       \
+      \ feature_matrix_csv=\"\",\n    )"
     name: assemble_feature_matrix
     nodes_depended_on:
     - compute_price_action_features
@@ -305,10 +446,90 @@ nodes:
     prompt: Merge the four feature tables on Date, ensure no duplicate columns, and
       keep the target variable (next‑day return) as a separate column named Target.
       Return the full matrix as CSV.
+    shims: []
   compile_strategy_documentation:
     agent: false
+    code_node_type: stub
     description: Assemble all model, feature, risk, execution, and backtest artifacts
       into a single strategy dossier.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass SelectBestModelOutput(BaseModel):\n    \"\"\"Pydantic model for select_best_model\
+      \ node outputs.\"\"\"\n    best_model_identifier: str = Field(..., description=\"\
+      Identifier of the selected best model.\")\n    sharpe_ratio: float = Field(...,\
+      \ description=\"Sharpe ratio of the selected model.\")\n    max_drawdown: float\
+      \ = Field(..., description=\"Maximum drawdown of the selected model.\")\n  \
+      \  annualized_return: float = Field(..., description=\"Annualized return of\
+      \ the selected model.\")\n\n\nclass DesignRiskControlsOutput(BaseModel):\n \
+      \   \"\"\"Pydantic model for design_risk_controls node outputs.\"\"\"\n    risk_control_names:\
+      \ List[str] = Field(..., description=\"Identifier for each risk control (e.g.,\
+      \ max_gross_exposure, var_99, max_asset_weight, daily_stop_loss, monthly_turnover).\"\
+      )\n    risk_control_thresholds: List[float] = Field(..., description=\"Numeric\
+      \ threshold for each risk control in the same order as risk_control_names (e.g.,\
+      \ 0.20 for 20% gross exposure, 0.02 for 2% VaR).\")\n    risk_control_formulas:\
+      \ List[str] = Field(..., description=\"Short implementation formula or rule\
+      \ for each risk control (e.g., \\\"GrossExposure <= 0.20\\\", \\\"VaR_99 <=\
+      \ 0.02\\\").\")\n\n\nclass DraftExecutionLogicOutput(BaseModel):\n    \"\"\"\
+      Pydantic model for draft_execution_logic node outputs.\"\"\"\n    execution_logic_pseudocode:\
+      \ str = Field(..., description=\"Pseudocode outlining the order execution logic,\
+      \ including fetching features, generating signals, applying risk controls, sizing\
+      \ orders, and sending limit orders.\")\n    risk_control_implementation_details:\
+      \ List[str] = Field(..., description=\"Details on how risk controls are implemented\
+      \ within the execution logic, referencing specific risk limits defined in the\
+      \ Design Risk Controls node.\")\n    order_sizing_formula: str = Field(...,\
+      \ description=\"The formula or method used to determine the order size based\
+      \ on the model's signal, risk limits, and available capital.\")\n\n\nclass SummarizeBacktestResultsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for summarize_backtest_results node outputs.\"\"\"\
+      \n    annualized_return: float = Field(..., description=\"Annualized return\
+      \ of the strategy expressed as a decimal (e.g., 0.12 for 12%).\")\n    sharpe_ratio:\
+      \ float = Field(..., description=\"Annualized Sharpe ratio of the strategy.\"\
+      )\n    max_drawdown: float = Field(..., description=\"Maximum drawdown of the\
+      \ equity curve expressed as a decimal (e.g., -0.25 for -25%).\")\n    turnover:\
+      \ float = Field(..., description=\"Average portfolio turnover per period (e.g.,\
+      \ monthly turnover as a decimal).\")\n    win_rate: float = Field(..., description=\"\
+      Proportion of winning trades (range 0\\u20111).\")\n    histogram_description:\
+      \ str = Field(..., description=\"Markdown description of the histogram chart\
+      \ for daily returns, including key observations.\")\n    turnover_chart_description:\
+      \ str = Field(..., description=\"Markdown description of the turnover time\\\
+      u2011series chart, highlighting trends or spikes.\")\n    markdown_report: str\
+      \ = Field(..., description=\"Full markdown report containing the statistics\
+      \ and chart descriptions.\")\n\n\nclass CompileStrategyDocumentationOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for compile_strategy_documentation node outputs.\"\
+      \"\"\n    strategy_overview: str = Field(..., description=\"Markdown text summarizing\
+      \ the high\\u2011level strategy intent, asset universe, time horizon, and performance\
+      \ goals.\")\n    data_and_features: str = Field(..., description=\"Markdown\
+      \ description of data sources, cleaning steps, and a concise list of engineered\
+      \ features.\")\n    model_architecture: str = Field(..., description=\"Markdown\
+      \ detailing the selected model(s), algorithmic components, input shapes, and\
+      \ how predictions are combined.\")\n    feature_importance: str = Field(...,\
+      \ description=\"Markdown table (or bullet list) ranking features by importance\
+      \ scores (e.g., gain, SHAP).\")\n    risk_management: str = Field(..., description=\"\
+      Markdown outlining the portfolio\\u2011level and position\\u2011level risk controls,\
+      \ limits, and stop\\u2011loss rules.\")\n    execution_pseudocode: str = Field(...,\
+      \ description=\"Markdown block containing the pseudo\\u2011code for real\\u2011time\
+      \ signal generation, risk filtering, order sizing, and order submission.\")\n\
+      \    backtest_results: str = Field(..., description=\"Markdown summary of backtest\
+      \ performance metrics and brief description of supporting charts.\")\n    implementation_checklist:\
+      \ str = Field(..., description=\"Markdown checklist of items required to operationalize\
+      \ the strategy (e.g., code deployment, config files, monitoring setup).\")\n\
+      \    full_document_markdown: str = Field(..., description=\"The complete compiled\
+      \ strategy dossier, concatenating all sections in proper heading order.\")\n\
+      \n\ndef compile_strategy_documentation(select_best_model_input: SelectBestModelOutput,\
+      \ design_risk_controls_input: DesignRiskControlsOutput, draft_execution_logic_input:\
+      \ DraftExecutionLogicOutput, summarize_backtest_results_input: SummarizeBacktestResultsOutput,\
+      \ **kwargs) -> CompileStrategyDocumentationOutput:\n    \"\"\"Assemble all model,\
+      \ feature, risk, execution, and backtest artifacts into a single strategy dossier.\n\
+      \n    Args:\n        select_best_model_input: Input from the 'select_best_model'\
+      \ node.\n        design_risk_controls_input: Input from the 'design_risk_controls'\
+      \ node.\n        draft_execution_logic_input: Input from the 'draft_execution_logic'\
+      \ node.\n        summarize_backtest_results_input: Input from the 'summarize_backtest_results'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       CompileStrategyDocumentationOutput: Object containing outputs for this\
+      \ node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub\
+      \ output with placeholder values\n    return CompileStrategyDocumentationOutput(\n\
+      \        strategy_overview=\"\",\n        data_and_features=\"\",\n        model_architecture=\"\
+      \",\n        feature_importance=\"\",\n        risk_management=\"\",\n     \
+      \   execution_pseudocode=\"\",\n        backtest_results=\"\",\n        implementation_checklist=\"\
+      \",\n        full_document_markdown=\"\",\n    )"
     name: compile_strategy_documentation
     nodes_depended_on:
     - select_best_model
@@ -473,10 +694,42 @@ nodes:
       & Features, (3) Model Architecture, (4) Feature Importance, (5) Risk Management,
       (6) Execution Pseudocode, (7) Backtest Results, (8) Implementation Checklist.
       Use headings and bullet points.'
+    shims: []
   compute_cross_asset_features:
     agent: false
+    code_node_type: stub
     description: Create correlation and spread features between the primary asset
       and each cross‑asset.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass AlignAndCleanDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ align_and_clean_data node outputs.\"\"\"\n    cleaned_data_csv: str = Field(...,\
+      \ description=\"CSV\\u2011formatted text of the cleaned master DataFrame after\
+      \ merging and imputation.\")\n    row_count: int = Field(..., description=\"\
+      Number of rows (dates) present in the cleaned DataFrame.\")\n    column_names:\
+      \ List[str] = Field(..., description=\"List of column names in the cleaned DataFrame,\
+      \ including the primary asset fields and all feature columns.\")\n    missing_values_filled:\
+      \ bool = Field(..., description=\"Indicates whether any missing values were\
+      \ forward\\u2011filled during the cleaning process (true if any fill occurred,\
+      \ false if none were needed).\")\n\n\nclass ComputeCrossAssetFeaturesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for compute_cross_asset_features node outputs.\"\"\
+      \"\n    date: List[str] = Field(..., description=\"List of dates for the computed\
+      \ features (ISO\\u20118601 strings, sorted ascending).\")\n    asset_pairs:\
+      \ List[str] = Field(..., description=\"List of cross\\u2011asset pair identifiers\
+      \ used for correlation and spread calculation, formatted as \\\"Primary-SecondaryTicker\\\
+      \".\")\n    correlations: List[float] = Field(..., description=\"Flattened list\
+      \ of rolling 20\\u2011day Pearson correlation values. Order is by date (earliest\
+      \ to latest) then by asset_pairs order.\")\n    price_spreads: List[float] =\
+      \ Field(..., description=\"Flattened list of daily price spread values (PrimaryClose\
+      \ - SecondaryClose). Order matches the correlations list.\")\n\n\ndef compute_cross_asset_features(align_and_clean_data_input:\
+      \ AlignAndCleanDataOutput, **kwargs) -> ComputeCrossAssetFeaturesOutput:\n \
+      \   \"\"\"Create correlation and spread features between the primary asset and\
+      \ each cross‑asset.\n\n    Args:\n        align_and_clean_data_input: Input\
+      \ from the 'align_and_clean_data' node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        ComputeCrossAssetFeaturesOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return ComputeCrossAssetFeaturesOutput(\n\
+      \        date=[],\n        asset_pairs=[],\n        correlations=[],\n     \
+      \   price_spreads=[],\n    )"
     name: compute_cross_asset_features
     nodes_depended_on:
     - align_and_clean_data
@@ -609,10 +862,39 @@ nodes:
     prompt: For every secondary asset, compute the rolling 20‑day Pearson correlation
       with the primary asset's returns and the daily price spread. Output a table
       with Date and a column for each correlation and spread pair.
+    shims: []
   compute_price_action_features:
     agent: false
+    code_node_type: stub
     description: Generate technical features from the primary asset price series (e.g.,
       returns, momentum, volatility).
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass AlignAndCleanDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ align_and_clean_data node outputs.\"\"\"\n    cleaned_data_csv: str = Field(...,\
+      \ description=\"CSV\\u2011formatted text of the cleaned master DataFrame after\
+      \ merging and imputation.\")\n    row_count: int = Field(..., description=\"\
+      Number of rows (dates) present in the cleaned DataFrame.\")\n    column_names:\
+      \ List[str] = Field(..., description=\"List of column names in the cleaned DataFrame,\
+      \ including the primary asset fields and all feature columns.\")\n    missing_values_filled:\
+      \ bool = Field(..., description=\"Indicates whether any missing values were\
+      \ forward\\u2011filled during the cleaning process (true if any fill occurred,\
+      \ false if none were needed).\")\n\n\nclass ComputePriceActionFeaturesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for compute_price_action_features node outputs.\"\"\
+      \"\n    csv_data: str = Field(..., description=\"CSV\\u2011formatted text containing\
+      \ the Date column followed by each computed feature column (log_return, ma_10,\
+      \ ma_30, rsi, macd, atr).\")\n    feature_names: List[str] = Field(..., description=\"\
+      List of feature column names in the order they appear in the CSV (excluding\
+      \ the Date column).\")\n    row_count: int = Field(..., description=\"Number\
+      \ of rows (dates) in the generated feature table.\")\n\n\ndef compute_price_action_features(align_and_clean_data_input:\
+      \ AlignAndCleanDataOutput, **kwargs) -> ComputePriceActionFeaturesOutput:\n\
+      \    \"\"\"Generate technical features from the primary asset price series (e.g.,\
+      \ returns, momentum, volatility).\n\n    Args:\n        align_and_clean_data_input:\
+      \ Input from the 'align_and_clean_data' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        ComputePriceActionFeaturesOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ ComputePriceActionFeaturesOutput(\n        csv_data=\"\",\n        feature_names=[],\n\
+      \        row_count=0,\n    )"
     name: compute_price_action_features
     nodes_depended_on:
     - align_and_clean_data
@@ -770,10 +1052,38 @@ nodes:
     prompt: From the cleaned price columns, calculate daily log returns, 10‑day and
       30‑day moving averages, RSI, MACD, and ATR. Present as a table with Date and
       each feature column.
+    shims: []
   compute_regime_features:
     agent: false
+    code_node_type: stub
     description: Derive regime classification signals from macro indicators (e.g.,
       high‑/low‑vol regimes).
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass AlignAndCleanDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ align_and_clean_data node outputs.\"\"\"\n    cleaned_data_csv: str = Field(...,\
+      \ description=\"CSV\\u2011formatted text of the cleaned master DataFrame after\
+      \ merging and imputation.\")\n    row_count: int = Field(..., description=\"\
+      Number of rows (dates) present in the cleaned DataFrame.\")\n    column_names:\
+      \ List[str] = Field(..., description=\"List of column names in the cleaned DataFrame,\
+      \ including the primary asset fields and all feature columns.\")\n    missing_values_filled:\
+      \ bool = Field(..., description=\"Indicates whether any missing values were\
+      \ forward\\u2011filled during the cleaning process (true if any fill occurred,\
+      \ false if none were needed).\")\n\n\nclass ComputeRegimeFeaturesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for compute_regime_features node outputs.\"\"\"\n\
+      \    dates: List[str] = Field(..., description=\"List of dates (ISO\\u20118601\
+      \ strings) for which regime signals are generated.\")\n    regime_labels: List[str]\
+      \ = Field(..., description=\"Corresponding regime label for each date: either\
+      \ \\\"high_vol\\\" or \\\"low_vol\\\".\")\n    pmi_flags: List[bool] = Field(...,\
+      \ description=\"Binary flag indicating PMI direction for each date: true for\
+      \ positive PMI, false for negative PMI.\")\n\n\ndef compute_regime_features(align_and_clean_data_input:\
+      \ AlignAndCleanDataOutput, **kwargs) -> ComputeRegimeFeaturesOutput:\n    \"\
+      \"\"Derive regime classification signals from macro indicators (e.g., high‑/low‑vol\
+      \ regimes).\n\n    Args:\n        align_and_clean_data_input: Input from the\
+      \ 'align_and_clean_data' node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        ComputeRegimeFeaturesOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return ComputeRegimeFeaturesOutput(\n\
+      \        dates=[],\n        regime_labels=[],\n        pmi_flags=[],\n    )"
     name: compute_regime_features
     nodes_depended_on:
     - align_and_clean_data
@@ -853,10 +1163,39 @@ nodes:
     prompt: 'Apply a simple rule‑based classifier: if VIX > its 75th percentile →
       ''high_vol'', else ''low_vol''. Also create a binary flag for positive/negative
       PMI. Return a table with Date, RegimeLabel, PMIFlag.'
+    shims: []
   compute_volatility_features:
     agent: false
+    code_node_type: stub
     description: Generate forecasted volatility inputs using GARCH‑type calculations
       and implied‑vol trends.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass AlignAndCleanDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ align_and_clean_data node outputs.\"\"\"\n    cleaned_data_csv: str = Field(...,\
+      \ description=\"CSV\\u2011formatted text of the cleaned master DataFrame after\
+      \ merging and imputation.\")\n    row_count: int = Field(..., description=\"\
+      Number of rows (dates) present in the cleaned DataFrame.\")\n    column_names:\
+      \ List[str] = Field(..., description=\"List of column names in the cleaned DataFrame,\
+      \ including the primary asset fields and all feature columns.\")\n    missing_values_filled:\
+      \ bool = Field(..., description=\"Indicates whether any missing values were\
+      \ forward\\u2011filled during the cleaning process (true if any fill occurred,\
+      \ false if none were needed).\")\n\n\nclass ComputeVolatilityFeaturesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for compute_volatility_features node outputs.\"\"\"\
+      \n    dates: List[str] = Field(..., description=\"List of dates (ISO format)\
+      \ for which the forecasts are generated.\")\n    garch_forecasts: List[float]\
+      \ = Field(..., description=\"One\\u2011step\\u2011ahead volatility forecast\
+      \ from the GARCH(1,1) model for each corresponding date.\")\n    implied_vol_delta_5d:\
+      \ List[float] = Field(..., description=\"5\\u2011day change in implied volatility\
+      \ (ImpliedVol[t] - ImpliedVol[t-5]) for each date.\")\n\n\ndef compute_volatility_features(align_and_clean_data_input:\
+      \ AlignAndCleanDataOutput, **kwargs) -> ComputeVolatilityFeaturesOutput:\n \
+      \   \"\"\"Generate forecasted volatility inputs using GARCH‑type calculations\
+      \ and implied‑vol trends.\n\n    Args:\n        align_and_clean_data_input:\
+      \ Input from the 'align_and_clean_data' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        ComputeVolatilityFeaturesOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ ComputeVolatilityFeaturesOutput(\n        dates=[],\n        garch_forecasts=[],\n\
+      \        implied_vol_delta_5d=[],\n    )"
     name: compute_volatility_features
     nodes_depended_on:
     - align_and_clean_data
@@ -981,10 +1320,51 @@ nodes:
     prompt: Fit a GARCH(1,1) model on the primary asset's returns and produce one‑step‑ahead
       volatility forecasts. Also compute the 5‑day change in implied volatility. Output
       a table with Date, GARCHForecast, ImpVolDelta.
+    shims: []
   create_monitoring_plan:
     agent: false
+    code_node_type: stub
     description: Define real‑time monitoring metrics, alert thresholds, and model
       retraining schedule.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DefineStrategyObjectivesOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for define_strategy_objectives node outputs.\"\"\"\n    primary_tradable_asset:\
+      \ str = Field(..., description=\"Ticker or identifier of the main asset the\
+      \ strategy will trade\")\n    asset_universe: List[str] = Field(..., description=\"\
+      List of all assets (tickers or identifiers) considered in the strategy\")\n\
+      \    desired_annual_return_pct: float = Field(..., description=\"Target annualized\
+      \ return expressed as a percentage (e.g., 12.5 for 12.5%)\")\n    risk_tolerance_max_drawdown_pct:\
+      \ float = Field(..., description=\"Maximum acceptable drawdown expressed as\
+      \ a percentage of capital\")\n    holding_period_days: int = Field(..., description=\"\
+      Typical holding period for positions in days\")\n    regulatory_constraints:\
+      \ List[str] = Field(..., description=\"List of regulatory or compliance constraints\
+      \ affecting the strategy (e.g., short\\u2011selling bans, leverage limits)\"\
+      )\n\n\nclass SelectBestModelOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ select_best_model node outputs.\"\"\"\n    best_model_identifier: str = Field(...,\
+      \ description=\"Identifier of the selected best model.\")\n    sharpe_ratio:\
+      \ float = Field(..., description=\"Sharpe ratio of the selected model.\")\n\
+      \    max_drawdown: float = Field(..., description=\"Maximum drawdown of the\
+      \ selected model.\")\n    annualized_return: float = Field(..., description=\"\
+      Annualized return of the selected model.\")\n\n\nclass CreateMonitoringPlanOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for create_monitoring_plan node outputs.\"\"\"\n \
+      \   daily_live_metrics: str = Field(..., description=\"List of daily live metrics\
+      \ to track (e.g., realized volatility, prediction error)\")\n    alert_thresholds_metrics:\
+      \ str = Field(..., description=\"List of the metric names used in alert thresholds\"\
+      )\n    alert_thresholds_values: float = Field(..., description=\"List of the\
+      \ threshold values, corresponding to alert_thresholds_metrics\")\n    retraining_schedule:\
+      \ str = Field(..., description=\"Outline of the quarterly retraining process\"\
+      )\n\n\ndef create_monitoring_plan(define_strategy_objectives_input: DefineStrategyObjectivesOutput,\
+      \ select_best_model_input: SelectBestModelOutput, **kwargs) -> CreateMonitoringPlanOutput:\n\
+      \    \"\"\"Define real‑time monitoring metrics, alert thresholds, and model\
+      \ retraining schedule.\n\n    Args:\n        define_strategy_objectives_input:\
+      \ Input from the 'define_strategy_objectives' node.\n        select_best_model_input:\
+      \ Input from the 'select_best_model' node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        CreateMonitoringPlanOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return CreateMonitoringPlanOutput(\n\
+      \        daily_live_metrics=\"\",\n        alert_thresholds_metrics=\"\",\n\
+      \        alert_thresholds_values=0.0,\n        retraining_schedule=\"\",\n \
+      \   )"
     name: create_monitoring_plan
     nodes_depended_on:
     - define_strategy_objectives
@@ -1090,9 +1470,44 @@ nodes:
     prompt: List daily live metrics to track (e.g., realized vs. forecast volatility,
       prediction error, exposure limits) and specify alert conditions (e.g., Sharpe
       < 0.5). Also outline a quarterly retraining process.
+    shims: []
   define_hyperparameter_grid:
     agent: false
+    code_node_type: stub
     description: Set the search space for each model component's hyperparameters.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass SpecifyModelArchitectureOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for specify_model_architecture node outputs.\"\"\"\n    model_ensemble_description:\
+      \ str = Field(..., description=\"A concise description of the chosen model ensemble\
+      \ architecture.\")\n    model_components: str = Field(..., description=\"List\
+      \ of individual model components (e.g., Gradient Boosting, LSTM).\")\n    input_shape:\
+      \ str = Field(..., description=\"The shape of the input data expected by the\
+      \ model.\")\n    prediction_combination_method: str = Field(..., description=\"\
+      How the predictions from individual components are combined (e.g., averaging,\
+      \ stacking).\")\n\n\nclass DefineHyperparameterGridOutput(BaseModel):\n    \"\
+      \"\"Pydantic model for define_hyperparameter_grid node outputs.\"\"\"\n    hyperparameter_grid_json:\
+      \ str = Field(..., description=\"A JSON\\u2011formatted string that contains\
+      \ the full hyperparameter search space for both Gradient Boosting and LSTM models.\"\
+      )\n    gb_hyperparameters: List[str] = Field(..., description=\"List of Gradient\
+      \ Boosting hyperparameter names (e.g., \\\"n_estimators\\\", \\\"learning_rate\\\
+      \").\")\n    gb_hyperparameter_ranges: List[str] = Field(..., description=\"\
+      List of corresponding ranges for each Gradient Boosting hyperparameter, expressed\
+      \ as strings (e.g., \\\"100-500\\\", \\\"0.01-0.1\\\"). Order matches `gb_hyperparameters`.\"\
+      )\n    lstm_hyperparameters: List[str] = Field(..., description=\"List of LSTM\
+      \ hyperparameter names (e.g., \\\"layers\\\", \\\"units\\\", \\\"dropout\\\"\
+      ).\")\n    lstm_hyperparameter_ranges: List[str] = Field(..., description=\"\
+      List of corresponding ranges for each LSTM hyperparameter, expressed as strings\
+      \ (e.g., \\\"1-3\\\", \\\"32-128\\\", \\\"0-0.3\\\"). Order matches `lstm_hyperparameters`.\"\
+      )\n\n\ndef define_hyperparameter_grid(specify_model_architecture_input: SpecifyModelArchitectureOutput,\
+      \ **kwargs) -> DefineHyperparameterGridOutput:\n    \"\"\"Set the search space\
+      \ for each model component's hyperparameters.\n\n    Args:\n        specify_model_architecture_input:\
+      \ Input from the 'specify_model_architecture' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        DefineHyperparameterGridOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ DefineHyperparameterGridOutput(\n        hyperparameter_grid_json=\"\",\n\
+      \        gb_hyperparameters=[],\n        gb_hyperparameter_ranges=[],\n    \
+      \    lstm_hyperparameters=[],\n        lstm_hyperparameter_ranges=[],\n    )"
     name: define_hyperparameter_grid
     nodes_depended_on:
     - specify_model_architecture
@@ -1193,10 +1608,35 @@ nodes:
     prompt: 'List hyperparameters with their ranges for the Gradient Boosting model
       (e.g., n_estimators: 100‑500, learning_rate: 0.01‑0.1) and the LSTM (layers:
       1‑3, units: 32‑128, dropout: 0‑0.3). Return as JSON.'
+    shims: []
   define_strategy_objectives:
     agent: false
+    code_node_type: stub
     description: State the high‑level goals, asset universe, time horizon, and performance
       targets for the quant strategy.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DefineStrategyObjectivesOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for define_strategy_objectives node outputs.\"\"\"\n    primary_tradable_asset:\
+      \ str = Field(..., description=\"Ticker or identifier of the main asset the\
+      \ strategy will trade\")\n    asset_universe: List[str] = Field(..., description=\"\
+      List of all assets (tickers or identifiers) considered in the strategy\")\n\
+      \    desired_annual_return_pct: float = Field(..., description=\"Target annualized\
+      \ return expressed as a percentage (e.g., 12.5 for 12.5%)\")\n    risk_tolerance_max_drawdown_pct:\
+      \ float = Field(..., description=\"Maximum acceptable drawdown expressed as\
+      \ a percentage of capital\")\n    holding_period_days: int = Field(..., description=\"\
+      Typical holding period for positions in days\")\n    regulatory_constraints:\
+      \ List[str] = Field(..., description=\"List of regulatory or compliance constraints\
+      \ affecting the strategy (e.g., short\\u2011selling bans, leverage limits)\"\
+      )\n\n\ndef define_strategy_objectives(general_input: str, **kwargs) -> DefineStrategyObjectivesOutput:\n\
+      \    \"\"\"State the high‑level goals, asset universe, time horizon, and performance\
+      \ targets for the quant strategy.\n\n    Args:\n        general_input: General\
+      \ input string for the root node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        DefineStrategyObjectivesOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return DefineStrategyObjectivesOutput(\n\
+      \        primary_tradable_asset=\"\",\n        asset_universe=[],\n        desired_annual_return_pct=0.0,\n\
+      \        risk_tolerance_max_drawdown_pct=0.0,\n        holding_period_days=0,\n\
+      \        regulatory_constraints=[],\n    )"
     name: define_strategy_objectives
     nodes_depended_on: []
     nodes_dependent_on: []
@@ -1290,10 +1730,52 @@ nodes:
     prompt: Provide a concise bullet list of the strategy objectives, including the
       primary tradable asset, desired return, risk tolerance, holding period, and
       any regulatory constraints.
+    shims: []
   design_risk_controls:
     agent: false
+    code_node_type: stub
     description: Define portfolio‑level and position‑level risk limits, stop‑loss
       rules, and turnover caps.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass SelectBestModelOutput(BaseModel):\n    \"\"\"Pydantic model for select_best_model\
+      \ node outputs.\"\"\"\n    best_model_identifier: str = Field(..., description=\"\
+      Identifier of the selected best model.\")\n    sharpe_ratio: float = Field(...,\
+      \ description=\"Sharpe ratio of the selected model.\")\n    max_drawdown: float\
+      \ = Field(..., description=\"Maximum drawdown of the selected model.\")\n  \
+      \  annualized_return: float = Field(..., description=\"Annualized return of\
+      \ the selected model.\")\n\n\nclass DefineStrategyObjectivesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for define_strategy_objectives node outputs.\"\"\"\
+      \n    primary_tradable_asset: str = Field(..., description=\"Ticker or identifier\
+      \ of the main asset the strategy will trade\")\n    asset_universe: List[str]\
+      \ = Field(..., description=\"List of all assets (tickers or identifiers) considered\
+      \ in the strategy\")\n    desired_annual_return_pct: float = Field(..., description=\"\
+      Target annualized return expressed as a percentage (e.g., 12.5 for 12.5%)\"\
+      )\n    risk_tolerance_max_drawdown_pct: float = Field(..., description=\"Maximum\
+      \ acceptable drawdown expressed as a percentage of capital\")\n    holding_period_days:\
+      \ int = Field(..., description=\"Typical holding period for positions in days\"\
+      )\n    regulatory_constraints: List[str] = Field(..., description=\"List of\
+      \ regulatory or compliance constraints affecting the strategy (e.g., short\\\
+      u2011selling bans, leverage limits)\")\n\n\nclass DesignRiskControlsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for design_risk_controls node outputs.\"\"\"\n   \
+      \ risk_control_names: List[str] = Field(..., description=\"Identifier for each\
+      \ risk control (e.g., max_gross_exposure, var_99, max_asset_weight, daily_stop_loss,\
+      \ monthly_turnover).\")\n    risk_control_thresholds: List[float] = Field(...,\
+      \ description=\"Numeric threshold for each risk control in the same order as\
+      \ risk_control_names (e.g., 0.20 for 20% gross exposure, 0.02 for 2% VaR).\"\
+      )\n    risk_control_formulas: List[str] = Field(..., description=\"Short implementation\
+      \ formula or rule for each risk control (e.g., \\\"GrossExposure <= 0.20\\\"\
+      , \\\"VaR_99 <= 0.02\\\").\")\n\n\ndef design_risk_controls(select_best_model_input:\
+      \ SelectBestModelOutput, define_strategy_objectives_input: DefineStrategyObjectivesOutput,\
+      \ **kwargs) -> DesignRiskControlsOutput:\n    \"\"\"Define portfolio‑level and\
+      \ position‑level risk limits, stop‑loss rules, and turnover caps.\n\n    Args:\n\
+      \        select_best_model_input: Input from the 'select_best_model' node.\n\
+      \        define_strategy_objectives_input: Input from the 'define_strategy_objectives'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       DesignRiskControlsOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return DesignRiskControlsOutput(\n        risk_control_names=[],\n\
+      \        risk_control_thresholds=[],\n        risk_control_formulas=[],\n  \
+      \  )"
     name: design_risk_controls
     nodes_depended_on:
     - select_best_model
@@ -1405,10 +1887,49 @@ nodes:
     prompt: List at least five quantitative risk controls (e.g., max gross exposure
       20%, VaR 99% ≤ 2%, per‑asset weight ≤ 5%, daily stop‑loss 2%, turnover ≤ 30%
       per month) with brief implementation formulas.
+    shims: []
   draft_execution_logic:
     agent: false
+    code_node_type: stub
     description: Create pseudo‑code describing order sizing, routing, and real‑time
       signal handling.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass SelectBestModelOutput(BaseModel):\n    \"\"\"Pydantic model for select_best_model\
+      \ node outputs.\"\"\"\n    best_model_identifier: str = Field(..., description=\"\
+      Identifier of the selected best model.\")\n    sharpe_ratio: float = Field(...,\
+      \ description=\"Sharpe ratio of the selected model.\")\n    max_drawdown: float\
+      \ = Field(..., description=\"Maximum drawdown of the selected model.\")\n  \
+      \  annualized_return: float = Field(..., description=\"Annualized return of\
+      \ the selected model.\")\n\n\nclass DesignRiskControlsOutput(BaseModel):\n \
+      \   \"\"\"Pydantic model for design_risk_controls node outputs.\"\"\"\n    risk_control_names:\
+      \ List[str] = Field(..., description=\"Identifier for each risk control (e.g.,\
+      \ max_gross_exposure, var_99, max_asset_weight, daily_stop_loss, monthly_turnover).\"\
+      )\n    risk_control_thresholds: List[float] = Field(..., description=\"Numeric\
+      \ threshold for each risk control in the same order as risk_control_names (e.g.,\
+      \ 0.20 for 20% gross exposure, 0.02 for 2% VaR).\")\n    risk_control_formulas:\
+      \ List[str] = Field(..., description=\"Short implementation formula or rule\
+      \ for each risk control (e.g., \\\"GrossExposure <= 0.20\\\", \\\"VaR_99 <=\
+      \ 0.02\\\").\")\n\n\nclass DraftExecutionLogicOutput(BaseModel):\n    \"\"\"\
+      Pydantic model for draft_execution_logic node outputs.\"\"\"\n    execution_logic_pseudocode:\
+      \ str = Field(..., description=\"Pseudocode outlining the order execution logic,\
+      \ including fetching features, generating signals, applying risk controls, sizing\
+      \ orders, and sending limit orders.\")\n    risk_control_implementation_details:\
+      \ List[str] = Field(..., description=\"Details on how risk controls are implemented\
+      \ within the execution logic, referencing specific risk limits defined in the\
+      \ Design Risk Controls node.\")\n    order_sizing_formula: str = Field(...,\
+      \ description=\"The formula or method used to determine the order size based\
+      \ on the model's signal, risk limits, and available capital.\")\n\n\ndef draft_execution_logic(select_best_model_input:\
+      \ SelectBestModelOutput, design_risk_controls_input: DesignRiskControlsOutput,\
+      \ **kwargs) -> DraftExecutionLogicOutput:\n    \"\"\"Create pseudo‑code describing\
+      \ order sizing, routing, and real‑time signal handling.\n\n    Args:\n     \
+      \   select_best_model_input: Input from the 'select_best_model' node.\n    \
+      \    design_risk_controls_input: Input from the 'design_risk_controls' node.\n\
+      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        DraftExecutionLogicOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ DraftExecutionLogicOutput(\n        execution_logic_pseudocode=\"\",\n   \
+      \     risk_control_implementation_details=[],\n        order_sizing_formula=\"\
+      \",\n    )"
     name: draft_execution_logic
     nodes_depended_on:
     - select_best_model
@@ -1545,10 +2066,49 @@ nodes:
     prompt: Write concise pseudocode that (1) fetches the latest feature vector, (2)
       generates a position signal using the selected model, (3) applies risk controls,
       (4) computes order size, and (5) sends limit orders. Use clear step comments.
+    shims: []
   evaluate_models:
     agent: false
+    code_node_type: stub
     description: Assess all trained candidates on the test set and compute performance
       metrics.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass TrainModelsOutput(BaseModel):\n    \"\"\"Pydantic model for train_models\
+      \ node outputs.\"\"\"\n    hyperparameters: List[str] = Field(..., description=\"\
+      List of hyperparameter combinations for each trained model.\")\n    validation_sharpe:\
+      \ List[float] = Field(..., description=\"List of Sharpe ratios calculated on\
+      \ the validation set for each trained model.\")\n    validation_rmse: List[float]\
+      \ = Field(..., description=\"List of Root Mean Squared Errors calculated on\
+      \ the validation set for each trained model.\")\n\n\nclass SplitDatasetOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for split_dataset node outputs.\"\"\"\n    train_csv:\
+      \ str = Field(..., description=\"CSV formatted text containing the training\
+      \ subset of the feature matrix.\")\n    validation_csv: str = Field(..., description=\"\
+      CSV formatted text containing the validation subset of the feature matrix.\"\
+      )\n    test_csv: str = Field(..., description=\"CSV formatted text containing\
+      \ the test subset of the feature matrix.\")\n\n\nclass EvaluateModelsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for evaluate_models node outputs.\"\"\"\n    candidate_models:\
+      \ List[str] = Field(..., description=\"Identifier or name of each evaluated\
+      \ model candidate.\")\n    sharpe_ratios: List[float] = Field(..., description=\"\
+      Sharpe ratio for each model on the test set.\")\n    annualized_returns: List[float]\
+      \ = Field(..., description=\"Annualized return (in percent) for each model on\
+      \ the test set.\")\n    max_drawdowns: List[float] = Field(..., description=\"\
+      Maximum drawdown (in percent) observed for each model on the test set.\")\n\
+      \    turnovers: List[float] = Field(..., description=\"Average portfolio turnover\
+      \ (as a percent of portfolio per period) for each model.\")\n    hit_rates:\
+      \ List[float] = Field(..., description=\"Proportion of trades with positive\
+      \ return (hit\\u2011rate) for each model.\")\n    ranks: List[int] = Field(...,\
+      \ description=\"Rank of each model based on the chosen composite performance\
+      \ criterion (1 = best).\")\n\n\ndef evaluate_models(train_models_input: TrainModelsOutput,\
+      \ split_dataset_input: SplitDatasetOutput, **kwargs) -> EvaluateModelsOutput:\n\
+      \    \"\"\"Assess all trained candidates on the test set and compute performance\
+      \ metrics.\n\n    Args:\n        train_models_input: Input from the 'train_models'\
+      \ node.\n        split_dataset_input: Input from the 'split_dataset' node.\n\
+      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        EvaluateModelsOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ EvaluateModelsOutput(\n        candidate_models=[],\n        sharpe_ratios=[],\n\
+      \        annualized_returns=[],\n        max_drawdowns=[],\n        turnovers=[],\n\
+      \        hit_rates=[],\n        ranks=[],\n    )"
     name: evaluate_models
     nodes_depended_on:
     - train_models
@@ -1706,10 +2266,36 @@ nodes:
           and audit trails.'
     prompt: Using the Test set, calculate Sharpe ratio, annualized return, max drawdown,
       turnover, and hit‑rate for each candidate. Output a ranked table.
+    shims: []
   fetch_cross_asset_data:
     agent: false
+    code_node_type: stub
     description: Download historical price series for secondary assets used for correlation
       signals.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ListDataSourcesOutput(BaseModel):\n    \"\"\"Pydantic model for list_data_sources\
+      \ node outputs.\"\"\"\n    data_sources: str = Field(..., description=\"Plain\
+      \ list of data source descriptions, each including the dataset type, provider\
+      \ name, and update frequency (e.g., \\\"Price History: Bloomberg, daily\\\"\
+      ).\")\n\n\nclass FetchCrossAssetDataOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for fetch_cross_asset_data node outputs.\"\"\"\n    csv_data: str = Field(...,\
+      \ description=\"CSV\\u2011formatted string of the resulting table, with a \\\
+      \"Date\\\" column followed by a column for each cross\\u2011asset's closing\
+      \ price.\")\n    asset_names: List[str] = Field(..., description=\"List of cross\\\
+      u2011asset identifiers (e.g., ticker symbols) that were fetched.\")\n    start_date:\
+      \ str = Field(..., description=\"ISO\\u20118601 formatted first date of the\
+      \ returned series.\")\n    end_date: str = Field(..., description=\"ISO\\u20118601\
+      \ formatted last date of the returned series.\")\n    row_count: int = Field(...,\
+      \ description=\"Number of rows (dates) in the returned table.\")\n\n\ndef fetch_cross_asset_data(list_data_sources_input:\
+      \ ListDataSourcesOutput, **kwargs) -> FetchCrossAssetDataOutput:\n    \"\"\"\
+      Download historical price series for secondary assets used for correlation signals.\n\
+      \n    Args:\n        list_data_sources_input: Input from the 'list_data_sources'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       FetchCrossAssetDataOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return FetchCrossAssetDataOutput(\n        csv_data=\"\
+      \",\n        asset_names=[],\n        start_date=\"\",\n        end_date=\"\"\
+      ,\n        row_count=0,\n    )"
     name: fetch_cross_asset_data
     nodes_depended_on:
     - list_data_sources
@@ -1831,10 +2417,35 @@ nodes:
     prompt: Obtain daily closing prices for each cross‑asset listed in the data sources
       (e.g., sector ETFs, commodities, FX pairs) covering the same date range as the
       primary asset. Return as a multi‑column table with Date as the index.
+    shims: []
   fetch_price_data:
     agent: false
+    code_node_type: stub
     description: Download historical price series for the primary asset and any directly
       traded instruments.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ListDataSourcesOutput(BaseModel):\n    \"\"\"Pydantic model for list_data_sources\
+      \ node outputs.\"\"\"\n    data_sources: str = Field(..., description=\"Plain\
+      \ list of data source descriptions, each including the dataset type, provider\
+      \ name, and update frequency (e.g., \\\"Price History: Bloomberg, daily\\\"\
+      ).\")\n\n\nclass FetchPriceDataOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for fetch_price_data node outputs.\"\"\"\n    dates: List[str] = Field(...,\
+      \ description=\"List of dates for the price data.\")\n    opens: List[float]\
+      \ = Field(..., description=\"List of opening prices for each date.\")\n    highs:\
+      \ List[float] = Field(..., description=\"List of high prices for each date.\"\
+      )\n    lows: List[float] = Field(..., description=\"List of low prices for each\
+      \ date.\")\n    closes: List[float] = Field(..., description=\"List of closing\
+      \ prices for each date.\")\n    volumes: List[int] = Field(..., description=\"\
+      List of trading volumes for each date.\")\n\n\ndef fetch_price_data(list_data_sources_input:\
+      \ ListDataSourcesOutput, **kwargs) -> FetchPriceDataOutput:\n    \"\"\"Download\
+      \ historical price series for the primary asset and any directly traded instruments.\n\
+      \n    Args:\n        list_data_sources_input: Input from the 'list_data_sources'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       FetchPriceDataOutput: Object containing outputs for this node.\n   \
+      \ \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output with\
+      \ placeholder values\n    return FetchPriceDataOutput(\n        dates=[],\n\
+      \        opens=[],\n        highs=[],\n        lows=[],\n        closes=[],\n\
+      \        volumes=[],\n    )"
     name: fetch_price_data
     nodes_depended_on:
     - list_data_sources
@@ -1973,10 +2584,29 @@ nodes:
     prompt: 'Retrieve OHLCV data for the primary asset over the last 10 years at daily
       resolution. Return the data as a CSV‑compatible table with columns: Date, Open,
       High, Low, Close, Volume.'
+    shims: []
   fetch_regime_indicator_data:
     agent: false
+    code_node_type: stub
     description: Collect macro‑economic and market‑regime indicators (e.g., VIX, yield
       curve, PMI).
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass ListDataSourcesOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for list_data_sources node outputs.\"\"\"\n    data_sources:\
+      \ str = Field(..., description=\"Plain list of data source descriptions, each\
+      \ including the dataset type, provider name, and update frequency (e.g., \\\"\
+      Price History: Bloomberg, daily\\\").\")\n\n\nclass FetchRegimeIndicatorDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for fetch_regime_indicator_data node outputs.\"\"\"\
+      \n    regime_indicator_csv: str = Field(..., description=\"CSV formatted table\
+      \ containing a Date column and one column for each regime indicator, aligned\
+      \ to the price\\u2011data calendar.\")\n\n\ndef fetch_regime_indicator_data(list_data_sources_input:\
+      \ ListDataSourcesOutput, **kwargs) -> FetchRegimeIndicatorDataOutput:\n    \"\
+      \"\"Collect macro‑economic and market‑regime indicators (e.g., VIX, yield curve,\
+      \ PMI).\n\n    Args:\n        list_data_sources_input: Input from the 'list_data_sources'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       FetchRegimeIndicatorDataOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return FetchRegimeIndicatorDataOutput(\n    \
+      \    regime_indicator_csv=\"\",\n    )"
     name: fetch_regime_indicator_data
     nodes_depended_on:
     - list_data_sources
@@ -2057,9 +2687,31 @@ nodes:
     prompt: Download daily values for each regime indicator specified, aligned to
       the same calendar as the price data. Provide a table with Date and one column
       per indicator.
+    shims: []
   fetch_volatility_data:
     agent: false
+    code_node_type: stub
     description: Retrieve realized and implied volatility metrics needed for forecasting.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ListDataSourcesOutput(BaseModel):\n    \"\"\"Pydantic model for list_data_sources\
+      \ node outputs.\"\"\"\n    data_sources: str = Field(..., description=\"Plain\
+      \ list of data source descriptions, each including the dataset type, provider\
+      \ name, and update frequency (e.g., \\\"Price History: Bloomberg, daily\\\"\
+      ).\")\n\n\nclass FetchVolatilityDataOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for fetch_volatility_data node outputs.\"\"\"\n    dates: List[str] = Field(...,\
+      \ description=\"List of dates for which volatility data is provided, formatted\
+      \ as YYYY-MM-DD.\")\n    realized_vol: List[float] = Field(..., description=\"\
+      30\\u2011day rolling realized volatility values corresponding to each date.\"\
+      )\n    implied_vol: List[float] = Field(..., description=\"Implied volatility\
+      \ index values for the primary asset corresponding to each date.\")\n\n\ndef\
+      \ fetch_volatility_data(list_data_sources_input: ListDataSourcesOutput, **kwargs)\
+      \ -> FetchVolatilityDataOutput:\n    \"\"\"Retrieve realized and implied volatility\
+      \ metrics needed for forecasting.\n\n    Args:\n        list_data_sources_input:\
+      \ Input from the 'list_data_sources' node.\n        **kwargs: Additional keyword\
+      \ arguments.\n\n    Returns:\n        FetchVolatilityDataOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return FetchVolatilityDataOutput(\n\
+      \        dates=[],\n        realized_vol=[],\n        implied_vol=[],\n    )"
     name: fetch_volatility_data
     nodes_depended_on:
     - list_data_sources
@@ -2159,10 +2811,62 @@ nodes:
     prompt: Acquire daily realized volatility (e.g., 30‑day rolling std) and implied
       volatility indices for the primary asset over the same period. Output a table
       with Date, RealizedVol, ImpliedVol.
+    shims: []
   final_deliverables_package:
     agent: false
+    code_node_type: stub
     description: Package the strategy dossier, code snippets, monitoring plan, and
       any configuration files for hand‑off.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass CompileStrategyDocumentationOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for compile_strategy_documentation node outputs.\"\"\"\n    strategy_overview:\
+      \ str = Field(..., description=\"Markdown text summarizing the high\\u2011level\
+      \ strategy intent, asset universe, time horizon, and performance goals.\")\n\
+      \    data_and_features: str = Field(..., description=\"Markdown description\
+      \ of data sources, cleaning steps, and a concise list of engineered features.\"\
+      )\n    model_architecture: str = Field(..., description=\"Markdown detailing\
+      \ the selected model(s), algorithmic components, input shapes, and how predictions\
+      \ are combined.\")\n    feature_importance: str = Field(..., description=\"\
+      Markdown table (or bullet list) ranking features by importance scores (e.g.,\
+      \ gain, SHAP).\")\n    risk_management: str = Field(..., description=\"Markdown\
+      \ outlining the portfolio\\u2011level and position\\u2011level risk controls,\
+      \ limits, and stop\\u2011loss rules.\")\n    execution_pseudocode: str = Field(...,\
+      \ description=\"Markdown block containing the pseudo\\u2011code for real\\u2011time\
+      \ signal generation, risk filtering, order sizing, and order submission.\")\n\
+      \    backtest_results: str = Field(..., description=\"Markdown summary of backtest\
+      \ performance metrics and brief description of supporting charts.\")\n    implementation_checklist:\
+      \ str = Field(..., description=\"Markdown checklist of items required to operationalize\
+      \ the strategy (e.g., code deployment, config files, monitoring setup).\")\n\
+      \    full_document_markdown: str = Field(..., description=\"The complete compiled\
+      \ strategy dossier, concatenating all sections in proper heading order.\")\n\
+      \n\nclass CreateMonitoringPlanOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ create_monitoring_plan node outputs.\"\"\"\n    daily_live_metrics: str =\
+      \ Field(..., description=\"List of daily live metrics to track (e.g., realized\
+      \ volatility, prediction error)\")\n    alert_thresholds_metrics: str = Field(...,\
+      \ description=\"List of the metric names used in alert thresholds\")\n    alert_thresholds_values:\
+      \ float = Field(..., description=\"List of the threshold values, corresponding\
+      \ to alert_thresholds_metrics\")\n    retraining_schedule: str = Field(...,\
+      \ description=\"Outline of the quarterly retraining process\")\n\n\nclass FinalDeliverablesPackageOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for final_deliverables_package node outputs.\"\"\"\
+      \n    manifest_files: List[str] = Field(..., description=\"Names of files included\
+      \ in the deliverable package, e.g., Strategy_Document.md, model_code.py, requirements.txt,\
+      \ config.yml, monitoring_plan.md.\")\n    manifest_descriptions: List[str] =\
+      \ Field(..., description=\"Brief description for each file in the manifest,\
+      \ in the same order as manifest_files.\")\n    package_type: str = Field(...,\
+      \ description=\"Archive format of the package, e.g., \\\"zip\\\".\")\n    is_ready_for_handoff:\
+      \ bool = Field(..., description=\"Indicates whether the package has been validated\
+      \ and is ready for hand\\u2011off.\")\n\n\ndef final_deliverables_package(compile_strategy_documentation_input:\
+      \ CompileStrategyDocumentationOutput, create_monitoring_plan_input: CreateMonitoringPlanOutput,\
+      \ **kwargs) -> FinalDeliverablesPackageOutput:\n    \"\"\"Package the strategy\
+      \ dossier, code snippets, monitoring plan, and any configuration files for hand‑off.\n\
+      \n    Args:\n        compile_strategy_documentation_input: Input from the 'compile_strategy_documentation'\
+      \ node.\n        create_monitoring_plan_input: Input from the 'create_monitoring_plan'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       FinalDeliverablesPackageOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return FinalDeliverablesPackageOutput(\n    \
+      \    manifest_files=[],\n        manifest_descriptions=[],\n        package_type=\"\
+      \",\n        is_ready_for_handoff=False,\n    )"
     name: final_deliverables_package
     nodes_depended_on:
     - compile_strategy_documentation
@@ -2297,10 +3001,38 @@ nodes:
     prompt: 'Provide a zip‑style manifest listing: Strategy_Document.md, model_code.py,
       requirements.txt, config.yml, monitoring_plan.md. For each item give a brief
       description.'
+    shims: []
   list_data_sources:
     agent: false
+    code_node_type: stub
     description: Identify all external datasets required for price action, cross‑asset
       correlation, regime detection, and volatility forecasting.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DefineStrategyObjectivesOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for define_strategy_objectives node outputs.\"\"\"\n    primary_tradable_asset:\
+      \ str = Field(..., description=\"Ticker or identifier of the main asset the\
+      \ strategy will trade\")\n    asset_universe: List[str] = Field(..., description=\"\
+      List of all assets (tickers or identifiers) considered in the strategy\")\n\
+      \    desired_annual_return_pct: float = Field(..., description=\"Target annualized\
+      \ return expressed as a percentage (e.g., 12.5 for 12.5%)\")\n    risk_tolerance_max_drawdown_pct:\
+      \ float = Field(..., description=\"Maximum acceptable drawdown expressed as\
+      \ a percentage of capital\")\n    holding_period_days: int = Field(..., description=\"\
+      Typical holding period for positions in days\")\n    regulatory_constraints:\
+      \ List[str] = Field(..., description=\"List of regulatory or compliance constraints\
+      \ affecting the strategy (e.g., short\\u2011selling bans, leverage limits)\"\
+      )\n\n\nclass ListDataSourcesOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ list_data_sources node outputs.\"\"\"\n    data_sources: str = Field(...,\
+      \ description=\"Plain list of data source descriptions, each including the dataset\
+      \ type, provider name, and update frequency (e.g., \\\"Price History: Bloomberg,\
+      \ daily\\\").\")\n\n\ndef list_data_sources(define_strategy_objectives_input:\
+      \ DefineStrategyObjectivesOutput, **kwargs) -> ListDataSourcesOutput:\n    \"\
+      \"\"Identify all external datasets required for price action, cross‑asset correlation,\
+      \ regime detection, and volatility forecasting.\n\n    Args:\n        define_strategy_objectives_input:\
+      \ Input from the 'define_strategy_objectives' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        ListDataSourcesOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return ListDataSourcesOutput(\n\
+      \        data_sources=\"\",\n    )"
     name: list_data_sources
     nodes_depended_on:
     - define_strategy_objectives
@@ -2386,10 +3118,45 @@ nodes:
     prompt: Enumerate the data sources (e.g., price history, macro indicators, implied
       volatility, sentiment feeds) with provider names and frequency. Output as a
       plain list.
+    shims: []
   run_backtest:
     agent: false
+    code_node_type: stub
     description: Execute the backtest over the test period and record performance
       timeseries.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass SetupBacktestEnvironmentOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for setup_backtest_environment node outputs.\"\"\"\
+      \n    initial_capital: float = Field(..., description=\"Starting capital for\
+      \ the backtest (e.g., 1_000_000).\")\n    slippage_bps: float = Field(..., description=\"\
+      Slippage applied per trade expressed in basis points.\")\n    commission_pct:\
+      \ float = Field(..., description=\"Commission charged per trade as a percentage\
+      \ of trade value.\")\n    rebalance_frequency: str = Field(..., description=\"\
+      How often the portfolio is rebalanced (e.g., \\\"daily\\\", \\\"weekly\\\",\
+      \ \\\"monthly\\\").\")\n    risk_controls_summary: str = Field(..., description=\"\
+      List of risk\\u2011control rules that will be enforced during the simulation\
+      \ (e.g., \\\"max_gross_exposure 20%\\\", \\\"VaR 99% \\u2264 2%\\\", \\\"per_asset_weight\
+      \ \\u2264 5%\\\", \\\"daily_stop_loss 2%\\\", \\\"turnover \\u2264 30%/month\\\
+      \").\")\n    risk_control_enforcement_method: str = Field(..., description=\"\
+      Brief description of how risk controls are applied in the backtest engine (e.g.,\
+      \ \\\"pre\\u2011trade check that aborts orders violating any rule\\\").\")\n\
+      \n\nclass RunBacktestOutput(BaseModel):\n    \"\"\"Pydantic model for run_backtest\
+      \ node outputs.\"\"\"\n    backtest_success: bool = Field(..., description=\"\
+      True if the backtest completed without runtime errors, otherwise False.\")\n\
+      \    equity_curve_csv: str = Field(..., description=\"CSV\\u2011formatted string\
+      \ of the daily equity curve. Columns: Date, Equity.\")\n    trades_log_csv:\
+      \ str = Field(..., description=\"CSV\\u2011formatted string of all executed\
+      \ trades. Columns: Date, Symbol, Quantity, Price, PnL.\")\n    summary_message:\
+      \ str = Field(..., description=\"Brief textual summary of backtest execution\
+      \ (e.g., runtime, any warnings).\")\n\n\ndef run_backtest(setup_backtest_environment_input:\
+      \ SetupBacktestEnvironmentOutput, **kwargs) -> RunBacktestOutput:\n    \"\"\"\
+      Execute the backtest over the test period and record performance timeseries.\n\
+      \n    Args:\n        setup_backtest_environment_input: Input from the 'setup_backtest_environment'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       RunBacktestOutput: Object containing outputs for this node.\n    \"\"\
+      \"\n    # TODO: Implement this function\n\n    # Return stub output with placeholder\
+      \ values\n    return RunBacktestOutput(\n        backtest_success=False,\n \
+      \       equity_curve_csv=\"\",\n        trades_log_csv=\"\",\n        summary_message=\"\
+      \",\n    )"
     name: run_backtest
     nodes_depended_on:
     - setup_backtest_environment
@@ -2499,10 +3266,41 @@ nodes:
     prompt: Run the backtest using the previously defined environment and generate
       a daily equity curve CSV, plus a log of executed trades (Date, Symbol, Quantity,
       Price, PnL).
+    shims: []
   select_best_model:
     agent: false
+    code_node_type: stub
     description: Pick the model with the highest risk‑adjusted performance according
       to a predefined criterion.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass EvaluateModelsOutput(BaseModel):\n    \"\"\"Pydantic model for evaluate_models\
+      \ node outputs.\"\"\"\n    candidate_models: List[str] = Field(..., description=\"\
+      Identifier or name of each evaluated model candidate.\")\n    sharpe_ratios:\
+      \ List[float] = Field(..., description=\"Sharpe ratio for each model on the\
+      \ test set.\")\n    annualized_returns: List[float] = Field(..., description=\"\
+      Annualized return (in percent) for each model on the test set.\")\n    max_drawdowns:\
+      \ List[float] = Field(..., description=\"Maximum drawdown (in percent) observed\
+      \ for each model on the test set.\")\n    turnovers: List[float] = Field(...,\
+      \ description=\"Average portfolio turnover (as a percent of portfolio per period)\
+      \ for each model.\")\n    hit_rates: List[float] = Field(..., description=\"\
+      Proportion of trades with positive return (hit\\u2011rate) for each model.\"\
+      )\n    ranks: List[int] = Field(..., description=\"Rank of each model based\
+      \ on the chosen composite performance criterion (1 = best).\")\n\n\nclass SelectBestModelOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for select_best_model node outputs.\"\"\"\n    best_model_identifier:\
+      \ str = Field(..., description=\"Identifier of the selected best model.\")\n\
+      \    sharpe_ratio: float = Field(..., description=\"Sharpe ratio of the selected\
+      \ model.\")\n    max_drawdown: float = Field(..., description=\"Maximum drawdown\
+      \ of the selected model.\")\n    annualized_return: float = Field(..., description=\"\
+      Annualized return of the selected model.\")\n\n\ndef select_best_model(evaluate_models_input:\
+      \ EvaluateModelsOutput, **kwargs) -> SelectBestModelOutput:\n    \"\"\"Pick\
+      \ the model with the highest risk‑adjusted performance according to a predefined\
+      \ criterion.\n\n    Args:\n        evaluate_models_input: Input from the 'evaluate_models'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       SelectBestModelOutput: Object containing outputs for this node.\n  \
+      \  \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output with\
+      \ placeholder values\n    return SelectBestModelOutput(\n        best_model_identifier=\"\
+      \",\n        sharpe_ratio=0.0,\n        max_drawdown=0.0,\n        annualized_return=0.0,\n\
+      \    )"
     name: select_best_model
     nodes_depended_on:
     - evaluate_models
@@ -2577,10 +3375,66 @@ nodes:
     prompt: Identify the model with the best combination of Sharpe and low max drawdown
       (e.g., highest Sharpe subject to max drawdown < 15%). Return the model identifier
       and its key metrics.
+    shims: []
   setup_backtest_environment:
     agent: false
+    code_node_type: stub
     description: Configure a backtesting engine with data, model, risk controls, and
       transaction cost assumptions.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass AlignAndCleanDataOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ align_and_clean_data node outputs.\"\"\"\n    cleaned_data_csv: str = Field(...,\
+      \ description=\"CSV\\u2011formatted text of the cleaned master DataFrame after\
+      \ merging and imputation.\")\n    row_count: int = Field(..., description=\"\
+      Number of rows (dates) present in the cleaned DataFrame.\")\n    column_names:\
+      \ List[str] = Field(..., description=\"List of column names in the cleaned DataFrame,\
+      \ including the primary asset fields and all feature columns.\")\n    missing_values_filled:\
+      \ bool = Field(..., description=\"Indicates whether any missing values were\
+      \ forward\\u2011filled during the cleaning process (true if any fill occurred,\
+      \ false if none were needed).\")\n\n\nclass SelectBestModelOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for select_best_model node outputs.\"\"\"\n    best_model_identifier:\
+      \ str = Field(..., description=\"Identifier of the selected best model.\")\n\
+      \    sharpe_ratio: float = Field(..., description=\"Sharpe ratio of the selected\
+      \ model.\")\n    max_drawdown: float = Field(..., description=\"Maximum drawdown\
+      \ of the selected model.\")\n    annualized_return: float = Field(..., description=\"\
+      Annualized return of the selected model.\")\n\n\nclass DesignRiskControlsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for design_risk_controls node outputs.\"\"\"\n   \
+      \ risk_control_names: List[str] = Field(..., description=\"Identifier for each\
+      \ risk control (e.g., max_gross_exposure, var_99, max_asset_weight, daily_stop_loss,\
+      \ monthly_turnover).\")\n    risk_control_thresholds: List[float] = Field(...,\
+      \ description=\"Numeric threshold for each risk control in the same order as\
+      \ risk_control_names (e.g., 0.20 for 20% gross exposure, 0.02 for 2% VaR).\"\
+      )\n    risk_control_formulas: List[str] = Field(..., description=\"Short implementation\
+      \ formula or rule for each risk control (e.g., \\\"GrossExposure <= 0.20\\\"\
+      , \\\"VaR_99 <= 0.02\\\").\")\n\n\nclass SetupBacktestEnvironmentOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for setup_backtest_environment node outputs.\"\"\"\
+      \n    initial_capital: float = Field(..., description=\"Starting capital for\
+      \ the backtest (e.g., 1_000_000).\")\n    slippage_bps: float = Field(..., description=\"\
+      Slippage applied per trade expressed in basis points.\")\n    commission_pct:\
+      \ float = Field(..., description=\"Commission charged per trade as a percentage\
+      \ of trade value.\")\n    rebalance_frequency: str = Field(..., description=\"\
+      How often the portfolio is rebalanced (e.g., \\\"daily\\\", \\\"weekly\\\",\
+      \ \\\"monthly\\\").\")\n    risk_controls_summary: str = Field(..., description=\"\
+      List of risk\\u2011control rules that will be enforced during the simulation\
+      \ (e.g., \\\"max_gross_exposure 20%\\\", \\\"VaR 99% \\u2264 2%\\\", \\\"per_asset_weight\
+      \ \\u2264 5%\\\", \\\"daily_stop_loss 2%\\\", \\\"turnover \\u2264 30%/month\\\
+      \").\")\n    risk_control_enforcement_method: str = Field(..., description=\"\
+      Brief description of how risk controls are applied in the backtest engine (e.g.,\
+      \ \\\"pre\\u2011trade check that aborts orders violating any rule\\\").\")\n\
+      \n\ndef setup_backtest_environment(align_and_clean_data_input: AlignAndCleanDataOutput,\
+      \ select_best_model_input: SelectBestModelOutput, design_risk_controls_input:\
+      \ DesignRiskControlsOutput, **kwargs) -> SetupBacktestEnvironmentOutput:\n \
+      \   \"\"\"Configure a backtesting engine with data, model, risk controls, and\
+      \ transaction cost assumptions.\n\n    Args:\n        align_and_clean_data_input:\
+      \ Input from the 'align_and_clean_data' node.\n        select_best_model_input:\
+      \ Input from the 'select_best_model' node.\n        design_risk_controls_input:\
+      \ Input from the 'design_risk_controls' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        SetupBacktestEnvironmentOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ SetupBacktestEnvironmentOutput(\n        initial_capital=0.0,\n        slippage_bps=0.0,\n\
+      \        commission_pct=0.0,\n        rebalance_frequency=\"\",\n        risk_controls_summary=\"\
+      \",\n        risk_control_enforcement_method=\"\",\n    )"
     name: setup_backtest_environment
     nodes_depended_on:
     - align_and_clean_data
@@ -2701,10 +3555,44 @@ nodes:
     prompt: 'Describe the backtest settings: initial capital, slippage model (e.g.,
       0.5 bps), commission (0.1% per trade), rebalance frequency, and how risk controls
       are enforced during simulation.'
+    shims: []
   specify_model_architecture:
     agent: false
+    code_node_type: stub
     description: Choose a concrete predictive model type (e.g., Gradient Boosting
       + LSTM ensemble).
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass DefineStrategyObjectivesOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for define_strategy_objectives node outputs.\"\"\"\n    primary_tradable_asset:\
+      \ str = Field(..., description=\"Ticker or identifier of the main asset the\
+      \ strategy will trade\")\n    asset_universe: List[str] = Field(..., description=\"\
+      List of all assets (tickers or identifiers) considered in the strategy\")\n\
+      \    desired_annual_return_pct: float = Field(..., description=\"Target annualized\
+      \ return expressed as a percentage (e.g., 12.5 for 12.5%)\")\n    risk_tolerance_max_drawdown_pct:\
+      \ float = Field(..., description=\"Maximum acceptable drawdown expressed as\
+      \ a percentage of capital\")\n    holding_period_days: int = Field(..., description=\"\
+      Typical holding period for positions in days\")\n    regulatory_constraints:\
+      \ List[str] = Field(..., description=\"List of regulatory or compliance constraints\
+      \ affecting the strategy (e.g., short\\u2011selling bans, leverage limits)\"\
+      )\n\n\nclass SpecifyModelArchitectureOutput(BaseModel):\n    \"\"\"Pydantic\
+      \ model for specify_model_architecture node outputs.\"\"\"\n    model_ensemble_description:\
+      \ str = Field(..., description=\"A concise description of the chosen model ensemble\
+      \ architecture.\")\n    model_components: str = Field(..., description=\"List\
+      \ of individual model components (e.g., Gradient Boosting, LSTM).\")\n    input_shape:\
+      \ str = Field(..., description=\"The shape of the input data expected by the\
+      \ model.\")\n    prediction_combination_method: str = Field(..., description=\"\
+      How the predictions from individual components are combined (e.g., averaging,\
+      \ stacking).\")\n\n\ndef specify_model_architecture(define_strategy_objectives_input:\
+      \ DefineStrategyObjectivesOutput, **kwargs) -> SpecifyModelArchitectureOutput:\n\
+      \    \"\"\"Choose a concrete predictive model type (e.g., Gradient Boosting\
+      \ + LSTM ensemble).\n\n    Args:\n        define_strategy_objectives_input:\
+      \ Input from the 'define_strategy_objectives' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        SpecifyModelArchitectureOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ SpecifyModelArchitectureOutput(\n        model_ensemble_description=\"\",\n\
+      \        model_components=\"\",\n        input_shape=\"\",\n        prediction_combination_method=\"\
+      \",\n    )"
     name: specify_model_architecture
     nodes_depended_on:
     - define_strategy_objectives
@@ -2805,10 +3693,32 @@ nodes:
           boosting are averaged with LSTM predictions').
     prompt: Describe the selected model ensemble, including the algorithm for each
       component, input shape, and how predictions will be combined. Limit to 200 words.
+    shims: []
   split_dataset:
     agent: false
+    code_node_type: stub
     description: Partition the feature matrix into training, validation, and test
       sets using a time‑based split.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass AssembleFeatureMatrixOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for assemble_feature_matrix node outputs.\"\"\"\n\
+      \    feature_matrix_csv: str = Field(..., description=\"CSV\\u2011formatted\
+      \ string containing the complete feature matrix with a Date column, all merged\
+      \ feature columns, and a Target column for the next\\u2011day return.\")\n\n\
+      \nclass SplitDatasetOutput(BaseModel):\n    \"\"\"Pydantic model for split_dataset\
+      \ node outputs.\"\"\"\n    train_csv: str = Field(..., description=\"CSV formatted\
+      \ text containing the training subset of the feature matrix.\")\n    validation_csv:\
+      \ str = Field(..., description=\"CSV formatted text containing the validation\
+      \ subset of the feature matrix.\")\n    test_csv: str = Field(..., description=\"\
+      CSV formatted text containing the test subset of the feature matrix.\")\n\n\n\
+      def split_dataset(assemble_feature_matrix_input: AssembleFeatureMatrixOutput,\
+      \ **kwargs) -> SplitDatasetOutput:\n    \"\"\"Partition the feature matrix into\
+      \ training, validation, and test sets using a time‑based split.\n\n    Args:\n\
+      \        assemble_feature_matrix_input: Input from the 'assemble_feature_matrix'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       SplitDatasetOutput: Object containing outputs for this node.\n    \"\
+      \"\"\n    # TODO: Implement this function\n\n    # Return stub output with placeholder\
+      \ values\n    return SplitDatasetOutput(\n        train_csv=\"\",\n        validation_csv=\"\
+      \",\n        test_csv=\"\",\n    )"
     name: split_dataset
     nodes_depended_on:
     - assemble_feature_matrix
@@ -2894,10 +3804,46 @@ nodes:
     prompt: Using the cleaned matrix, allocate the earliest 60% of dates to training,
       the next 20% to validation, and the final 20% to testing. Provide three CSV
       snippets labeled Train, Validation, Test.
+    shims: []
   summarize_backtest_results:
     agent: false
+    code_node_type: stub
     description: Produce a concise performance summary with key statistics and charts
       description.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass RunBacktestOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for run_backtest node outputs.\"\"\"\n    backtest_success:\
+      \ bool = Field(..., description=\"True if the backtest completed without runtime\
+      \ errors, otherwise False.\")\n    equity_curve_csv: str = Field(..., description=\"\
+      CSV\\u2011formatted string of the daily equity curve. Columns: Date, Equity.\"\
+      )\n    trades_log_csv: str = Field(..., description=\"CSV\\u2011formatted string\
+      \ of all executed trades. Columns: Date, Symbol, Quantity, Price, PnL.\")\n\
+      \    summary_message: str = Field(..., description=\"Brief textual summary of\
+      \ backtest execution (e.g., runtime, any warnings).\")\n\n\nclass SummarizeBacktestResultsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for summarize_backtest_results node outputs.\"\"\"\
+      \n    annualized_return: float = Field(..., description=\"Annualized return\
+      \ of the strategy expressed as a decimal (e.g., 0.12 for 12%).\")\n    sharpe_ratio:\
+      \ float = Field(..., description=\"Annualized Sharpe ratio of the strategy.\"\
+      )\n    max_drawdown: float = Field(..., description=\"Maximum drawdown of the\
+      \ equity curve expressed as a decimal (e.g., -0.25 for -25%).\")\n    turnover:\
+      \ float = Field(..., description=\"Average portfolio turnover per period (e.g.,\
+      \ monthly turnover as a decimal).\")\n    win_rate: float = Field(..., description=\"\
+      Proportion of winning trades (range 0\\u20111).\")\n    histogram_description:\
+      \ str = Field(..., description=\"Markdown description of the histogram chart\
+      \ for daily returns, including key observations.\")\n    turnover_chart_description:\
+      \ str = Field(..., description=\"Markdown description of the turnover time\\\
+      u2011series chart, highlighting trends or spikes.\")\n    markdown_report: str\
+      \ = Field(..., description=\"Full markdown report containing the statistics\
+      \ and chart descriptions.\")\n\n\ndef summarize_backtest_results(run_backtest_input:\
+      \ RunBacktestOutput, **kwargs) -> SummarizeBacktestResultsOutput:\n    \"\"\"\
+      Produce a concise performance summary with key statistics and charts description.\n\
+      \n    Args:\n        run_backtest_input: Input from the 'run_backtest' node.\n\
+      \        **kwargs: Additional keyword arguments.\n\n    Returns:\n        SummarizeBacktestResultsOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ SummarizeBacktestResultsOutput(\n        annualized_return=0.0,\n        sharpe_ratio=0.0,\n\
+      \        max_drawdown=0.0,\n        turnover=0.0,\n        win_rate=0.0,\n \
+      \       histogram_description=\"\",\n        turnover_chart_description=\"\"\
+      ,\n        markdown_report=\"\",\n    )"
     name: summarize_backtest_results
     nodes_depended_on:
     - run_backtest
@@ -3047,10 +3993,50 @@ nodes:
     prompt: Calculate annualized return, Sharpe, max drawdown, turnover, and win rate
       from the equity curve. Also describe a histogram of daily returns and a turnover
       time series chart. Output as a markdown report.
+    shims: []
   train_models:
     agent: false
+    code_node_type: stub
     description: Perform hyperparameter optimization on the training set and fit each
       candidate model.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass SplitDatasetOutput(BaseModel):\n    \"\"\"Pydantic model for split_dataset\
+      \ node outputs.\"\"\"\n    train_csv: str = Field(..., description=\"CSV formatted\
+      \ text containing the training subset of the feature matrix.\")\n    validation_csv:\
+      \ str = Field(..., description=\"CSV formatted text containing the validation\
+      \ subset of the feature matrix.\")\n    test_csv: str = Field(..., description=\"\
+      CSV formatted text containing the test subset of the feature matrix.\")\n\n\n\
+      class DefineHyperparameterGridOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ define_hyperparameter_grid node outputs.\"\"\"\n    hyperparameter_grid_json:\
+      \ str = Field(..., description=\"A JSON\\u2011formatted string that contains\
+      \ the full hyperparameter search space for both Gradient Boosting and LSTM models.\"\
+      )\n    gb_hyperparameters: List[str] = Field(..., description=\"List of Gradient\
+      \ Boosting hyperparameter names (e.g., \\\"n_estimators\\\", \\\"learning_rate\\\
+      \").\")\n    gb_hyperparameter_ranges: List[str] = Field(..., description=\"\
+      List of corresponding ranges for each Gradient Boosting hyperparameter, expressed\
+      \ as strings (e.g., \\\"100-500\\\", \\\"0.01-0.1\\\"). Order matches `gb_hyperparameters`.\"\
+      )\n    lstm_hyperparameters: List[str] = Field(..., description=\"List of LSTM\
+      \ hyperparameter names (e.g., \\\"layers\\\", \\\"units\\\", \\\"dropout\\\"\
+      ).\")\n    lstm_hyperparameter_ranges: List[str] = Field(..., description=\"\
+      List of corresponding ranges for each LSTM hyperparameter, expressed as strings\
+      \ (e.g., \\\"1-3\\\", \\\"32-128\\\", \\\"0-0.3\\\"). Order matches `lstm_hyperparameters`.\"\
+      )\n\n\nclass TrainModelsOutput(BaseModel):\n    \"\"\"Pydantic model for train_models\
+      \ node outputs.\"\"\"\n    hyperparameters: List[str] = Field(..., description=\"\
+      List of hyperparameter combinations for each trained model.\")\n    validation_sharpe:\
+      \ List[float] = Field(..., description=\"List of Sharpe ratios calculated on\
+      \ the validation set for each trained model.\")\n    validation_rmse: List[float]\
+      \ = Field(..., description=\"List of Root Mean Squared Errors calculated on\
+      \ the validation set for each trained model.\")\n\n\ndef train_models(split_dataset_input:\
+      \ SplitDatasetOutput, define_hyperparameter_grid_input: DefineHyperparameterGridOutput,\
+      \ **kwargs) -> TrainModelsOutput:\n    \"\"\"Perform hyperparameter optimization\
+      \ on the training set and fit each candidate model.\n\n    Args:\n        split_dataset_input:\
+      \ Input from the 'split_dataset' node.\n        define_hyperparameter_grid_input:\
+      \ Input from the 'define_hyperparameter_grid' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        TrainModelsOutput: Object containing\
+      \ outputs for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n\
+      \    # Return stub output with placeholder values\n    return TrainModelsOutput(\n\
+      \        hyperparameters=[],\n        validation_sharpe=[],\n        validation_rmse=[],\n\
+      \    )"
     name: train_models
     nodes_depended_on:
     - split_dataset
@@ -3149,3 +4135,4 @@ nodes:
     prompt: Run a grid or random search over the defined hyperparameter space, training
       each candidate on the Train set and evaluating on Validation. Return a table
       with Hyperparameters, ValidationSharpe, ValidationRMSE.
+    shims: []

@@ -91,7 +91,7 @@ from pydantic import BaseModel, Field
 
 class ListDataSourcesOutput(BaseModel):
     """Pydantic model for list_data_sources node outputs."""
-    data_sources: str = Field(..., description="Plain list of data source descriptions, each including the dataset type, provider name, and update frequency (e.g., \"Price History: Bloomberg, daily\").")
+    data_sources: str = Field(..., description="Plain list of data source descriptions, each including the dataset type, provider name, and update frequency (e.g., "Price History: Bloomberg, daily").")
 
 
 class FetchRegimeIndicatorDataOutput(BaseModel):

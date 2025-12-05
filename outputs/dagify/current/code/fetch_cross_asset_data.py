@@ -1,3 +1,17 @@
+from ._fetch_cross_asset_data.extract_cross_asset_tickers import extract_cross_asset_tickers
+from ._fetch_cross_asset_data.get_primary_asset_date_range import get_primary_asset_date_range
+from ._fetch_cross_asset_data.download_close_prices import download_close_prices
+from ._fetch_cross_asset_data.create_unified_dataframe import create_unified_dataframe
+from ._fetch_cross_asset_data.slice_dataframe_by_dates import slice_dataframe_by_dates
+from ._fetch_cross_asset_data.dataframe_to_csv import dataframe_to_csv
+from ._fetch_cross_asset_data.extract_column_names import extract_column_names
+from ._fetch_cross_asset_data.extract_dataframe_metadata import extract_dataframe_metadata
+from ._fetch_cross_asset_data.persist_csv_data import persist_csv_data
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
 # -- PRD --
 # 1. BULLET: Parse the `data_sources` list produced by `list_data_sources` to extract all
 #   secondary‑asset entries (sector ETFs, commodities, FX pairs) while
@@ -112,18 +126,16 @@
 #           `return_output(output)` call.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
-from typing import List
 
 
 class ListDataSourcesOutput(BaseModel):
     """Pydantic model for list_data_sources node outputs."""
-    data_sources: str = Field(..., description="Plain list of data source descriptions, each including the dataset type, provider name, and update frequency (e.g., \"Price History: Bloomberg, daily\").")
+    data_sources: str = Field(..., description="Plain list of data source descriptions, each including the dataset type, provider name, and update frequency (e.g., "Price History: Bloomberg, daily").")
 
 
 class FetchCrossAssetDataOutput(BaseModel):
     """Pydantic model for fetch_cross_asset_data node outputs."""
-    csv_data: str = Field(..., description="CSV\u2011formatted string of the resulting table, with a \"Date\" column followed by a column for each cross\u2011asset's closing price.")
+    csv_data: str = Field(..., description="CSV\u2011formatted string of the resulting table, with a "Date" column followed by a column for each cross\u2011asset's closing price.")
     asset_names: List[str] = Field(..., description="List of cross\u2011asset identifiers (e.g., ticker symbols) that were fetched.")
     start_date: str = Field(..., description="ISO\u20118601 formatted first date of the returned series.")
     end_date: str = Field(..., description="ISO\u20118601 formatted last date of the returned series.")
@@ -140,13 +152,44 @@ def fetch_cross_asset_data(list_data_sources_input: ListDataSourcesOutput, **kwa
     Returns:
         FetchCrossAssetDataOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Parse data sources to extract cross-asset tickers
+    cross_asset_tickers: List[str] = extract_cross_asset_tickers(data_sources=list_data_sources_input.data_sources)
+    
+    # Determine date range from primary asset metadata if available
+    date_range: dict = get_primary_asset_date_range()
+    start_date = date_range.get('start_date')
+    end_date = date_range.get('end_date')
+    
+    # Download price data for each cross-asset ticker
+    series_dict: dict = {}
+    for ticker in cross_asset_tickers:
+        price_series = download_close_prices(ticker=ticker, start_date=start_date, end_date=end_date)
+        series_dict[ticker] = price_series
+    
+    # Create unified DataFrame with outer join
+    cross_df = create_unified_dataframe(series_dict=series_dict)
+    
+    # Apply date range filtering if dates were resolved
+    if start_date and end_date:
+        cross_df = slice_dataframe_by_dates(df=cross_df, start_date=start_date, end_date=end_date)
+    
+    # Convert to CSV and extract metadata
+    csv_data: str = dataframe_to_csv(df=cross_df)
+    asset_names: List[str] = extract_column_names(df=cross_df)
+    
+    # Derive final metadata from DataFrame
+    metadata: dict = extract_dataframe_metadata(df=cross_df)
+    final_start_date = metadata['start_date']
+    final_end_date = metadata['end_date']
+    row_count = metadata['row_count']
+    
+    # Persist data to temporary storage
+    file_path: str = persist_csv_data(csv_data=csv_data, workflow_context=kwargs.get('workflow_context', {}))
+    
     return FetchCrossAssetDataOutput(
-        csv_data="",
-        asset_names=[],
-        start_date="",
-        end_date="",
-        row_count=0,
+        csv_data=csv_data,
+        asset_names=asset_names,
+        start_date=final_start_date,
+        end_date=final_end_date,
+        row_count=row_count
     )

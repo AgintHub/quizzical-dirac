@@ -161,7 +161,7 @@ class FinalDeliverablesPackageOutput(BaseModel):
     """Pydantic model for final_deliverables_package node outputs."""
     manifest_files: List[str] = Field(..., description="Names of files included in the deliverable package, e.g., Strategy_Document.md, model_code.py, requirements.txt, config.yml, monitoring_plan.md.")
     manifest_descriptions: List[str] = Field(..., description="Brief description for each file in the manifest, in the same order as manifest_files.")
-    package_type: str = Field(..., description="Archive format of the package, e.g., \"zip\".")
+    package_type: str = Field(..., description="Archive format of the package, e.g., "zip".")
     is_ready_for_handoff: bool = Field(..., description="Indicates whether the package has been validated and is ready for hand\u2011off.")
 
 

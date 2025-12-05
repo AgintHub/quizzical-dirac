@@ -1,3 +1,20 @@
+from ._compute_cross_asset_features.load_and_parse_csv_with_datetime_index import load_and_parse_csv_with_datetime_index
+from ._compute_cross_asset_features.identify_primary_close_column import identify_primary_close_column
+from ._compute_cross_asset_features.identify_secondary_close_columns import identify_secondary_close_columns
+from ._compute_cross_asset_features.compute_log_returns import compute_log_returns
+from ._compute_cross_asset_features.compute_rolling_correlations import compute_rolling_correlations
+from ._compute_cross_asset_features.compute_price_spreads import compute_price_spreads
+from ._compute_cross_asset_features.combine_and_clean_features import combine_and_clean_features
+from ._compute_cross_asset_features.extract_dates_as_iso_strings import extract_dates_as_iso_strings
+from ._compute_cross_asset_features.build_asset_pairs_list import build_asset_pairs_list
+from ._compute_cross_asset_features.flatten_correlations import flatten_correlations
+from ._compute_cross_asset_features.flatten_price_spreads import flatten_price_spreads
+from ._compute_cross_asset_features.validate_output_lengths import validate_output_lengths
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
 # -- PRD --
 # 1. BULLET: Load the `cleaned_data_csv` string from the parent node
 #   `align_and_clean_data`, parse it into a pandas DataFrame with `Date`
@@ -135,8 +152,6 @@
 #           correlations, "price_spreads": price_spreads}`.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
-from typing import List
 
 
 class AlignAndCleanDataOutput(BaseModel):
@@ -150,7 +165,7 @@ class AlignAndCleanDataOutput(BaseModel):
 class ComputeCrossAssetFeaturesOutput(BaseModel):
     """Pydantic model for compute_cross_asset_features node outputs."""
     date: List[str] = Field(..., description="List of dates for the computed features (ISO\u20118601 strings, sorted ascending).")
-    asset_pairs: List[str] = Field(..., description="List of cross\u2011asset pair identifiers used for correlation and spread calculation, formatted as \"Primary-SecondaryTicker\".")
+    asset_pairs: List[str] = Field(..., description="List of cross\u2011asset pair identifiers used for correlation and spread calculation, formatted as "Primary-SecondaryTicker".")
     correlations: List[float] = Field(..., description="Flattened list of rolling 20\u2011day Pearson correlation values. Order is by date (earliest to latest) then by asset_pairs order.")
     price_spreads: List[float] = Field(..., description="Flattened list of daily price spread values (PrimaryClose - SecondaryClose). Order matches the correlations list.")
 
@@ -165,12 +180,63 @@ def compute_cross_asset_features(align_and_clean_data_input: AlignAndCleanDataOu
     Returns:
         ComputeCrossAssetFeaturesOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Load CSV data and parse into DataFrame with datetime index
+    df = load_and_parse_csv_with_datetime_index(csv_data=align_and_clean_data_input.cleaned_data_csv)
+    
+    # Identify primary and secondary asset columns
+    primary_close_col: str = identify_primary_close_column(columns=df.columns)
+    secondary_close_cols: List[str] = identify_secondary_close_columns(columns=df.columns, primary_col=primary_close_col)
+    
+    # Compute log returns for all assets
+    returns_df = compute_log_returns(price_df=df, close_columns=[primary_close_col] + secondary_close_cols)
+    
+    # Compute rolling 20-day correlations
+    corr_df = compute_rolling_correlations(
+        returns_df=returns_df,
+        primary_col=primary_close_col.replace('_Close', '_Ret'),
+        secondary_cols=[col.replace('_Close', '_Ret') for col in secondary_close_cols],
+        window=20
+    )
+    
+    # Compute price spreads
+    spread_df = compute_price_spreads(
+        price_df=df,
+        primary_col=primary_close_col,
+        secondary_cols=secondary_close_cols
+    )
+    
+    # Combine features and clean NaN values
+    features_df = combine_and_clean_features(corr_df=corr_df, spread_df=spread_df)
+    
+    # Extract dates as ISO-8601 strings
+    date: List[str] = extract_dates_as_iso_strings(df_index=features_df.index)
+    
+    # Build asset pairs list
+    asset_pairs: List[str] = build_asset_pairs_list(secondary_close_cols=secondary_close_cols)
+    
+    # Flatten correlations in proper order
+    correlations: List[float] = flatten_correlations(
+        features_df=features_df,
+        asset_pairs=asset_pairs
+    )
+    
+    # Flatten price spreads in matching order
+    price_spreads: List[float] = flatten_price_spreads(
+        features_df=features_df,
+        asset_pairs=asset_pairs
+    )
+    
+    # Validate output lengths
+    validate_output_lengths(
+        date=date,
+        asset_pairs=asset_pairs,
+        correlations=correlations,
+        price_spreads=price_spreads
+    )
+    
     return ComputeCrossAssetFeaturesOutput(
-        date=[],
-        asset_pairs=[],
-        correlations=[],
-        price_spreads=[],
+        date=date,
+        asset_pairs=asset_pairs,
+        correlations=correlations,
+        price_spreads=price_spreads
     )

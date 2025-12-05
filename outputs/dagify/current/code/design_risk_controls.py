@@ -116,7 +116,7 @@ class DesignRiskControlsOutput(BaseModel):
     """Pydantic model for design_risk_controls node outputs."""
     risk_control_names: List[str] = Field(..., description="Identifier for each risk control (e.g., max_gross_exposure, var_99, max_asset_weight, daily_stop_loss, monthly_turnover).")
     risk_control_thresholds: List[float] = Field(..., description="Numeric threshold for each risk control in the same order as risk_control_names (e.g., 0.20 for 20% gross exposure, 0.02 for 2% VaR).")
-    risk_control_formulas: List[str] = Field(..., description="Short implementation formula or rule for each risk control (e.g., \"GrossExposure <= 0.20\", \"VaR_99 <= 0.02\").")
+    risk_control_formulas: List[str] = Field(..., description="Short implementation formula or rule for each risk control (e.g., "GrossExposure <= 0.20", "VaR_99 <= 0.02").")
 
 
 def design_risk_controls(select_best_model_input: SelectBestModelOutput, define_strategy_objectives_input: DefineStrategyObjectivesOutput, **kwargs) -> DesignRiskControlsOutput:

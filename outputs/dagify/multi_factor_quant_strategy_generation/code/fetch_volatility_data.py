@@ -1,3 +1,18 @@
+from ._fetch_volatility_data.parse_implied_vol_source import parse_implied_vol_source
+from ._fetch_volatility_data.fetch_primary_asset_prices import fetch_primary_asset_prices
+from ._fetch_volatility_data.calculate_realized_volatility import calculate_realized_volatility
+from ._fetch_volatility_data.fetch_implied_volatility_data import fetch_implied_volatility_data
+from ._fetch_volatility_data.merge_volatility_data import merge_volatility_data
+from ._fetch_volatility_data.validate_volatility_data import validate_volatility_data
+from ._fetch_volatility_data.extract_dates_list import extract_dates_list
+from ._fetch_volatility_data.extract_realized_vol_list import extract_realized_vol_list
+from ._fetch_volatility_data.extract_implied_vol_list import extract_implied_vol_list
+from ._fetch_volatility_data.log_volatility_data_summary import log_volatility_data_summary
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
 # -- PRD --
 # 1. BULLET: Parse the output of the parent node **list_data_sources** to extract the
 #   provider name, dataset type, and update frequency for any
@@ -99,13 +114,11 @@
 #           to {dates[-1]}, source={implied_vol_source}")`.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
-from typing import List
 
 
 class ListDataSourcesOutput(BaseModel):
     """Pydantic model for list_data_sources node outputs."""
-    data_sources: str = Field(..., description="Plain list of data source descriptions, each including the dataset type, provider name, and update frequency (e.g., \"Price History: Bloomberg, daily\").")
+    data_sources: str = Field(..., description="Plain list of data source descriptions, each including the dataset type, provider name, and update frequency (e.g., "Price History: Bloomberg, daily").")
 
 
 class FetchVolatilityDataOutput(BaseModel):
@@ -125,11 +138,45 @@ def fetch_volatility_data(list_data_sources_input: ListDataSourcesOutput, **kwar
     Returns:
         FetchVolatilityDataOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Parse data sources to extract implied volatility provider information
+    implied_vol_source: str = parse_implied_vol_source(data_sources=list_data_sources_input.data_sources)
+    
+    # Fetch primary asset price data using same parameters as fetch_price_data
+    price_df = fetch_primary_asset_prices(data_sources=list_data_sources_input.data_sources)
+    
+    # Calculate daily log returns and 30-day rolling realized volatility
+    realized_vol_df = calculate_realized_volatility(price_df=price_df, window=30)
+    
+    # Retrieve implied volatility index series from identified provider
+    implied_vol_df = fetch_implied_volatility_data(
+        provider_source=implied_vol_source,
+        start_date=realized_vol_df['Date'].min(),
+        end_date=realized_vol_df['Date'].max()
+    )
+    
+    # Merge realized and implied volatility data on date
+    merged_df = merge_volatility_data(
+        realized_df=realized_vol_df,
+        implied_df=implied_vol_df
+    )
+    
+    # Validate merged series for completeness and data integrity
+    validated_df = validate_volatility_data(merged_df=merged_df)
+    
+    # Extract output lists from validated DataFrame
+    dates_list: List[str] = extract_dates_list(df=validated_df)
+    realized_vol_list: List[float] = extract_realized_vol_list(df=validated_df)
+    implied_vol_list: List[float] = extract_implied_vol_list(df=validated_df)
+    
+    # Log summary for auditability
+    log_volatility_data_summary(
+        dates=dates_list,
+        source=implied_vol_source,
+        row_count=len(dates_list)
+    )
+    
     return FetchVolatilityDataOutput(
-        dates=[],
-        realized_vol=[],
-        implied_vol=[],
+        dates=dates_list,
+        realized_vol=realized_vol_list,
+        implied_vol=implied_vol_list
     )

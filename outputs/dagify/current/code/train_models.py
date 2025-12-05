@@ -112,10 +112,10 @@ class SplitDatasetOutput(BaseModel):
 class DefineHyperparameterGridOutput(BaseModel):
     """Pydantic model for define_hyperparameter_grid node outputs."""
     hyperparameter_grid_json: str = Field(..., description="A JSON\u2011formatted string that contains the full hyperparameter search space for both Gradient Boosting and LSTM models.")
-    gb_hyperparameters: List[str] = Field(..., description="List of Gradient Boosting hyperparameter names (e.g., \"n_estimators\", \"learning_rate\").")
-    gb_hyperparameter_ranges: List[str] = Field(..., description="List of corresponding ranges for each Gradient Boosting hyperparameter, expressed as strings (e.g., \"100-500\", \"0.01-0.1\"). Order matches `gb_hyperparameters`.")
-    lstm_hyperparameters: List[str] = Field(..., description="List of LSTM hyperparameter names (e.g., \"layers\", \"units\", \"dropout\").")
-    lstm_hyperparameter_ranges: List[str] = Field(..., description="List of corresponding ranges for each LSTM hyperparameter, expressed as strings (e.g., \"1-3\", \"32-128\", \"0-0.3\"). Order matches `lstm_hyperparameters`.")
+    gb_hyperparameters: List[str] = Field(..., description="List of Gradient Boosting hyperparameter names (e.g., "n_estimators", "learning_rate").")
+    gb_hyperparameter_ranges: List[str] = Field(..., description="List of corresponding ranges for each Gradient Boosting hyperparameter, expressed as strings (e.g., "100-500", "0.01-0.1"). Order matches `gb_hyperparameters`.")
+    lstm_hyperparameters: List[str] = Field(..., description="List of LSTM hyperparameter names (e.g., "layers", "units", "dropout").")
+    lstm_hyperparameter_ranges: List[str] = Field(..., description="List of corresponding ranges for each LSTM hyperparameter, expressed as strings (e.g., "1-3", "32-128", "0-0.3"). Order matches `lstm_hyperparameters`.")
 
 
 class TrainModelsOutput(BaseModel):

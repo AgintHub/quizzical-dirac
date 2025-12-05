@@ -1,3 +1,19 @@
+from ._compute_volatility_features.parse_csv_to_dataframe import parse_csv_to_dataframe
+from ._compute_volatility_features.validate_required_columns import validate_required_columns
+from ._compute_volatility_features.compute_log_returns import compute_log_returns
+from ._compute_volatility_features.fit_garch_model import fit_garch_model
+from ._compute_volatility_features.generate_garch_forecasts import generate_garch_forecasts
+from ._compute_volatility_features.calculate_implied_vol_delta import calculate_implied_vol_delta
+from ._compute_volatility_features.align_volatility_series import align_volatility_series
+from ._compute_volatility_features.extract_date_strings import extract_date_strings
+from ._compute_volatility_features.extract_float_list import extract_float_list
+from ._compute_volatility_features.log_volatility_success import log_volatility_success
+from ._compute_volatility_features.handle_volatility_feature_error import handle_volatility_feature_error
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
 # -- PRD --
 # 1. BULLET: Parse the `cleaned_data_csv` string from the `align_and_clean_data` output
 #   into a Pandas DataFrame, ensuring the `Date` column is converted to
@@ -105,8 +121,6 @@
 #           define a lightweight exception class for clarity.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
-from typing import List
 
 
 class AlignAndCleanDataOutput(BaseModel):
@@ -134,11 +148,42 @@ def compute_volatility_features(align_and_clean_data_input: AlignAndCleanDataOut
     Returns:
         ComputeVolatilityFeaturesOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
-    return ComputeVolatilityFeaturesOutput(
-        dates=[],
-        garch_forecasts=[],
-        implied_vol_delta_5d=[],
-    )
+    try:
+        # Parse cleaned CSV data into DataFrame with proper datetime index
+        df = parse_csv_to_dataframe(csv_string=align_and_clean_data_input.cleaned_data_csv)
+        
+        # Validate presence of required columns
+        validate_required_columns(dataframe=df, required_columns=['Close', 'ImpliedVol'])
+        
+        # Compute daily log returns
+        df_with_returns = compute_log_returns(dataframe=df, price_column='Close')
+        
+        # Fit GARCH(1,1) model to log returns
+        garch_model = fit_garch_model(returns_series=df_with_returns['LogReturn'])
+        
+        # Generate one-step-ahead volatility forecasts
+        vol_forecasts = generate_garch_forecasts(fitted_model=garch_model, start_date=df_with_returns.index[0])
+        
+        # Calculate 5-day implied volatility delta
+        imp_vol_delta = calculate_implied_vol_delta(implied_vol_series=df_with_returns['ImpliedVol'], lag_days=5)
+        
+        # Align forecast and delta series, dropping NaN values
+        aligned_data = align_volatility_series(garch_forecasts=vol_forecasts, implied_vol_delta=imp_vol_delta)
+        
+        # Extract final output lists
+        output_dates: List[str] = extract_date_strings(datetime_index=aligned_data.index)
+        output_garch_forecasts: List[float] = extract_float_list(series=aligned_data['GARCHForecast'])
+        output_implied_vol_delta: List[float] = extract_float_list(series=aligned_data['ImpliedVolDelta'])
+        
+        # Log successful completion
+        log_volatility_success(num_dates=len(output_dates))
+        
+        return ComputeVolatilityFeaturesOutput(
+            dates=output_dates,
+            garch_forecasts=output_garch_forecasts,
+            implied_vol_delta_5d=output_implied_vol_delta
+        )
+        
+    except Exception as e:
+        # Handle errors with detailed logging and custom exception
+        handle_volatility_feature_error(error=e, context={'input_columns': align_and_clean_data_input.column_names, 'row_count': align_and_clean_data_input.row_count})

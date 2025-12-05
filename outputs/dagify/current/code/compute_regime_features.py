@@ -1,3 +1,16 @@
+from ._compute_regime_features.parse_csv_to_dataframe import parse_csv_to_dataframe
+from ._compute_regime_features.validate_required_columns import validate_required_columns
+from ._compute_regime_features.compute_vix_threshold import compute_vix_threshold
+from ._compute_regime_features.create_regime_labels import create_regime_labels
+from ._compute_regime_features.create_pmi_flags import create_pmi_flags
+from ._compute_regime_features.extract_date_list import extract_date_list
+from ._compute_regime_features.extract_regime_labels_list import extract_regime_labels_list
+from ._compute_regime_features.extract_pmi_flags_list import extract_pmi_flags_list
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
 # -- PRD --
 # 1. BULLET: Load the `cleaned_data_csv` string from the `align_and_clean_data` node,
 #   parse it into a pandas DataFrame preserving the original chronological
@@ -73,8 +86,6 @@
 #           pmi_flags}`.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
-from typing import List
 
 
 class AlignAndCleanDataOutput(BaseModel):
@@ -88,7 +99,7 @@ class AlignAndCleanDataOutput(BaseModel):
 class ComputeRegimeFeaturesOutput(BaseModel):
     """Pydantic model for compute_regime_features node outputs."""
     dates: List[str] = Field(..., description="List of dates (ISO\u20118601 strings) for which regime signals are generated.")
-    regime_labels: List[str] = Field(..., description="Corresponding regime label for each date: either \"high_vol\" or \"low_vol\".")
+    regime_labels: List[str] = Field(..., description="Corresponding regime label for each date: either "high_vol" or "low_vol".")
     pmi_flags: List[bool] = Field(..., description="Binary flag indicating PMI direction for each date: true for positive PMI, false for negative PMI.")
 
 
@@ -102,11 +113,28 @@ def compute_regime_features(align_and_clean_data_input: AlignAndCleanDataOutput,
     Returns:
         ComputeRegimeFeaturesOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Load and parse the CSV data into a DataFrame
+    df = parse_csv_to_dataframe(csv_string=align_and_clean_data_input.cleaned_data_csv)
+    
+    # Validate required columns are present
+    validate_required_columns(dataframe=df, required_columns=["VIX", "PMI"])
+    
+    # Compute the 75th percentile threshold for VIX
+    vix_threshold: float = compute_vix_threshold(vix_series=df["VIX"])
+    
+    # Create regime labels based on VIX threshold
+    df = create_regime_labels(dataframe=df, vix_threshold=vix_threshold)
+    
+    # Create PMI flags based on positive/negative PMI values
+    df = create_pmi_flags(dataframe=df)
+    
+    # Extract ordered lists for output
+    dates: List[str] = extract_date_list(dataframe=df)
+    regime_labels: List[str] = extract_regime_labels_list(dataframe=df)
+    pmi_flags: List[bool] = extract_pmi_flags_list(dataframe=df)
+    
     return ComputeRegimeFeaturesOutput(
-        dates=[],
-        regime_labels=[],
-        pmi_flags=[],
+        dates=dates,
+        regime_labels=regime_labels,
+        pmi_flags=pmi_flags
     )

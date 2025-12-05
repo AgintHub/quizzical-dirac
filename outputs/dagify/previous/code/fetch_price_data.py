@@ -1,0 +1,180 @@
+# -- PRD --
+# 1. BULLET: Parse the `list_data_sources` output to locate the entry that describes the
+#   primary asset's price history (e.g., "Price History: Bloomberg, daily,
+#   ticker=SPY").
+#   Reason: The downstream fetch must know which provider, ticker, and frequency to
+#           query; the parent node only supplies a plain list of strings.
+#   Impact: HIGH
+#   Complexity: MEDIUM
+#   Method: Use regex pattern matching to extract provider name, ticker symbol, and
+#           frequency. Store these in variables `provider`, `ticker`,
+#           `frequency`. Validate that `frequency` equals "daily"; if not,
+#           raise a configuration error.
+# 
+# -----------------------------------------------------------------------------
+# 2. BULLET: Map the identified provider to a concrete data‑access library or API client
+#   (e.g., Bloomberg → `blpapi`, Yahoo Finance → `yfinance`, Alpha Vantage →
+#   HTTP REST).
+#   Reason: Different providers have distinct authentication, rate‑limit, and
+#           data‑format requirements; abstracting this mapping enables a
+#           modular fetch implementation.
+#   Impact: HIGH
+#   Complexity: MEDIUM
+#   Method: Create a provider‑lookup dictionary. For each supported provider, define:
+#           authentication method, request function signature, and any
+#           required third‑party SDK. If the provider is unsupported,
+#           fallback to a generic CSV download if a URL is supplied.
+# 
+# -----------------------------------------------------------------------------
+# 3. BULLET: Compute the exact 10‑year date window: `end_date = yesterday (UTC)`,
+#   `start_date = end_date - 10 years`. Adjust for market calendar (exclude
+#   weekends/holidays).
+#   Reason: The prompt explicitly requests the last 10 years of daily data; precise
+#           bounds avoid off‑by‑one errors and ensure alignment with
+#           downstream calendar merging.
+#   Impact: MEDIUM
+#   Complexity: LOW
+#   Method: Use Python's `pandas.tseries.offsets.DateOffset(years=10)` or `datetime`
+#           arithmetic. Generate a list of trading days via
+#           `pandas_market_calendars` for the primary asset's exchange.
+# 
+# -----------------------------------------------------------------------------
+# 4. BULLET: Issue the data request to the selected provider using the determined
+#   `ticker`, `start_date`, `end_date`, and daily frequency. Implement
+#   pagination or batch requests if the provider limits the number of rows
+#   per call.
+#   Reason: Historical OHLCV data for 10 years can exceed API limits; handling
+#           pagination guarantees complete retrieval.
+#   Impact: HIGH
+#   Complexity: MEDIUM
+#   Method: For Bloomberg: use `blpapi` with `HistoricalDataRequest`. For Yahoo
+#           Finance: call `yfinance.download(ticker, start=start_date,
+#           end=end_date, interval='1d')`. Loop until all dates are
+#           received, respecting rate‑limit sleep intervals (e.g., 1‑second
+#           pause).
+# 
+# -----------------------------------------------------------------------------
+# 5. BULLET: Normalize the raw response into a canonical DataFrame with columns exactly
+#   named `Date`, `Open`, `High`, `Low`, `Close`, `Volume`. Convert all
+#   numeric columns to `float` (price) and `int` (volume). Ensure `Date` is a
+#   `datetime64[ns]` object.
+#   Reason: Downstream nodes expect clean, consistently typed arrays; mismatched column
+#           names or dtypes cause merge failures later.
+#   Impact: HIGH
+#   Complexity: LOW
+#   Method: Rename columns using a mapping dict, e.g., `{'Adj Close': 'Close'}` if
+#           present. Apply `astype(float)` to price columns and
+#           `astype(int)` to volume. Use `pd.to_datetime` for dates, then
+#           `dt.strftime('%Y-%m-%d')` for string output.
+# 
+# -----------------------------------------------------------------------------
+# 6. BULLET: Handle missing trading days (e.g., holidays) by ensuring the DataFrame
+#   contains a row for every business day in the date window. If a date is
+#   missing, insert a row with `NaN` values for OHLCV.
+#   Reason: Later alignment (`align_and_clean_data`) assumes a common calendar;
+#           explicit missing rows allow forward‑fill logic to operate
+#           correctly.
+#   Impact: MEDIUM
+#   Complexity: MEDIUM
+#   Method: Create a full date range `pd.date_range(start_date, end_date, freq='B')`.
+#           Reindex the DataFrame to this index, using `np.nan` for missing
+#           values.
+# 
+# -----------------------------------------------------------------------------
+# 7. BULLET: Sort the DataFrame by `Date` ascending and drop any rows that still contain
+#   `NaN` after reindexing if the business rule is to exclude incomplete
+#   days.
+#   Reason: Consistent chronological order is required for time‑series feature
+#           engineering; eliminating rows with missing data simplifies
+#           later processing.
+#   Impact: MEDIUM
+#   Complexity: LOW
+#   Method: `df.sort_values('Date', inplace=True)`. Optionally
+#           `df.dropna(inplace=True)` if policy dictates; otherwise keep
+#           NaNs for forward‑fill later.
+# 
+# -----------------------------------------------------------------------------
+# 8. BULLET: Extract the columns into the output list structures preserving the
+#   chronological order: `dates =
+#   df['Date'].dt.strftime('%Y-%m-%d').tolist()`, `opens =
+#   df['Open'].tolist()`, etc.
+#   Reason: The node's output schema demands separate lists rather than a tabular
+#           object; converting now avoids extra transformations downstream.
+#   Impact: HIGH
+#   Complexity: LOW
+#   Method: Use pandas `.tolist()` on each column. Cast `volumes` explicitly to `int`
+#           with `df['Volume'].astype(int).tolist()`.
+# 
+# -----------------------------------------------------------------------------
+# 9. BULLET: Validate the final payload: check that `len(dates) == len(opens) == …` and
+#   that the count matches the expected number of trading days (~252 * 10 =
+#   2520). Log a warning if the count deviates by more than 2%.
+#   Reason: Early detection of incomplete fetch prevents silent data quality issues
+#           that would cascade into model training.
+#   Impact: HIGH
+#   Complexity: LOW
+#   Method: Compute `expected_days = len(pd.date_range(start_date, end_date,
+#           freq='B'))`. Compare lengths; if `abs(len(dates) -
+#           expected_days) / expected_days > 0.02`, emit a logger warning.
+# 
+# -----------------------------------------------------------------------------
+# 10. BULLET: Record provenance metadata (provider name, ticker, request timestamps, any
+#   adjustments made) into a structured log file for auditability.
+#   Reason: Traceability is essential for compliance and reproducibility of the quant
+#           pipeline.
+#   Impact: MEDIUM
+#   Complexity: LOW
+#   Method: Append a JSON entry to `data_fetch_log.json` with fields `provider`,
+#           `ticker`, `start_date`, `end_date`, `row_count`, `adjustments`.
+# 
+# -----------------------------------------------------------------------------
+# 11. BULLET: Return the six output fields (`dates`, `opens`, `highs`, `lows`, `closes`,
+#   `volumes`) as defined in the node's output structure.
+#   Reason: Completes the node's contract, enabling downstream nodes to consume the
+#           data.
+#   Impact: HIGH
+#   Complexity: LOW
+#   Method: Package the lists into a dictionary matching the schema and output via the
+#           execution framework.
+# -- END PRD --
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
+class ListDataSourcesOutput(BaseModel):
+    """Pydantic model for list_data_sources node outputs."""
+    data_sources: str = Field(..., description="Plain list of data source descriptions, each including the dataset type, provider name, and update frequency (e.g., \"Price History: Bloomberg, daily\").")
+
+
+class FetchPriceDataOutput(BaseModel):
+    """Pydantic model for fetch_price_data node outputs."""
+    dates: List[str] = Field(..., description="List of dates for the price data.")
+    opens: List[float] = Field(..., description="List of opening prices for each date.")
+    highs: List[float] = Field(..., description="List of high prices for each date.")
+    lows: List[float] = Field(..., description="List of low prices for each date.")
+    closes: List[float] = Field(..., description="List of closing prices for each date.")
+    volumes: List[int] = Field(..., description="List of trading volumes for each date.")
+
+
+def fetch_price_data(list_data_sources_input: ListDataSourcesOutput, **kwargs) -> FetchPriceDataOutput:
+    """Download historical price series for the primary asset and any directly traded instruments.
+
+    Args:
+        list_data_sources_input: Input from the 'list_data_sources' node.
+        **kwargs: Additional keyword arguments.
+
+    Returns:
+        FetchPriceDataOutput: Object containing outputs for this node.
+    """
+    # TODO: Implement this function
+
+    # Return stub output with placeholder values
+    return FetchPriceDataOutput(
+        dates=[],
+        opens=[],
+        highs=[],
+        lows=[],
+        closes=[],
+        volumes=[],
+    )

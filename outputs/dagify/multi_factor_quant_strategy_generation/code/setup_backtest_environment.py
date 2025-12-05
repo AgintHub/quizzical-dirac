@@ -134,7 +134,7 @@ class DesignRiskControlsOutput(BaseModel):
     """Pydantic model for design_risk_controls node outputs."""
     risk_control_names: List[str] = Field(..., description="Identifier for each risk control (e.g., max_gross_exposure, var_99, max_asset_weight, daily_stop_loss, monthly_turnover).")
     risk_control_thresholds: List[float] = Field(..., description="Numeric threshold for each risk control in the same order as risk_control_names (e.g., 0.20 for 20% gross exposure, 0.02 for 2% VaR).")
-    risk_control_formulas: List[str] = Field(..., description="Short implementation formula or rule for each risk control (e.g., \"GrossExposure <= 0.20\", \"VaR_99 <= 0.02\").")
+    risk_control_formulas: List[str] = Field(..., description="Short implementation formula or rule for each risk control (e.g., "GrossExposure <= 0.20", "VaR_99 <= 0.02").")
 
 
 class SetupBacktestEnvironmentOutput(BaseModel):
@@ -142,9 +142,9 @@ class SetupBacktestEnvironmentOutput(BaseModel):
     initial_capital: float = Field(..., description="Starting capital for the backtest (e.g., 1_000_000).")
     slippage_bps: float = Field(..., description="Slippage applied per trade expressed in basis points.")
     commission_pct: float = Field(..., description="Commission charged per trade as a percentage of trade value.")
-    rebalance_frequency: str = Field(..., description="How often the portfolio is rebalanced (e.g., \"daily\", \"weekly\", \"monthly\").")
-    risk_controls_summary: str = Field(..., description="List of risk\u2011control rules that will be enforced during the simulation (e.g., \"max_gross_exposure 20%\", \"VaR 99% \u2264 2%\", \"per_asset_weight \u2264 5%\", \"daily_stop_loss 2%\", \"turnover \u2264 30%/month\").")
-    risk_control_enforcement_method: str = Field(..., description="Brief description of how risk controls are applied in the backtest engine (e.g., \"pre\u2011trade check that aborts orders violating any rule\").")
+    rebalance_frequency: str = Field(..., description="How often the portfolio is rebalanced (e.g., "daily", "weekly", "monthly").")
+    risk_controls_summary: str = Field(..., description="List of risk\u2011control rules that will be enforced during the simulation (e.g., "max_gross_exposure 20%", "VaR 99% \u2264 2%", "per_asset_weight \u2264 5%", "daily_stop_loss 2%", "turnover \u2264 30%/month").")
+    risk_control_enforcement_method: str = Field(..., description="Brief description of how risk controls are applied in the backtest engine (e.g., "pre\u2011trade check that aborts orders violating any rule").")
 
 
 def setup_backtest_environment(align_and_clean_data_input: AlignAndCleanDataOutput, select_best_model_input: SelectBestModelOutput, design_risk_controls_input: DesignRiskControlsOutput, **kwargs) -> SetupBacktestEnvironmentOutput:

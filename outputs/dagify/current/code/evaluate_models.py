@@ -1,3 +1,25 @@
+from ._evaluate_models.parse_csv_to_dataframe import parse_csv_to_dataframe
+from ._evaluate_models.validate_test_dataframe_columns import validate_test_dataframe_columns
+from ._evaluate_models.extract_model_identifiers_and_hyperparams import extract_model_identifiers_and_hyperparams
+from ._evaluate_models.load_trained_models import load_trained_models
+from ._evaluate_models.generate_test_predictions import generate_test_predictions
+from ._evaluate_models.convert_predictions_to_positions import convert_predictions_to_positions
+from ._evaluate_models.compute_portfolio_returns import compute_portfolio_returns
+from ._evaluate_models.calculate_sharpe_ratios import calculate_sharpe_ratios
+from ._evaluate_models.calculate_annualized_returns import calculate_annualized_returns
+from ._evaluate_models.calculate_max_drawdowns import calculate_max_drawdowns
+from ._evaluate_models.calculate_turnovers import calculate_turnovers
+from ._evaluate_models.calculate_hit_rates import calculate_hit_rates
+from ._evaluate_models.calculate_composite_rankings import calculate_composite_rankings
+from ._evaluate_models.validate_output_consistency import validate_output_consistency
+from ._evaluate_models.log_evaluation_summary import log_evaluation_summary
+
+from pydantic import BaseModel, Field
+from typing import List
+from typing import Dict
+from typing import Any
+
+
 # -- PRD --
 # 1. BULLET: Parse `split_dataset` output CSV strings (`train_csv`, `validation_csv`,
 #   `test_csv`) into three Pandas DataFrames with proper dtypes (Date →
@@ -139,8 +161,6 @@
 #           f‑interpolation.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
-from typing import List
 
 
 class TrainModelsOutput(BaseModel):
@@ -179,15 +199,71 @@ def evaluate_models(train_models_input: TrainModelsOutput, split_dataset_input: 
     Returns:
         EvaluateModelsOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Parse CSV strings into DataFrames with proper dtypes
+    train_df = parse_csv_to_dataframe(csv_string=split_dataset_input.train_csv)
+    validation_df = parse_csv_to_dataframe(csv_string=split_dataset_input.validation_csv)
+    test_df = parse_csv_to_dataframe(csv_string=split_dataset_input.test_csv)
+    
+    # Validate test DataFrame has required columns
+    validate_test_dataframe_columns(test_df=test_df)
+    
+    # Extract model identifiers and parse hyperparameters
+    model_mapping: Dict[str, Dict] = extract_model_identifiers_and_hyperparams(hyperparameters=train_models_input.hyperparameters)
+    
+    # Load trained models from storage
+    loaded_models: Dict[str, Any] = load_trained_models(model_ids=list(model_mapping.keys()))
+    
+    # Generate predictions for each valid model
+    predictions: Dict[str, Any] = generate_test_predictions(models=loaded_models, test_df=test_df)
+    
+    # Convert predictions to position signals
+    positions: Dict[str, Any] = convert_predictions_to_positions(predictions=predictions)
+    
+    # Compute daily portfolio returns for each model
+    daily_returns: Dict[str, Any] = compute_portfolio_returns(positions=positions, test_df=test_df)
+    
+    # Calculate performance metrics for each model
+    sharpe_ratios: List[float] = calculate_sharpe_ratios(daily_returns=daily_returns)
+    annualized_returns: List[float] = calculate_annualized_returns(daily_returns=daily_returns)
+    max_drawdowns: List[float] = calculate_max_drawdowns(daily_returns=daily_returns)
+    turnovers: List[float] = calculate_turnovers(positions=positions)
+    hit_rates: List[float] = calculate_hit_rates(daily_returns=daily_returns)
+    
+    # Calculate composite ranking scores
+    ranks: List[int] = calculate_composite_rankings(
+        sharpe_ratios=sharpe_ratios,
+        max_drawdowns=max_drawdowns,
+        annualized_returns=annualized_returns
+    )
+    
+    # Get candidate model identifiers in order
+    candidate_models: List[str] = list(loaded_models.keys())
+    
+    # Validate final output
+    validate_output_consistency(
+        candidate_models=candidate_models,
+        sharpe_ratios=sharpe_ratios,
+        annualized_returns=annualized_returns,
+        max_drawdowns=max_drawdowns,
+        turnovers=turnovers,
+        hit_rates=hit_rates,
+        ranks=ranks
+    )
+    
+    # Log evaluation summary
+    log_evaluation_summary(
+        candidate_models=candidate_models,
+        sharpe_ratios=sharpe_ratios,
+        max_drawdowns=max_drawdowns,
+        ranks=ranks
+    )
+    
     return EvaluateModelsOutput(
-        candidate_models=[],
-        sharpe_ratios=[],
-        annualized_returns=[],
-        max_drawdowns=[],
-        turnovers=[],
-        hit_rates=[],
-        ranks=[],
+        candidate_models=candidate_models,
+        sharpe_ratios=sharpe_ratios,
+        annualized_returns=annualized_returns,
+        max_drawdowns=max_drawdowns,
+        turnovers=turnovers,
+        hit_rates=hit_rates,
+        ranks=ranks
     )

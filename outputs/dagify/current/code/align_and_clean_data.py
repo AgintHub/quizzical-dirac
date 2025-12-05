@@ -112,7 +112,7 @@ class FetchPriceDataOutput(BaseModel):
 
 class FetchCrossAssetDataOutput(BaseModel):
     """Pydantic model for fetch_cross_asset_data node outputs."""
-    csv_data: str = Field(..., description="CSV\u2011formatted string of the resulting table, with a \"Date\" column followed by a column for each cross\u2011asset's closing price.")
+    csv_data: str = Field(..., description="CSV\u2011formatted string of the resulting table, with a "Date" column followed by a column for each cross\u2011asset's closing price.")
     asset_names: List[str] = Field(..., description="List of cross\u2011asset identifiers (e.g., ticker symbols) that were fetched.")
     start_date: str = Field(..., description="ISO\u20118601 formatted first date of the returned series.")
     end_date: str = Field(..., description="ISO\u20118601 formatted last date of the returned series.")

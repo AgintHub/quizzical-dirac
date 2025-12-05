@@ -1,3 +1,20 @@
+from ._assemble_feature_matrix.load_price_action_csv import load_price_action_csv
+from ._assemble_feature_matrix.load_cross_asset_csv import load_cross_asset_csv
+from ._assemble_feature_matrix.load_regime_csv import load_regime_csv
+from ._assemble_feature_matrix.load_volatility_csv import load_volatility_csv
+from ._assemble_feature_matrix.standardize_date_index import standardize_date_index
+from ._assemble_feature_matrix.inner_join_on_date import inner_join_on_date
+from ._assemble_feature_matrix.resolve_duplicate_columns import resolve_duplicate_columns
+from ._assemble_feature_matrix.compute_next_day_return_target import compute_next_day_return_target
+from ._assemble_feature_matrix.sort_and_reset_index import sort_and_reset_index
+from ._assemble_feature_matrix.validate_feature_matrix import validate_feature_matrix
+from ._assemble_feature_matrix.serialize_to_csv_string import serialize_to_csv_string
+from ._assemble_feature_matrix.log_feature_matrix_summary import log_feature_matrix_summary
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
 # -- PRD --
 # 1. BULLET: Load the CSV payloads from each parent node (price_action, cross_asset,
 #   regime, volatility) into in‑memory data frames using a robust CSV parser
@@ -101,8 +118,6 @@
 #           output.
 # -- END PRD --
 
-from pydantic import BaseModel, Field
-from typing import List
 
 
 class ComputePriceActionFeaturesOutput(BaseModel):
@@ -115,7 +130,7 @@ class ComputePriceActionFeaturesOutput(BaseModel):
 class ComputeCrossAssetFeaturesOutput(BaseModel):
     """Pydantic model for compute_cross_asset_features node outputs."""
     date: List[str] = Field(..., description="List of dates for the computed features (ISO\u20118601 strings, sorted ascending).")
-    asset_pairs: List[str] = Field(..., description="List of cross\u2011asset pair identifiers used for correlation and spread calculation, formatted as \"Primary-SecondaryTicker\".")
+    asset_pairs: List[str] = Field(..., description="List of cross\u2011asset pair identifiers used for correlation and spread calculation, formatted as "Primary-SecondaryTicker".")
     correlations: List[float] = Field(..., description="Flattened list of rolling 20\u2011day Pearson correlation values. Order is by date (earliest to latest) then by asset_pairs order.")
     price_spreads: List[float] = Field(..., description="Flattened list of daily price spread values (PrimaryClose - SecondaryClose). Order matches the correlations list.")
 
@@ -123,7 +138,7 @@ class ComputeCrossAssetFeaturesOutput(BaseModel):
 class ComputeRegimeFeaturesOutput(BaseModel):
     """Pydantic model for compute_regime_features node outputs."""
     dates: List[str] = Field(..., description="List of dates (ISO\u20118601 strings) for which regime signals are generated.")
-    regime_labels: List[str] = Field(..., description="Corresponding regime label for each date: either \"high_vol\" or \"low_vol\".")
+    regime_labels: List[str] = Field(..., description="Corresponding regime label for each date: either "high_vol" or "low_vol".")
     pmi_flags: List[bool] = Field(..., description="Binary flag indicating PMI direction for each date: true for positive PMI, false for negative PMI.")
 
 
@@ -152,9 +167,46 @@ def assemble_feature_matrix(compute_price_action_features_input: ComputePriceAct
     Returns:
         AssembleFeatureMatrixOutput: Object containing outputs for this node.
     """
-    # TODO: Implement this function
-
-    # Return stub output with placeholder values
+    # Load CSV payloads from each parent node into DataFrames
+    price_df = load_price_action_csv(csv_data=compute_price_action_features_input.csv_data)
+    cross_df = load_cross_asset_csv(dates=compute_cross_asset_features_input.date, 
+                                     asset_pairs=compute_cross_asset_features_input.asset_pairs,
+                                     correlations=compute_cross_asset_features_input.correlations,
+                                     price_spreads=compute_cross_asset_features_input.price_spreads)
+    regime_df = load_regime_csv(dates=compute_regime_features_input.dates,
+                                 regime_labels=compute_regime_features_input.regime_labels,
+                                 pmi_flags=compute_regime_features_input.pmi_flags)
+    vol_df = load_volatility_csv(dates=compute_volatility_features_input.dates,
+                                  garch_forecasts=compute_volatility_features_input.garch_forecasts,
+                                  implied_vol_delta_5d=compute_volatility_features_input.implied_vol_delta_5d)
+    
+    # Standardize Date columns and set as index
+    price_df = standardize_date_index(df=price_df)
+    cross_df = standardize_date_index(df=cross_df)
+    regime_df = standardize_date_index(df=regime_df)
+    vol_df = standardize_date_index(df=vol_df)
+    
+    # Perform inner join on Date index
+    merged_df = inner_join_on_date(price_df=price_df, cross_df=cross_df, regime_df=regime_df, vol_df=vol_df)
+    
+    # Detect and resolve duplicate column names
+    merged_df = resolve_duplicate_columns(df=merged_df, source_prefixes=['price_', 'cross_', 'regime_', 'vol_'])
+    
+    # Compute target variable (next-day simple return)
+    merged_df = compute_next_day_return_target(df=merged_df, close_column='close')
+    
+    # Re-index to chronological order and reset index
+    merged_df = sort_and_reset_index(df=merged_df)
+    
+    # Validate final matrix
+    validate_feature_matrix(df=merged_df, expected_columns=['Date', 'Target'])
+    
+    # Serialize to CSV string
+    feature_matrix_csv: str = serialize_to_csv_string(df=merged_df)
+    
+    # Log summary for observability
+    log_feature_matrix_summary(df=merged_df)
+    
     return AssembleFeatureMatrixOutput(
-        feature_matrix_csv="",
+        feature_matrix_csv=feature_matrix_csv
     )
