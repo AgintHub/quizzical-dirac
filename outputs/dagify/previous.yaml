@@ -1,47 +1,66 @@
 dag_type: plain_text
-description: A workflow to create a simple workflow DAG
-name: create_simple_workflow
+description: A workflow to create a Directed Acyclic Graph for a given task or objective
+name: create_workflow_dag
 nodes:
-  create_workflow_dag:
+  create_dag_structure:
     agent: false
-    description: Create the workflow DAG
-    name: create_workflow_dag
+    description: Create the structure of the Directed Acyclic Graph
+    name: create_dag_structure
     nodes_depended_on:
-    - define_task_dependencies
+    - identify_dependencies_between_subtasks
     nodes_dependent_on: []
-    prompt: Create the workflow DAG using the defined tasks and dependencies.
-  decompose_workflow:
+    prompt: Using the subtasks and their dependencies, define the structure of the
+      DAG. Specify the nodes and their connections.
+  decompose_task_into_subtasks:
     agent: false
-    description: Decompose the workflow into smaller tasks
-    name: decompose_workflow
+    description: Break down the task into smaller, manageable subtasks
+    name: decompose_task_into_subtasks
     nodes_depended_on:
-    - define_workflow_objective
-    nodes_dependent_on:
-    - identify_atomic_tasks
-    prompt: Decompose the workflow objective into smaller, manageable tasks.
-  define_task_dependencies:
+    - define_task_objective
+    nodes_dependent_on: []
+    prompt: Decompose the task into smaller subtasks or operations. List each subtask
+      with a brief description.
+  define_node_prompts_and_descriptions:
     agent: false
-    description: Define the dependencies between tasks
-    name: define_task_dependencies
+    description: Specify the prompts and descriptions for each node in the DAG
+    name: define_node_prompts_and_descriptions
     nodes_depended_on:
-    - identify_atomic_tasks
-    nodes_dependent_on:
-    - create_workflow_dag
-    prompt: Define the dependencies between the identified atomic tasks.
-  define_workflow_objective:
+    - validate_dag_for_acyclicity
+    nodes_dependent_on: []
+    prompt: For each node in the DAG, define a clear prompt and description. Ensure
+      that each node represents a single, self-contained operation.
+  define_task_objective:
     agent: false
-    description: Define the objective of the workflow
-    name: define_workflow_objective
+    description: Clearly define the task or objective for the workflow
+    name: define_task_objective
     nodes_depended_on: []
-    nodes_dependent_on:
-    - decompose_workflow
-    prompt: Clearly define the objective of the workflow. What is it supposed to accomplish?
-  identify_atomic_tasks:
+    nodes_dependent_on: []
+    prompt: State the primary objective or task that the workflow is intended to accomplish.
+      Provide a concise description.
+  finalize_workflow_dag:
     agent: false
-    description: Identify the atomic tasks in the workflow
-    name: identify_atomic_tasks
+    description: Compile the final workflow DAG
+    name: finalize_workflow_dag
     nodes_depended_on:
-    - decompose_workflow
-    nodes_dependent_on:
-    - define_task_dependencies
-    prompt: Identify the atomic tasks that cannot be further decomposed.
+    - define_node_prompts_and_descriptions
+    nodes_dependent_on: []
+    prompt: Compile all the steps into a final workflow DAG. Ensure that it is correctly
+      formatted and represents the task or objective.
+  identify_dependencies_between_subtasks:
+    agent: false
+    description: Determine the dependencies between the subtasks
+    name: identify_dependencies_between_subtasks
+    nodes_depended_on:
+    - decompose_task_into_subtasks
+    nodes_dependent_on: []
+    prompt: Analyze the subtasks and identify any dependencies between them. Specify
+      which subtasks depend on others.
+  validate_dag_for_acyclicity:
+    agent: false
+    description: Verify that the DAG is acyclic
+    name: validate_dag_for_acyclicity
+    nodes_depended_on:
+    - create_dag_structure
+    nodes_dependent_on: []
+    prompt: Check the DAG for any cyclic dependencies. Ensure that there are no loops
+      or circular dependencies.
