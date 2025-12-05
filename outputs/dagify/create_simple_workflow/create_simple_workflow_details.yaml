@@ -1,59 +1,47 @@
 dag_type: plain_text
-description: A workflow for creating a simple workflow DAG with atomic, self-contained
-  tasks
+description: A workflow to create a simple workflow DAG
 name: create_simple_workflow
 nodes:
-  assemble_workflow_dag:
+  create_workflow_dag:
     agent: false
-    description: Assemble the tasks and their dependencies into a workflow DAG
-    name: assemble_workflow_dag
+    description: Create the workflow DAG
+    name: create_workflow_dag
     nodes_depended_on:
     - define_task_dependencies
-    - create_task_prompts
     nodes_dependent_on: []
-    prompt: Combine the tasks, their dependencies, and prompts into a coherent workflow
-      DAG. Ensure the DAG is acyclic and allows for maximum concurrency.
-  create_task_prompts:
+    prompt: Create the workflow DAG using the defined tasks and dependencies.
+  decompose_workflow:
     agent: false
-    description: Create prompts for each task to guide their execution
-    name: create_task_prompts
-    nodes_depended_on:
-    - identify_required_tasks
-    nodes_dependent_on: []
-    prompt: Develop specific prompts for each task. Ensure each prompt is clear, concise,
-      and focused on a single objective.
-  define_task_dependencies:
-    agent: false
-    description: Define the dependencies between the identified tasks
-    name: define_task_dependencies
-    nodes_depended_on:
-    - identify_required_tasks
-    nodes_dependent_on: []
-    prompt: Determine the dependencies between the tasks. Identify which tasks must
-      be completed before others can begin.
-  define_workflow_objective:
-    agent: false
-    description: Define the primary objective of the workflow
-    name: define_workflow_objective
-    nodes_depended_on: []
-    nodes_dependent_on: []
-    prompt: State the primary objective of the workflow. Provide a concise description
-      of what the workflow is intended to achieve.
-  identify_required_tasks:
-    agent: false
-    description: Identify the tasks required to achieve the workflow objective
-    name: identify_required_tasks
+    description: Decompose the workflow into smaller tasks
+    name: decompose_workflow
     nodes_depended_on:
     - define_workflow_objective
-    nodes_dependent_on: []
-    prompt: List the specific tasks necessary to achieve the workflow objective. Break
-      down complex tasks into simpler, atomic steps.
-  validate_workflow_dag:
+    nodes_dependent_on:
+    - identify_atomic_tasks
+    prompt: Decompose the workflow objective into smaller, manageable tasks.
+  define_task_dependencies:
     agent: false
-    description: Validate the constructed workflow DAG for correctness and acyclicity
-    name: validate_workflow_dag
+    description: Define the dependencies between tasks
+    name: define_task_dependencies
     nodes_depended_on:
-    - assemble_workflow_dag
-    nodes_dependent_on: []
-    prompt: Verify that the workflow DAG is correct, acyclic, and maximizes concurrency.
-      Check for any circular dependencies or isolated nodes.
+    - identify_atomic_tasks
+    nodes_dependent_on:
+    - create_workflow_dag
+    prompt: Define the dependencies between the identified atomic tasks.
+  define_workflow_objective:
+    agent: false
+    description: Define the objective of the workflow
+    name: define_workflow_objective
+    nodes_depended_on: []
+    nodes_dependent_on:
+    - decompose_workflow
+    prompt: Clearly define the objective of the workflow. What is it supposed to accomplish?
+  identify_atomic_tasks:
+    agent: false
+    description: Identify the atomic tasks in the workflow
+    name: identify_atomic_tasks
+    nodes_depended_on:
+    - decompose_workflow
+    nodes_dependent_on:
+    - define_task_dependencies
+    prompt: Identify the atomic tasks that cannot be further decomposed.
