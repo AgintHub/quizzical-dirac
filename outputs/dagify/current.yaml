@@ -1,8 +1,5 @@
-dag_type: plain_text
-description: Creates a complete, multi‑factor quantitative trading strategy by gathering
-  data, engineering price‑action, cross‑asset, regime and volatility features, building
-  and selecting a predictive model, defining risk controls, generating execution logic,
-  backtesting, and packaging all deliverables.
+dag_type: typed
+description: Generated workflow from UI.
 name: multi_factor_quant_strategy_generation
 nodes:
   align_and_clean_data:
@@ -16,6 +13,22 @@ nodes:
     - fetch_regime_indicator_data
     - fetch_volatility_data
     nodes_dependent_on: []
+    output_structure:
+    - description: CSV‑formatted text of the cleaned master DataFrame after merging
+        and imputation.
+      key: cleaned_data_csv
+      type: str
+    - description: Number of rows (dates) present in the cleaned DataFrame.
+      key: row_count
+      type: int
+    - description: List of column names in the cleaned DataFrame, including the primary
+        asset fields and all feature columns.
+      key: column_names
+      type: List[str]
+    - description: Indicates whether any missing values were forward‑filled during
+        the cleaning process (true if any fill occurred, false if none were needed).
+      key: missing_values_filled
+      type: bool
     prompt: Merge the five tables on Date, forward‑fill any missing values, and drop
       rows still containing NaNs. Return the cleaned DataFrame as CSV text.
   analyze_feature_importance:
@@ -27,6 +40,20 @@ nodes:
     - select_best_model
     - assemble_feature_matrix
     nodes_dependent_on: []
+    output_structure:
+    - description: Identifier of the model selected as best (e.g., "GBM_v1" or "LSTM_ensemble")
+      key: model_id
+      type: str
+    - description: List of feature names sorted from most to least important
+      key: feature_names
+      type: List[str]
+    - description: Corresponding importance scores for each feature in feature_names
+        (higher means more important)
+      key: importance_scores
+      type: List[float]
+    - description: Method used to compute importance (e.g., "SHAP", "gain", "permutation")
+      key: ranking_method
+      type: str
     prompt: For the chosen model, generate a ranked list of feature importances (e.g.,
       gain, SHAP values). Present as a table with Feature and ImportanceScore.
   assemble_feature_matrix:
@@ -40,6 +67,12 @@ nodes:
     - compute_regime_features
     - compute_volatility_features
     nodes_dependent_on: []
+    output_structure:
+    - description: CSV‑formatted string containing the complete feature matrix with
+        a Date column, all merged feature columns, and a Target column for the next‑day
+        return.
+      key: feature_matrix_csv
+      type: str
     prompt: Merge the four feature tables on Date, ensure no duplicate columns, and
       keep the target variable (next‑day return) as a separate column named Target.
       Return the full matrix as CSV.
@@ -54,6 +87,43 @@ nodes:
     - draft_execution_logic
     - summarize_backtest_results
     nodes_dependent_on: []
+    output_structure:
+    - description: Markdown text summarizing the high‑level strategy intent, asset
+        universe, time horizon, and performance goals.
+      key: strategy_overview
+      type: str
+    - description: Markdown description of data sources, cleaning steps, and a concise
+        list of engineered features.
+      key: data_and_features
+      type: str
+    - description: Markdown detailing the selected model(s), algorithmic components,
+        input shapes, and how predictions are combined.
+      key: model_architecture
+      type: str
+    - description: Markdown table (or bullet list) ranking features by importance
+        scores (e.g., gain, SHAP).
+      key: feature_importance
+      type: str
+    - description: Markdown outlining the portfolio‑level and position‑level risk
+        controls, limits, and stop‑loss rules.
+      key: risk_management
+      type: str
+    - description: Markdown block containing the pseudo‑code for real‑time signal
+        generation, risk filtering, order sizing, and order submission.
+      key: execution_pseudocode
+      type: str
+    - description: Markdown summary of backtest performance metrics and brief description
+        of supporting charts.
+      key: backtest_results
+      type: str
+    - description: Markdown checklist of items required to operationalize the strategy
+        (e.g., code deployment, config files, monitoring setup).
+      key: implementation_checklist
+      type: str
+    - description: The complete compiled strategy dossier, concatenating all sections
+        in proper heading order.
+      key: full_document_markdown
+      type: str
     prompt: 'Create a structured document containing: (1) Strategy Overview, (2) Data
       & Features, (3) Model Architecture, (4) Feature Importance, (5) Risk Management,
       (6) Execution Pseudocode, (7) Backtest Results, (8) Implementation Checklist.
@@ -66,6 +136,21 @@ nodes:
     nodes_depended_on:
     - align_and_clean_data
     nodes_dependent_on: []
+    output_structure:
+    - description: List of dates for the computed features.
+      key: date
+      type: List[str]
+    - description: List of the cross asset pairs used for correlation and spread calculation
+      key: asset_pairs
+      type: List[str]
+    - description: List of correlation values corresponding to each cross-asset pair
+        for each date.
+      key: correlations
+      type: List[float]
+    - description: List of price spread values corresponding to each cross-asset pair
+        for each date.
+      key: price_spreads
+      type: List[float]
     prompt: For every secondary asset, compute the rolling 20‑day Pearson correlation
       with the primary asset's returns and the daily price spread. Output a table
       with Date and a column for each correlation and spread pair.
@@ -77,6 +162,18 @@ nodes:
     nodes_depended_on:
     - align_and_clean_data
     nodes_dependent_on: []
+    output_structure:
+    - description: CSV‑formatted text containing the Date column followed by each
+        computed feature column (log_return, ma_10, ma_30, rsi, macd, atr).
+      key: csv_data
+      type: str
+    - description: List of feature column names in the order they appear in the CSV
+        (excluding the Date column).
+      key: feature_names
+      type: List[str]
+    - description: Number of rows (dates) in the generated feature table.
+      key: row_count
+      type: int
     prompt: From the cleaned price columns, calculate daily log returns, 10‑day and
       30‑day moving averages, RSI, MACD, and ATR. Present as a table with Date and
       each feature column.
@@ -88,6 +185,18 @@ nodes:
     nodes_depended_on:
     - align_and_clean_data
     nodes_dependent_on: []
+    output_structure:
+    - description: List of dates (ISO‑8601 strings) for which regime signals are generated.
+      key: dates
+      type: List[str]
+    - description: 'Corresponding regime label for each date: either "high_vol" or
+        "low_vol".'
+      key: regime_labels
+      type: List[str]
+    - description: 'Binary flag indicating PMI direction for each date: true for positive
+        PMI, false for negative PMI.'
+      key: pmi_flags
+      type: List[bool]
     prompt: 'Apply a simple rule‑based classifier: if VIX > its 75th percentile →
       ''high_vol'', else ''low_vol''. Also create a binary flag for positive/negative
       PMI. Return a table with Date, RegimeLabel, PMIFlag.'
@@ -99,6 +208,18 @@ nodes:
     nodes_depended_on:
     - align_and_clean_data
     nodes_dependent_on: []
+    output_structure:
+    - description: List of dates (ISO format) for which the forecasts are generated.
+      key: dates
+      type: List[str]
+    - description: One‑step‑ahead volatility forecast from the GARCH(1,1) model for
+        each corresponding date.
+      key: garch_forecasts
+      type: List[float]
+    - description: 5‑day change in implied volatility (ImpliedVol[t] - ImpliedVol[t-5])
+        for each date.
+      key: implied_vol_delta_5d
+      type: List[float]
     prompt: Fit a GARCH(1,1) model on the primary asset's returns and produce one‑step‑ahead
       volatility forecasts. Also compute the 5‑day change in implied volatility. Output
       a table with Date, GARCHForecast, ImpVolDelta.
@@ -111,6 +232,20 @@ nodes:
     - define_strategy_objectives
     - select_best_model
     nodes_dependent_on: []
+    output_structure:
+    - description: List of daily live metrics to track (e.g., realized volatility,
+        prediction error)
+      key: daily_live_metrics
+      type: List[str]
+    - description: List of the metric names used in alert thresholds
+      key: alert_thresholds_metrics
+      type: List[str]
+    - description: List of the threshold values, corresponding to alert_thresholds_metrics
+      key: alert_thresholds_values
+      type: List[float]
+    - description: Outline of the quarterly retraining process
+      key: retraining_schedule
+      type: str
     prompt: List daily live metrics to track (e.g., realized vs. forecast volatility,
       prediction error, exposure limits) and specify alert conditions (e.g., Sharpe
       < 0.5). Also outline a quarterly retraining process.
@@ -121,6 +256,26 @@ nodes:
     nodes_depended_on:
     - specify_model_architecture
     nodes_dependent_on: []
+    output_structure:
+    - description: A JSON‑formatted string that contains the full hyperparameter search
+        space for both Gradient Boosting and LSTM models.
+      key: hyperparameter_grid_json
+      type: str
+    - description: List of Gradient Boosting hyperparameter names (e.g., "n_estimators",
+        "learning_rate").
+      key: gb_hyperparameters
+      type: List[str]
+    - description: List of corresponding ranges for each Gradient Boosting hyperparameter,
+        expressed as strings (e.g., "100-500", "0.01-0.1"). Order matches `gb_hyperparameters`.
+      key: gb_hyperparameter_ranges
+      type: List[str]
+    - description: List of LSTM hyperparameter names (e.g., "layers", "units", "dropout").
+      key: lstm_hyperparameters
+      type: List[str]
+    - description: List of corresponding ranges for each LSTM hyperparameter, expressed
+        as strings (e.g., "1-3", "32-128", "0-0.3"). Order matches `lstm_hyperparameters`.
+      key: lstm_hyperparameter_ranges
+      type: List[str]
     prompt: 'List hyperparameters with their ranges for the Gradient Boosting model
       (e.g., n_estimators: 100‑500, learning_rate: 0.01‑0.1) and the LSTM (layers:
       1‑3, units: 32‑128, dropout: 0‑0.3). Return as JSON.'
@@ -131,6 +286,27 @@ nodes:
     name: define_strategy_objectives
     nodes_depended_on: []
     nodes_dependent_on: []
+    output_structure:
+    - description: Ticker or identifier of the main asset the strategy will trade
+      key: primary_tradable_asset
+      type: str
+    - description: List of all assets (tickers or identifiers) considered in the strategy
+      key: asset_universe
+      type: List[str]
+    - description: Target annualized return expressed as a percentage (e.g., 12.5
+        for 12.5%)
+      key: desired_annual_return_pct
+      type: float
+    - description: Maximum acceptable drawdown expressed as a percentage of capital
+      key: risk_tolerance_max_drawdown_pct
+      type: float
+    - description: Typical holding period for positions in days
+      key: holding_period_days
+      type: int
+    - description: List of regulatory or compliance constraints affecting the strategy
+        (e.g., short‑selling bans, leverage limits)
+      key: regulatory_constraints
+      type: List[str]
     prompt: Provide a concise bullet list of the strategy objectives, including the
       primary tradable asset, desired return, risk tolerance, holding period, and
       any regulatory constraints.
@@ -143,6 +319,19 @@ nodes:
     - select_best_model
     - define_strategy_objectives
     nodes_dependent_on: []
+    output_structure:
+    - description: Identifier for each risk control (e.g., max_gross_exposure, var_99,
+        max_asset_weight, daily_stop_loss, monthly_turnover).
+      key: risk_control_names
+      type: List[str]
+    - description: Numeric threshold for each risk control in the same order as risk_control_names
+        (e.g., 0.20 for 20% gross exposure, 0.02 for 2% VaR).
+      key: risk_control_thresholds
+      type: List[float]
+    - description: Short implementation formula or rule for each risk control (e.g.,
+        "GrossExposure <= 0.20", "VaR_99 <= 0.02").
+      key: risk_control_formulas
+      type: List[str]
     prompt: List at least five quantitative risk controls (e.g., max gross exposure
       20%, VaR 99% ≤ 2%, per‑asset weight ≤ 5%, daily stop‑loss 2%, turnover ≤ 30%
       per month) with brief implementation formulas.
@@ -155,6 +344,21 @@ nodes:
     - select_best_model
     - design_risk_controls
     nodes_dependent_on: []
+    output_structure:
+    - description: Pseudocode outlining the order execution logic, including fetching
+        features, generating signals, applying risk controls, sizing orders, and sending
+        limit orders.
+      key: execution_logic_pseudocode
+      type: str
+    - description: Details on how risk controls are implemented within the execution
+        logic, referencing specific risk limits defined in the Design Risk Controls
+        node.
+      key: risk_control_implementation_details
+      type: List[str]
+    - description: The formula or method used to determine the order size based on
+        the model's signal, risk limits, and available capital.
+      key: order_sizing_formula
+      type: str
     prompt: Write concise pseudocode that (1) fetches the latest feature vector, (2)
       generates a position signal using the selected model, (3) applies risk controls,
       (4) computes order size, and (5) sends limit orders. Use clear step comments.
@@ -167,6 +371,31 @@ nodes:
     - train_models
     - split_dataset
     nodes_dependent_on: []
+    output_structure:
+    - description: Identifier or name of each evaluated model candidate.
+      key: candidate_models
+      type: List[str]
+    - description: Sharpe ratio for each model on the test set.
+      key: sharpe_ratios
+      type: List[float]
+    - description: Annualized return (in percent) for each model on the test set.
+      key: annualized_returns
+      type: List[float]
+    - description: Maximum drawdown (in percent) observed for each model on the test
+        set.
+      key: max_drawdowns
+      type: List[float]
+    - description: Average portfolio turnover (as a percent of portfolio per period)
+        for each model.
+      key: turnovers
+      type: List[float]
+    - description: Proportion of trades with positive return (hit‑rate) for each model.
+      key: hit_rates
+      type: List[float]
+    - description: Rank of each model based on the chosen composite performance criterion
+        (1 = best).
+      key: ranks
+      type: List[int]
     prompt: Using the Test set, calculate Sharpe ratio, annualized return, max drawdown,
       turnover, and hit‑rate for each candidate. Output a ranked table.
   fetch_cross_asset_data:
@@ -177,6 +406,24 @@ nodes:
     nodes_depended_on:
     - list_data_sources
     nodes_dependent_on: []
+    output_structure:
+    - description: CSV‑formatted string of the resulting table, with a "Date" column
+        followed by a column for each cross‑asset's closing price.
+      key: csv_data
+      type: str
+    - description: List of cross‑asset identifiers (e.g., ticker symbols) that were
+        fetched.
+      key: asset_names
+      type: List[str]
+    - description: ISO‑8601 formatted first date of the returned series.
+      key: start_date
+      type: str
+    - description: ISO‑8601 formatted last date of the returned series.
+      key: end_date
+      type: str
+    - description: Number of rows (dates) in the returned table.
+      key: row_count
+      type: int
     prompt: Obtain daily closing prices for each cross‑asset listed in the data sources
       (e.g., sector ETFs, commodities, FX pairs) covering the same date range as the
       primary asset. Return as a multi‑column table with Date as the index.
@@ -188,6 +435,25 @@ nodes:
     nodes_depended_on:
     - list_data_sources
     nodes_dependent_on: []
+    output_structure:
+    - description: List of dates for the price data.
+      key: dates
+      type: List[str]
+    - description: List of opening prices for each date.
+      key: opens
+      type: List[float]
+    - description: List of high prices for each date.
+      key: highs
+      type: List[float]
+    - description: List of low prices for each date.
+      key: lows
+      type: List[float]
+    - description: List of closing prices for each date.
+      key: closes
+      type: List[float]
+    - description: List of trading volumes for each date.
+      key: volumes
+      type: List[int]
     prompt: 'Retrieve OHLCV data for the primary asset over the last 10 years at daily
       resolution. Return the data as a CSV‑compatible table with columns: Date, Open,
       High, Low, Close, Volume.'
@@ -199,6 +465,11 @@ nodes:
     nodes_depended_on:
     - list_data_sources
     nodes_dependent_on: []
+    output_structure:
+    - description: CSV formatted table containing a Date column and one column for
+        each regime indicator, aligned to the price‑data calendar.
+      key: regime_indicator_csv
+      type: str
     prompt: Download daily values for each regime indicator specified, aligned to
       the same calendar as the price data. Provide a table with Date and one column
       per indicator.
@@ -209,6 +480,19 @@ nodes:
     nodes_depended_on:
     - list_data_sources
     nodes_dependent_on: []
+    output_structure:
+    - description: List of dates for which volatility data is provided, formatted
+        as YYYY-MM-DD.
+      key: dates
+      type: List[str]
+    - description: 30‑day rolling realized volatility values corresponding to each
+        date.
+      key: realized_vol
+      type: List[float]
+    - description: Implied volatility index values for the primary asset corresponding
+        to each date.
+      key: implied_vol
+      type: List[float]
     prompt: Acquire daily realized volatility (e.g., 30‑day rolling std) and implied
       volatility indices for the primary asset over the same period. Output a table
       with Date, RealizedVol, ImpliedVol.
@@ -221,6 +505,22 @@ nodes:
     - compile_strategy_documentation
     - create_monitoring_plan
     nodes_dependent_on: []
+    output_structure:
+    - description: Names of files included in the deliverable package, e.g., Strategy_Document.md,
+        model_code.py, requirements.txt, config.yml, monitoring_plan.md.
+      key: manifest_files
+      type: List[str]
+    - description: Brief description for each file in the manifest, in the same order
+        as manifest_files.
+      key: manifest_descriptions
+      type: List[str]
+    - description: Archive format of the package, e.g., "zip".
+      key: package_type
+      type: str
+    - description: Indicates whether the package has been validated and is ready for
+        hand‑off.
+      key: is_ready_for_handoff
+      type: bool
     prompt: 'Provide a zip‑style manifest listing: Strategy_Document.md, model_code.py,
       requirements.txt, config.yml, monitoring_plan.md. For each item give a brief
       description.'
@@ -232,6 +532,12 @@ nodes:
     nodes_depended_on:
     - define_strategy_objectives
     nodes_dependent_on: []
+    output_structure:
+    - description: 'Plain list of data source descriptions, each including the dataset
+        type, provider name, and update frequency (e.g., "Price History: Bloomberg,
+        daily").'
+      key: data_sources
+      type: List[str]
     prompt: Enumerate the data sources (e.g., price history, macro indicators, implied
       volatility, sentiment feeds) with provider names and frequency. Output as a
       plain list.
@@ -243,6 +549,23 @@ nodes:
     nodes_depended_on:
     - setup_backtest_environment
     nodes_dependent_on: []
+    output_structure:
+    - description: True if the backtest completed without runtime errors, otherwise
+        False.
+      key: backtest_success
+      type: bool
+    - description: 'CSV‑formatted string of the daily equity curve. Columns: Date,
+        Equity.'
+      key: equity_curve_csv
+      type: str
+    - description: 'CSV‑formatted string of all executed trades. Columns: Date, Symbol,
+        Quantity, Price, PnL.'
+      key: trades_log_csv
+      type: str
+    - description: Brief textual summary of backtest execution (e.g., runtime, any
+        warnings).
+      key: summary_message
+      type: str
     prompt: Run the backtest using the previously defined environment and generate
       a daily equity curve CSV, plus a log of executed trades (Date, Symbol, Quantity,
       Price, PnL).
@@ -254,6 +577,19 @@ nodes:
     nodes_depended_on:
     - evaluate_models
     nodes_dependent_on: []
+    output_structure:
+    - description: Identifier of the selected best model.
+      key: best_model_identifier
+      type: str
+    - description: Sharpe ratio of the selected model.
+      key: sharpe_ratio
+      type: float
+    - description: Maximum drawdown of the selected model.
+      key: max_drawdown
+      type: float
+    - description: Annualized return of the selected model.
+      key: annualized_return
+      type: float
     prompt: Identify the model with the best combination of Sharpe and low max drawdown
       (e.g., highest Sharpe subject to max drawdown < 15%). Return the model identifier
       and its key metrics.
@@ -267,6 +603,29 @@ nodes:
     - select_best_model
     - design_risk_controls
     nodes_dependent_on: []
+    output_structure:
+    - description: Starting capital for the backtest (e.g., 1_000_000).
+      key: initial_capital
+      type: float
+    - description: Slippage applied per trade expressed in basis points.
+      key: slippage_bps
+      type: float
+    - description: Commission charged per trade as a percentage of trade value.
+      key: commission_pct
+      type: float
+    - description: How often the portfolio is rebalanced (e.g., "daily", "weekly",
+        "monthly").
+      key: rebalance_frequency
+      type: str
+    - description: List of risk‑control rules that will be enforced during the simulation
+        (e.g., "max_gross_exposure 20%", "VaR 99% ≤ 2%", "per_asset_weight ≤ 5%",
+        "daily_stop_loss 2%", "turnover ≤ 30%/month").
+      key: risk_controls_summary
+      type: List[str]
+    - description: Brief description of how risk controls are applied in the backtest
+        engine (e.g., "pre‑trade check that aborts orders violating any rule").
+      key: risk_control_enforcement_method
+      type: str
     prompt: 'Describe the backtest settings: initial capital, slippage model (e.g.,
       0.5 bps), commission (0.1% per trade), rebalance frequency, and how risk controls
       are enforced during simulation.'
@@ -278,6 +637,20 @@ nodes:
     nodes_depended_on:
     - define_strategy_objectives
     nodes_dependent_on: []
+    output_structure:
+    - description: A concise description of the chosen model ensemble architecture.
+      key: model_ensemble_description
+      type: str
+    - description: List of individual model components (e.g., Gradient Boosting, LSTM).
+      key: model_components
+      type: List[str]
+    - description: The shape of the input data expected by the model.
+      key: input_shape
+      type: str
+    - description: How the predictions from individual components are combined (e.g.,
+        averaging, stacking).
+      key: prediction_combination_method
+      type: str
     prompt: Describe the selected model ensemble, including the algorithm for each
       component, input shape, and how predictions will be combined. Limit to 200 words.
   split_dataset:
@@ -288,6 +661,18 @@ nodes:
     nodes_depended_on:
     - assemble_feature_matrix
     nodes_dependent_on: []
+    output_structure:
+    - description: CSV formatted text containing the training subset of the feature
+        matrix.
+      key: train_csv
+      type: str
+    - description: CSV formatted text containing the validation subset of the feature
+        matrix.
+      key: validation_csv
+      type: str
+    - description: CSV formatted text containing the test subset of the feature matrix.
+      key: test_csv
+      type: str
     prompt: Using the cleaned matrix, allocate the earliest 60% of dates to training,
       the next 20% to validation, and the final 20% to testing. Provide three CSV
       snippets labeled Train, Validation, Test.
@@ -299,6 +684,36 @@ nodes:
     nodes_depended_on:
     - run_backtest
     nodes_dependent_on: []
+    output_structure:
+    - description: Annualized return of the strategy expressed as a decimal (e.g.,
+        0.12 for 12%).
+      key: annualized_return
+      type: float
+    - description: Annualized Sharpe ratio of the strategy.
+      key: sharpe_ratio
+      type: float
+    - description: Maximum drawdown of the equity curve expressed as a decimal (e.g.,
+        -0.25 for -25%).
+      key: max_drawdown
+      type: float
+    - description: Average portfolio turnover per period (e.g., monthly turnover as
+        a decimal).
+      key: turnover
+      type: float
+    - description: Proportion of winning trades (range 0‑1).
+      key: win_rate
+      type: float
+    - description: Markdown description of the histogram chart for daily returns,
+        including key observations.
+      key: histogram_description
+      type: str
+    - description: Markdown description of the turnover time‑series chart, highlighting
+        trends or spikes.
+      key: turnover_chart_description
+      type: str
+    - description: Full markdown report containing the statistics and chart descriptions.
+      key: markdown_report
+      type: str
     prompt: Calculate annualized return, Sharpe, max drawdown, turnover, and win rate
       from the equity curve. Also describe a histogram of daily returns and a turnover
       time series chart. Output as a markdown report.
@@ -311,6 +726,18 @@ nodes:
     - split_dataset
     - define_hyperparameter_grid
     nodes_dependent_on: []
+    output_structure:
+    - description: List of hyperparameter combinations for each trained model.
+      key: hyperparameters
+      type: List[str]
+    - description: List of Sharpe ratios calculated on the validation set for each
+        trained model.
+      key: validation_sharpe
+      type: List[float]
+    - description: List of Root Mean Squared Errors calculated on the validation set
+        for each trained model.
+      key: validation_rmse
+      type: List[float]
     prompt: Run a grid or random search over the defined hyperparameter space, training
       each candidate on the Train set and evaluating on Validation. Return a table
       with Hyperparameters, ValidationSharpe, ValidationRMSE.
